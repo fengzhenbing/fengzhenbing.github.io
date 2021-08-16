@@ -638,7 +638,7 @@ kubeadm join 192.168.3.13:6443 --token qxu02l.g995k2yhkxjh3k80 &lt;span class="s
 &lt;h3 id="垃圾回收器">垃圾回收器&lt;/h3></description></item><item><title>pulsar</title><link>https://fengzhenbing.github.io/p/pulsar/</link><pubDate>Tue, 23 Feb 2021 00:00:00 +0000</pubDate><guid>https://fengzhenbing.github.io/p/pulsar/</guid><description>&lt;h2 id="相关概念">相关概念&lt;/h2>
 &lt;ul>
 &lt;li>计算存储分离&lt;/li>
-&lt;li>![image-20210406220312072](/Users/mokernet/Library/Application Support/typora-user-images/image-20210406220312072.png)&lt;/li>
+&lt;li>&lt;img src="https://gitee.com/fengzhenbing/picgo/raw/master/image-20210406220312072.png" alt="image-20210406220312072" />&lt;/li>
 &lt;/ul>
 &lt;h2 id="安装测试">安装测试&lt;/h2>
 &lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-shell" data-lang="shell">&lt;span class="c1"># 下载&lt;/span>
