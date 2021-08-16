@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Spring on Feng Zhenbing's Blog</title><link>https://fengzhenbing.github.io/tags/spring/</link><description>Recent content in Spring on Feng Zhenbing's Blog</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Tue, 08 Dec 2020 00:00:00 +0000</lastBuildDate><atom:link href="https://fengzhenbing.github.io/tags/spring/index.xml" rel="self" type="application/rss+xml"/><item><title>配置中心刷新</title><link>https://fengzhenbing.github.io/p/%E9%85%8D%E7%BD%AE%E4%B8%AD%E5%BF%83%E5%88%B7%E6%96%B0/</link><pubDate>Tue, 08 Dec 2020 00:00:00 +0000</pubDate><guid>https://fengzhenbing.github.io/p/%E9%85%8D%E7%BD%AE%E4%B8%AD%E5%BF%83%E5%88%B7%E6%96%B0/</guid><description>配置中心刷新原理 nacos和spring cloud config两种配置中心动态刷新的范围都是以下两种：
+@ConfigurationProperties 注解的配置类 @RefreshScope 注解的bean 手动刷新 post请求config客户端的/refresh端点
+自动刷新 WebHooks动态触发刷新
+spring-cloud-bus动态刷新
+这时Spring Cloud Bus做配置更新步骤如下:
+提交代码触发post给Server端发送bus/refresh Server端接收到请求并发送给Spring Cloud Bus Spring Cloud bus接到消息并通知给其它客户端 其它客户端接收到通知，请求Server端获取最新配置 全部客户端均获取到最新的配置 这样的话我们在server端的代码做一些改动，来支持/actuator/bus-refresh
+Spring Cloud Bus Spring Cloud Bus 使用轻量级的消息代理来连接微服务架构中的各个服务，可以将其用于广播状态更改（例如配置中心配置更改）或其他管理指令
+目前 Spring Cloud Bus 支持两种消息代理：RabbitMQ 和 Kafka。
+参考
+https://blog.csdn.net/woshilijiuyi/article/details/88293782
+https://www.cnblogs.com/babycomeon/p/11141160.html</description></item></channel></rss>

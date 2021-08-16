@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>服务链路 on Feng Zhenbing's Blog</title><link>https://fengzhenbing.github.io/tags/%E6%9C%8D%E5%8A%A1%E9%93%BE%E8%B7%AF/</link><description>Recent content in 服务链路 on Feng Zhenbing's Blog</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Sat, 12 Jun 2021 00:00:00 +0000</lastBuildDate><atom:link href="https://fengzhenbing.github.io/tags/%E6%9C%8D%E5%8A%A1%E9%93%BE%E8%B7%AF/index.xml" rel="self" type="application/rss+xml"/><item><title>服务链路追踪</title><link>https://fengzhenbing.github.io/p/%E6%9C%8D%E5%8A%A1%E9%93%BE%E8%B7%AF%E8%BF%BD%E8%B8%AA/</link><pubDate>Sat, 12 Jun 2021 00:00:00 +0000</pubDate><guid>https://fengzhenbing.github.io/p/%E6%9C%8D%E5%8A%A1%E9%93%BE%E8%B7%AF%E8%BF%BD%E8%B8%AA/</guid><description>背景 随着业务的发展，系统规模也会越来越大，各微服务间的调用关系也越来越错综复杂，每一个前端请求都会形成一条复杂的分布式服务调用链路，在每条链路中任何一个依赖服务出现延迟过高或错误的时候都会引起请求最后的失败。
+链路追踪原理 实现请求跟踪 当请求发送到分布式系统的入口端点时，只需要服务跟踪框架为该请求创建一个唯一的跟踪标识Trace ID，
+同时在分布式系统内部流转的时候，框架失踪保持该唯一标识，直到返回给请求方位置。
+trace：服务追踪的追踪单元是从客户发起请求（request）抵达被追踪系统的边界开始，到被追踪系统向客户返回响应（response）为止的过程，称为一
+个“trace”
+统计各处理单元的时间延迟 当请求到达各个服务组件时，也是通过一个唯一标识Span ID来标记它的开始，具体过程以及结束。对每一个Span来说，它必须有开始和结束两个节点，通过记录开始Span和结束Span的时间戳，就能统计出该Span的时间延迟，除了时间戳记录之外，它还可以包含一些其他元数据，比如时间名称、请求信息等。
+UI可视化 APM技术组件 Zipkin+Sleuth Apache SkyWalking Cat Pinpoint 特点对比</description></item></channel></rss>

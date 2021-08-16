@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>架构 on Feng Zhenbing's Blog</title><link>https://fengzhenbing.github.io/tags/%E6%9E%B6%E6%9E%84/</link><description>Recent content in 架构 on Feng Zhenbing's Blog</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Thu, 10 Jun 2021 00:00:00 +0000</lastBuildDate><atom:link href="https://fengzhenbing.github.io/tags/%E6%9E%B6%E6%9E%84/index.xml" rel="self" type="application/rss+xml"/><item><title>架构演变</title><link>https://fengzhenbing.github.io/p/%E6%9E%B6%E6%9E%84%E6%BC%94%E5%8F%98/</link><pubDate>Thu, 10 Jun 2021 00:00:00 +0000</pubDate><guid>https://fengzhenbing.github.io/p/%E6%9E%B6%E6%9E%84%E6%BC%94%E5%8F%98/</guid><description>单体架构(spring boot) 优点：所有代码都运行在同一个进程空间之内，所有模块、方法的调用都无须考虑网络分区、对象复制这些麻烦的事和性能损失。
+缺点：损失了各个功能模块的自治、隔离能力；
+​ 由于隔离能力的缺失难以阻断错误传播、不便于动态更新程序以外，还面临难以技术异构的困难
+​ 可以 使用OSGi 这种运行时模块化框架，但是太复杂了。
+SOA 架构（Service-Oriented Architecture） 面向服务的架构是一次具体地、系统性地成功解决分布式服务主要问题的架构模式。
+SOAP 协议被逐渐边缘化的本质原因：过于严格的规范定义带来过度的复杂性。而构建在 SOAP 基础之上的 ESB、BPM、SCA、SDO 等诸多上层建筑，进一步加剧了这种复杂性。
+微服务架构(spring cloud) 微服务是一种软件开发技术，是一种 SOA 的变体形式。
+升级背景：
+制约软件质量与业务能力提升的最大因素是人而非硬件： 单体架构没有什么有效阻断错误传播的手段 技术异构的需求从可选渐渐成为必须：很多 Java 不擅长的事情 人工智能python 分布式协调工具 Etcd ,NSI C 编写的 Redis， &amp;hellip; 由于隔离能力的缺失，单体除了难以阻断错误传播、不便于动态更新程序以外，还面临难以技术异构的困难，每个模块的代码都通常需要使用一样的程序语言，乃至一样的编程框架去开发。
+随着软件架构演进，构筑可靠系统从“追求尽量不出错”，到正视“出错是必然”的观念转变，才是微服务架构得以挑战并逐步开始取代运作了数十年的单体架构的底气所在
+微服务时代充满着自由的气息，微服务时代充斥着迷茫的选择。
+微服务架构(Kubernetes) 升级背景：
+微服务中的各种新技术名词，如配置中心、服务发现、网关、熔断、负载均衡等等带来的技术组件 Config、Eureka、Zuul、Hystrix、Ribbon、Feign 等
+占据了产品的大部分编译后的代码容量
+之前在应用层面而不是基础设施层面去解决这些分布式问题，完全是因为由硬件构成的基础设施，跟不上由软件构成的应用服务的灵活性的无奈之举
+以 Docker Swarm、Apache Mesos 与 Kubernetes 为主要竞争者的“容器战争”终于有了明确的结果，Kubernetes 登基加冕
+容器动态构建出 DNS 服务器、服务负载均衡器等一系列虚拟化的基础设施，去代替原有的应用层面的技术组件</description></item></channel></rss>

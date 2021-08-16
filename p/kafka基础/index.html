@@ -1,0 +1,87 @@
+<!doctype html><html lang=en-us><head><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1"><meta name=description content="kafka基础"><title>kafka基础</title><link rel=canonical href=https://fengzhenbing.github.io/p/kafka%E5%9F%BA%E7%A1%80/><link rel=stylesheet href=/scss/style.min.css><meta property="og:title" content="kafka基础"><meta property="og:description" content="kafka基础"><meta property="og:url" content="https://fengzhenbing.github.io/p/kafka%E5%9F%BA%E7%A1%80/"><meta property="og:site_name" content="Feng Zhenbing's Blog"><meta property="og:type" content="article"><meta property="article:section" content="Post"><meta property="article:tag" content="消息"><meta property="article:published_time" content="2020-10-20T14:06:25+06:00"><meta property="article:modified_time" content="2020-10-20T14:06:25+06:00"><meta name=twitter:title content="kafka基础"><meta name=twitter:description content="kafka基础"></head><body class="article-page has-toc"><script>(function(){const a='StackColorScheme';localStorage.getItem(a)||localStorage.setItem(a,"auto")})()</script><script>(function(){const b='StackColorScheme',a=localStorage.getItem(b),c=window.matchMedia('(prefers-color-scheme: dark)').matches===!0;a=='dark'||a==='auto'&&c?document.documentElement.dataset.scheme='dark':document.documentElement.dataset.scheme='light'})()</script><div class="container main-container flex
+extended"><div id=article-toolbar><a href=https://fengzhenbing.github.io/ class=back-home><svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-chevron-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><polyline points="15 6 9 12 15 18"/></svg><span>返回</span></a></div><main class="main full-width"><article class=main-article><header class=article-header><div class=article-details><header class=article-category><a href=/categories/%E6%B6%88%E6%81%AF/>消息</a></header><h2 class=article-title><a href=/p/kafka%E5%9F%BA%E7%A1%80/>kafka基础</a></h2><h3 class=article-subtitle>kafka基础</h3><footer class=article-time><div><svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><path d="M11.795 21H5a2 2 0 01-2-2V7a2 2 0 012-2h12a2 2 0 012 2v4"/><circle cx="18" cy="18" r="4"/><path d="M15 3v4"/><path d="M7 3v4"/><path d="M3 11h16"/><path d="M18 16.496V18l1 1"/></svg><time class=article-time--published>Oct 20, 2020</time></div><div><svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><circle cx="12" cy="12" r="9"/><polyline points="12 7 12 12 15 15"/></svg><time class=article-time--reading>阅读时长: 2 分钟</time></div></footer></div></header><section class=article-content><h2 id=kafka相关概念>kafka相关概念</h2><p>二代mq, scala开发</p><ul><li>broker</li><li>topic</li><li>patition</li><li>producer</li><li>customer</li><li>Customer group</li><li>leader</li><li>follower</li><li>rebalance<ul><li>服务端partition数量扩大</li><li>消费者组中某个消费者down掉</li></ul></li></ul><h2 id=topic特性>Topic特性</h2><ol><li>通过partition增加可扩展性：线上改partion数，rebalance ，会照成性能抖动。</li><li>partition有序达到高吞吐</li><li>partition多副本增加容错性</li></ol><h2 id=kafka单机>kafka单机</h2><ol><li><p>安装 <a href=http://kafka.apache.org/downloads>http://kafka.apache.org/downloads</a></p></li><li><p>修改配置</p><div class=highlight><pre class=chroma><code class=language-shell data-lang=shell><span class=nb>cd</span> kafka_2.13-2.7.0
+<span class=c1># 打开 listeners=PLAINTEXT://localhost:9092</span>
+vim config/server.properties
+<span class=c1># 启动zookeeper</span>
+bin/zookeeper-server-start.sh config/zookeeper.properties 
+<span class=c1># 启动kafaka</span>
+bin/kafka-server-start.sh config/server.properties
+</code></pre></div></li><li><p>命令测试</p><div class=highlight><pre class=chroma><code class=language-shell data-lang=shell><span class=c1># 创建topic</span>
+mokernetdeMac-mini:kafka_2.13-2.7.0 mokernet$ bin/kafka-topics.sh --zookeeper localhost:2181 --create --topic testf  --partitions <span class=m>4</span> --replication-factor <span class=m>1</span>
+Created topic testf.
+
+<span class=c1># 查看</span>
+bin/kafka-topics.sh --zookeeper localhost:2181 --describe --topic testf
+
+<span class=c1># 消费者从头开始消费</span>
+bin/kafka-console-consumer.sh --bootstrap-server localhost:9092 --from-beginning --topic testf
+
+<span class=c1># 生产者生产</span>
+bin/kafka-console-producer.sh --bootstrap-server localhost:9092 --topic testf
+
+<span class=c1># 生产者性能测试 100万条数据 每条1000byte 限流100万条</span>
+bin/kafka-producer-perf-test.sh --topic testf --num-records <span class=m>1000000</span> --record-size <span class=m>1000</span> --throughput <span class=m>1000000</span> --producer-props bootstrap.servers<span class=o>=</span>localhost:9092
+
+<span class=c1># 消费者性能测试   消费100万条数据  一个线程</span>
+bin/kafka-consumer-perf-test.sh --bootstrap-server localhost:9092 --topic testf --fetch-size <span class=m>1048576</span> --messages <span class=m>1000000</span> --threads <span class=m>1</span>
+</code></pre></div></li></ol><h2 id=kafka集群>kafka集群</h2><ol><li><p>修改各个节点的三个属性配置如下：</p><div class=highlight><pre class=chroma><code class=language-shell data-lang=shell><span class=c1># 复制新的配置文件</span>
+cp config/server.properties config/server-1.properties
+cp config/server.properties config/server-2.properties
+</code></pre></div><pre><code class=language-properties data-lang=properties># 修改 id  端口 数据文件目录
+# config/server-1.properties:
+  broker.id=1
+  listeners=PLAINTEXT://:9093
+  log.dir=/tmp/kafka-logs-1
+</code></pre><pre><code class=language-properties data-lang=properties># 修改 id  端口 数据文件目录
+# config/server-2.properties:
+  broker.id=2
+  listeners=PLAINTEXT://:9094
+  log.dir=/tmp/kafka-logs-2
+</code></pre></li><li><p>启动</p><pre><code>bin/kafka-server-start.sh config/server.properties &amp;
+bin/kafka-server-start.sh config/server-1.properties &amp;
+bin/kafka-server-start.sh config/server-2.properties &amp;
+</code></pre></li><li><p>测试</p><div class=highlight><pre class=chroma><code class=language-shell data-lang=shell><span class=c1># 创建topic test42 4个patition 2个副本</span>
+bin/kafka-topics.sh --zookeeper localhost:2181 --create --topic test42  --partitions <span class=m>4</span> --replication-factor <span class=m>2</span>
+<span class=c1># 查看</span>
+mokernetdeMac-mini:kafka_2.13-2.7.0 mokernet$ bin/kafka-topics.sh --zookeeper localhost:2181 --describe --topic test42
+Topic: test42   PartitionCount: <span class=m>4</span>       ReplicationFactor: <span class=m>2</span>    Configs: 
+        Topic: test42   Partition: <span class=m>0</span>    Leader: <span class=m>1</span>       Replicas: 1,2   Isr: 1,2
+        Topic: test42   Partition: <span class=m>1</span>    Leader: <span class=m>2</span>       Replicas: 2,0   Isr: 2,0
+        Topic: test42   Partition: <span class=m>2</span>    Leader: <span class=m>0</span>       Replicas: 0,1   Isr: 0,1
+        Topic: test42   Partition: <span class=m>3</span>    Leader: <span class=m>1</span>       Replicas: 1,0   Isr: 1,0
+
+<span class=c1># 消费者从头开始消费</span>
+bin/kafka-console-consumer.sh --bootstrap-server localhost:9092 --from-beginning --topic test42
+
+<span class=c1># 生产者生产</span>
+bin/kafka-console-producer.sh --bootstrap-server localhost:9092 --topic test42
+
+<span class=c1># 容错性测试 ，关闭id=1的broker</span>
+ps aux <span class=p>|</span> grep server-1.properties
+&gt; mokernet         <span class=m>30302</span>   0.0  1.9  <span class=m>7323756</span> <span class=m>405020</span> s006  S+   10:31PM   0:16.87 /usr/bin/java -Xmx
+<span class=nb>kill</span> -9 <span class=m>30302</span>
+
+<span class=c1>#查看 如下，rebalance</span>
+mokernetdeMac-mini:kafka_2.13-2.7.0 mokernet$ bin/kafka-topics.sh --zookeeper localhost:2181 --describe --topic test42
+Topic: test42   PartitionCount: <span class=m>4</span>       ReplicationFactor: <span class=m>2</span>    Configs: 
+        Topic: test42   Partition: <span class=m>0</span>    Leader: <span class=m>2</span>       Replicas: 1,2   Isr: <span class=m>2</span>
+        Topic: test42   Partition: <span class=m>1</span>    Leader: <span class=m>2</span>       Replicas: 2,0   Isr: 2,0
+        Topic: test42   Partition: <span class=m>2</span>    Leader: <span class=m>0</span>       Replicas: 0,1   Isr: <span class=m>0</span>
+        Topic: test42   Partition: <span class=m>3</span>    Leader: <span class=m>0</span>       Replicas: 1,0   Isr: <span class=m>0</span>
+</code></pre></div></li></ol><h2 id=kafka-connect>Kafka connect</h2><ul><li>通过kafka导入导出数据</li></ul><div class=highlight><pre class=chroma><code class=language-shell data-lang=shell><span class=c1># 写入数据到输入文件 test.txt</span>
+<span class=nb>echo</span> -e <span class=s2>&#34;testtest&#34;</span> &gt; test.txt
+<span class=c1># 启动connect</span>
+<span class=c1># 三个配置文件： </span>
+<span class=c1># 1. Kafka Connect的配置文件，包含常用的配置，如Kafka brokers连接方式和数据的序列化格式。</span>
+<span class=c1># 2. 源连接器配置，用于从输入文件读取行，并将其输入到 Kafka topic</span>
+<span class=c1># 3. 接收器连接器配置，它从Kafka topic中读取消息，并在输出文件中生成一行。</span>
+bin/connect-standalone.sh config/connect-standalone.properties config/connect-file-source.properties config/connect-file-sink.properties
+<span class=c1># 查看输出文件， 可以看到不断地往 test.txt写入数据时，test.sink.txt 会持续产生数据</span>
+tail -f test.sink.txt 
+</code></pre></div><h2 id=kafak-stream>kafak stream</h2><ul><li><ul><li></li></ul></li></ul><h2 id=kafka-特点>Kafka 特点</h2><ul><li>高吞吐量、低延迟：kafka每秒可以处理几十万条消息，它的延迟最低只有几毫秒；</li><li>可扩展性：kafka集群支持热扩展；</li><li>持久性、可靠性：消息被持久化到本地磁盘，并且支持数据备份防止丢失；</li><li>容错性：允许集群中的节点失败(若分区副本数量为n,则允许n-1个节点失败)；</li><li>高并发：单机可支持数千个客户端同时读写；</li></ul><h2 id=使用场景>使用场景</h2><ul><li><p>消息系统</p></li><li><p>日志聚合</p></li><li><p>度量监控</p></li><li><p>流式处理</p></li><li><p>跟踪网站浏览记录</p></li></ul><h2 id=相关资料>相关资料</h2><p>参考 <a href=https://kafka.apachecn.org/>https://kafka.apachecn.org/</a></p><p><a class=link href="https://mp.weixin.qq.com/s?__biz=MzU1NDA0MDQ3MA==&mid=2247483958&idx=1&sn=dffaad318b50f875eea615bc3bdcc80c&chksm=fbe8efcfcc9f66d9ff096fbae1c2a3671f60ca4dc3e7412ebb511252e7193a46dcd4eb11aadc&scene=21#wechat_redirect" target=_blank rel=noopener>大白话 kafka 架构原理</a></p></section><footer class=article-footer><section class=article-tags><a href=/tags/%E6%B6%88%E6%81%AF/>消息</a></section><section class=article-copyright><svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-copyright" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><circle cx="12" cy="12" r="9"/><path d="M14.5 9a3.5 4 0 100 6"/></svg><span>Licensed under CC BY-NC-SA 4.0</span></section></footer></article><aside class=related-contents--wrapper><h2 class=section-title>相关文章</h2><div class=related-contents><div class="flex article-list--tile"><article><a href=/p/pulsar/><div class=article-details><h2 class=article-title>pulsar</h2></div></a></article><article><a href=/p/rocketmq/><div class=article-details><h2 class=article-title>rocketMQ</h2></div></a></article><article><a href=/p/rabbitmq/><div class=article-details><h2 class=article-title>rabbitMQ</h2></div></a></article><article><a href=/p/%E6%B6%88%E6%81%AF%E5%9F%BA%E7%A1%80/><div class=article-details><h2 class=article-title>消息基础</h2></div></a></article></div></div></aside><div class=disqus-container><div id=disqus_thread></div><script type=application/javascript>var disqus_config=function(){};(function(){if(["localhost","127.0.0.1"].indexOf(window.location.hostname)!=-1){document.getElementById('disqus_thread').innerHTML='Disqus comments not available by default when the website is previewed locally.';return}var b=document,a=b.createElement('script');a.async=!0,a.src='//hugo-theme-stack.disqus.com/embed.js',a.setAttribute('data-timestamp',+new Date),(b.head||b.body).appendChild(a)})()</script><noscript>Please enable JavaScript to view the <a href=https://disqus.com/?ref_noscript>comments powered by Disqus.</a></noscript><a href=https://disqus.com class=dsq-brlink>comments powered by <span class=logo-disqus>Disqus</span></a></div><style>.disqus-container{background-color:var(--card-background);border-radius:var(--card-border-radius);box-shadow:var(--shadow-l1);padding:var(--card-padding)}</style><script>window.addEventListener('onColorSchemeChange',a=>{DISQUS&&DISQUS.reset({reload:!0})})</script><footer class=site-footer><section class=copyright>&copy;
+2020 -
+2021 Feng Zhenbing's Blog</section><section class=powerby>Built with <a href=https://gohugo.io/ target=_blank rel=noopener>Hugo</a><br>Theme <b><a href=https://github.com/CaiJimmy/hugo-theme-stack target=_blank rel=noopener data-version=3.1.0>Stack</a></b> designed by <a href=https://jimmycai.com target=_blank rel=noopener>Jimmy</a></section></footer><div class=pswp tabindex=-1 role=dialog aria-hidden=true><div class=pswp__bg></div><div class=pswp__scroll-wrap><div class=pswp__container><div class=pswp__item></div><div class=pswp__item></div><div class=pswp__item></div></div><div class="pswp__ui pswp__ui--hidden"><div class=pswp__top-bar><div class=pswp__counter></div><button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+<button class="pswp__button pswp__button--share" title=Share></button>
+<button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+<button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button><div class=pswp__preloader><div class=pswp__preloader__icn><div class=pswp__preloader__cut><div class=pswp__preloader__donut></div></div></div></div></div><div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap"><div class=pswp__share-tooltip></div></div><button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)"></button>
+<button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)"></button><div class=pswp__caption><div class=pswp__caption__center></div></div></div></div></div><script src=https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js integrity="sha256-ePwmChbbvXbsO02lbM3HoHbSHTHFAeChekF1xKJdleo=" crossorigin=anonymous defer></script><script src=https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js integrity="sha256-UKkzOn/w1mBxRmLLGrSeyB4e1xbrp4xylgAWb3M42pU=" crossorigin=anonymous defer></script><link rel=stylesheet href=https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.css integrity="sha256-c0uckgykQ9v5k+IqViZOZKc47Jn7KQil4/MP3ySA3F8=" crossorigin=anonymous><link rel=stylesheet href=https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.css integrity="sha256-SBLU4vv6CA6lHsZ1XyTdhyjJxCjPif/TRkjnsyGAGnE=" crossorigin=anonymous></main><aside class="sidebar right-sidebar sticky"><section class="widget archives"><div class=widget-icon><svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-hash" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><line x1="5" y1="9" x2="19" y2="9"/><line x1="5" y1="15" x2="19" y2="15"/><line x1="11" y1="4" x2="7" y2="20"/><line x1="17" y1="4" x2="13" y2="20"/></svg></div><h2 class="widget-title section-title">目录</h2><div class=widget--toc><nav id=TableOfContents><ol><li><a href=#kafka相关概念>kafka相关概念</a></li><li><a href=#topic特性>Topic特性</a></li><li><a href=#kafka单机>kafka单机</a></li><li><a href=#kafka集群>kafka集群</a></li><li><a href=#kafka-connect>Kafka connect</a></li><li><a href=#kafak-stream>kafak stream</a></li><li><a href=#kafka-特点>Kafka 特点</a></li><li><a href=#使用场景>使用场景</a></li><li><a href=#相关资料>相关资料</a></li></ol></nav></div></section></aside></div><script src=https://cdn.jsdelivr.net/npm/node-vibrant@3.1.5/dist/vibrant.min.js integrity="sha256-5NovOZc4iwiAWTYIFiIM7DxKUXKWvpVEuMEPLzcm5/g=" crossorigin=anonymous defer></script><script type=text/javascript src=/ts/main.js defer></script><script>(function(){const a=document.createElement('link');a.href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap",a.type="text/css",a.rel="stylesheet",document.head.appendChild(a)})()</script></body></html>

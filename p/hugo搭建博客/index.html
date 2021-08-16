@@ -1,0 +1,114 @@
+<!doctype html><html lang=en-us><head><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1"><meta name=description content="How to build blog by Hugo"><title>Hugo搭建博客</title><link rel=canonical href=https://fengzhenbing.github.io/p/hugo%E6%90%AD%E5%BB%BA%E5%8D%9A%E5%AE%A2/><link rel=stylesheet href=/scss/style.min.css><meta property="og:title" content="Hugo搭建博客"><meta property="og:description" content="How to build blog by Hugo"><meta property="og:url" content="https://fengzhenbing.github.io/p/hugo%E6%90%AD%E5%BB%BA%E5%8D%9A%E5%AE%A2/"><meta property="og:site_name" content="Feng Zhenbing's Blog"><meta property="og:type" content="article"><meta property="article:section" content="Post"><meta property="article:published_time" content="2020-12-08T08:06:25+06:00"><meta property="article:modified_time" content="2020-12-08T08:06:25+06:00"><meta name=twitter:title content="Hugo搭建博客"><meta name=twitter:description content="How to build blog by Hugo"></head><body class="article-page has-toc"><script>(function(){const a='StackColorScheme';localStorage.getItem(a)||localStorage.setItem(a,"auto")})()</script><script>(function(){const b='StackColorScheme',a=localStorage.getItem(b),c=window.matchMedia('(prefers-color-scheme: dark)').matches===!0;a=='dark'||a==='auto'&&c?document.documentElement.dataset.scheme='dark':document.documentElement.dataset.scheme='light'})()</script><div class="container main-container flex
+extended"><div id=article-toolbar><a href=https://fengzhenbing.github.io/ class=back-home><svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-chevron-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><polyline points="15 6 9 12 15 18"/></svg><span>返回</span></a></div><main class="main full-width"><article class=main-article><header class=article-header><div class=article-details><h2 class=article-title><a href=/p/hugo%E6%90%AD%E5%BB%BA%E5%8D%9A%E5%AE%A2/>Hugo搭建博客</a></h2><h3 class=article-subtitle>How to build blog by Hugo</h3><footer class=article-time><div><svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><path d="M11.795 21H5a2 2 0 01-2-2V7a2 2 0 012-2h12a2 2 0 012 2v4"/><circle cx="18" cy="18" r="4"/><path d="M15 3v4"/><path d="M7 3v4"/><path d="M3 11h16"/><path d="M18 16.496V18l1 1"/></svg><time class=article-time--published>Dec 08, 2020</time></div><div><svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><circle cx="12" cy="12" r="9"/><polyline points="12 7 12 12 15 15"/></svg><time class=article-time--reading>阅读时长: 2 分钟</time></div></footer></div></header><section class=article-content><p>通过Hugo搭建静态博客网站，再通过github pages部署运行</p><h3 id=hugo介绍>Hugo介绍</h3><ul><li>Hugo是一种用Go语言编写的快速，现代的静态网站生成器，旨在让网站创建再次变得有趣。</li><li>性能高，安全性和易用性是主要特点</li><li>拥有超快的速度，强大的内容管理和强大的模板语言，使其非常适合各种静态网站。</li></ul><h3 id=hugo安装>Hugo安装</h3><pre><code># mac上安装
+brew install hugo
+# windows可通过Chocolatey上安装
+choco install hugo -confirm
+# 版本验证
+hugo version
+</code></pre><h3 id=hugo主题>hugo主题</h3><ul><li><a class=link href=https://themes.gohugo.io/ target=_blank rel=noopener>查找你喜欢的主题</a></li><li>在此我选择的主题为toha <a class=link href=https://toha-guides.netlify.app/posts/getting-started/ target=_blank rel=noopener>详情</a></li></ul><h3 id=初始化网站模板>初始化网站模板</h3><pre><code># 首先在github下创建xxx.github.io的仓库
+git clone https://github.com/fengzhenbing/fengzhenbing.github.io.git
+cd ./fengzhenbing.github.io
+
+# 初始化模板
+hugo new site ./ -f=yaml --force
+
+#添加hugo-toha主题
+git submodule add https://github.com/hugo-toha/toha.git themes/toha
+
+#本地运行
+hugo server -t toha -w
+</code></pre><h3 id=修改配置>修改配置</h3><p>参考themes/toha/exampleSite，配置网站根目录下的config.yml文件，配置网站各个模块</p><div class=highlight><pre class=chroma><code class=language-yaml data-lang=yaml><span class=nt>baseURL</span><span class=p>:</span><span class=w> </span><span class=l>https://fengzhenbing.github.io/</span><span class=w>
+</span><span class=w>
+</span><span class=w></span><span class=nt>languageCode</span><span class=p>:</span><span class=w> </span><span class=l>en-us</span><span class=w>
+</span><span class=w></span><span class=nt>defaultContentLanguage</span><span class=p>:</span><span class=w> </span><span class=l>cn</span><span class=w>
+</span><span class=w></span><span class=nt>title</span><span class=p>:</span><span class=w> </span><span class=s2>&#34;Feng Zhenbing&#39;s Blog&#34;</span><span class=w>
+</span><span class=w></span><span class=nt>theme</span><span class=p>:</span><span class=w> </span><span class=s2>&#34;toha&#34;</span><span class=w>
+</span><span class=w>
+</span><span class=w></span><span class=c># Manage languages</span><span class=w>
+</span><span class=w></span><span class=c># For any more details, you can check the official documentation: https://gohugo.io/content-management/multilingual/</span><span class=w>
+</span><span class=w></span><span class=nt>languages</span><span class=p>:</span><span class=w>
+</span><span class=w>  </span><span class=nt>cn</span><span class=p>:</span><span class=w>
+</span><span class=w>    </span><span class=nt>languageName</span><span class=p>:</span><span class=w> </span><span class=l>中文</span><span class=w>
+</span><span class=w>    </span><span class=nt>weight</span><span class=p>:</span><span class=w> </span><span class=m>1</span><span class=w>
+</span><span class=w></span><span class=c>#  en:</span><span class=w>
+</span><span class=w></span><span class=c>#    languageName: English</span><span class=w>
+</span><span class=w></span><span class=c>#    weight: 2</span><span class=w>
+</span><span class=w>
+</span><span class=w></span><span class=c># Control TOC depth</span><span class=w>
+</span><span class=w></span><span class=nt>markup</span><span class=p>:</span><span class=w>
+</span><span class=w>  </span><span class=nt>tableOfContents</span><span class=p>:</span><span class=w>
+</span><span class=w>    </span><span class=nt>startLevel</span><span class=p>:</span><span class=w> </span><span class=m>2</span><span class=w>
+</span><span class=w>    </span><span class=nt>endLevel</span><span class=p>:</span><span class=w> </span><span class=m>6</span><span class=w>
+</span><span class=w>    </span><span class=nt>ordered</span><span class=p>:</span><span class=w> </span><span class=kc>false</span><span class=w>
+</span><span class=w>
+</span><span class=w></span><span class=c># Enable global emoji support</span><span class=w>
+</span><span class=w></span><span class=nt>enableEmoji</span><span class=p>:</span><span class=w> </span><span class=kc>true</span><span class=w>
+</span><span class=w>
+</span><span class=w></span><span class=c># Site parameters</span><span class=w>
+</span><span class=w></span><span class=nt>params</span><span class=p>:</span><span class=w>
+</span><span class=w>  </span><span class=c># GitHub repo URL of your site</span><span class=w>
+</span><span class=w>  </span><span class=nt>gitRepo</span><span class=p>:</span><span class=w> </span><span class=l>https://github.com/fengzhenbing/fengzhenbing.github.io</span><span class=w>
+</span><span class=w>  </span><span class=nt>gitBranch</span><span class=p>:</span><span class=w> </span><span class=l>master</span><span class=w>
+</span><span class=w>
+</span><span class=w>  </span><span class=c># specify whether you want to write some blog posts or not</span><span class=w>
+</span><span class=w>  </span><span class=nt>enableBlogPost</span><span class=p>:</span><span class=w> </span><span class=kc>true</span><span class=w>
+</span><span class=w>
+</span><span class=w>  </span><span class=c># specify whether you want to show Table of Contents in reading page</span><span class=w>
+</span><span class=w>  </span><span class=nt>enableTOC</span><span class=p>:</span><span class=w> </span><span class=kc>true</span><span class=w>
+</span><span class=w>
+</span><span class=w>  </span><span class=c># Provide newsletter configuration. This feature hasn&#39;t been implemented yet.</span><span class=w>
+</span><span class=w>  </span><span class=c># Currently, you can just hide it from the footer.</span><span class=w>
+</span><span class=w>  </span><span class=nt>newsletter</span><span class=p>:</span><span class=w>
+</span><span class=w>    </span><span class=nt>enable</span><span class=p>:</span><span class=w> </span><span class=kc>true</span><span class=w>
+</span></code></pre></div><ul><li>至此浏览器中查看<a class=link href=http://localhost:1313/ target=_blank rel=noopener>http://localhost:1313/</a> 可看到大致的博客网站,</li><li>更多细节查看<a class=link href=https://toha-guides.netlify.app/posts/getting-started/prepare-site/ target=_blank rel=noopener>https://toha-guides.netlify.app/posts/getting-started/prepare-site/</a></li></ul><h3 id=github-pages-中部署>Github Pages 中部署</h3><ul><li>创建分支</li></ul><pre><code>#github 创建部署文件的分支
+git branch -b gh-pages
+git push
+</code></pre><ul><li><p>github中setting中将部署分支设为gh-pages分支<figure style=flex-grow:138;flex-basis:331px><a href=/p/hugo%E6%90%AD%E5%BB%BA%E5%8D%9A%E5%AE%A2/img.png data-size=1211x876><img src=/p/hugo%E6%90%AD%E5%BB%BA%E5%8D%9A%E5%AE%A2/img.png srcset="/p/hugo%E6%90%AD%E5%BB%BA%E5%8D%9A%E5%AE%A2/img_hufde637fbf01d56811fb1bb56bcbb807d_81033_480x0_resize_box_2.png 480w, /p/hugo%E6%90%AD%E5%BB%BA%E5%8D%9A%E5%AE%A2/img_hufde637fbf01d56811fb1bb56bcbb807d_81033_1024x0_resize_box_2.png 1024w" width=1211 height=876 loading=lazy alt=img.png></a><figcaption>img.png</figcaption></figure></p></li><li><p>开启github actions<figure style=flex-grow:166;flex-basis:399px><a href=/p/hugo%E6%90%AD%E5%BB%BA%E5%8D%9A%E5%AE%A2/img_1.png data-size=1008x605><img src=/p/hugo%E6%90%AD%E5%BB%BA%E5%8D%9A%E5%AE%A2/img_1.png srcset="/p/hugo%E6%90%AD%E5%BB%BA%E5%8D%9A%E5%AE%A2/img_1_hu0fd027d176be4424c185f73e72a53646_66920_480x0_resize_box_2.png 480w, /p/hugo%E6%90%AD%E5%BB%BA%E5%8D%9A%E5%AE%A2/img_1_hu0fd027d176be4424c185f73e72a53646_66920_1024x0_resize_box_2.png 1024w" width=1008 height=605 loading=lazy alt=img_1.png></a><figcaption>img_1.png</figcaption></figure></p></li><li><p>编写github actions的部署文件</p></li></ul><div class=highlight><pre class=chroma><code class=language-yaml data-lang=yaml><span class=c># 进入网站根目录，创建./github/workflows目录</span><span class=w>
+</span><span class=w></span><span class=l>mkdir ./github/workflows</span><span class=w>
+</span><span class=w></span><span class=l>cd ./github/workflows</span><span class=w>
+</span><span class=w></span><span class=l>vim deploy-site.yaml</span><span class=w>
+</span></code></pre></div><p>deploy-site.yaml</p><div class=highlight><pre class=chroma><code class=language-yaml data-lang=yaml><span class=nt>name</span><span class=p>:</span><span class=w> </span><span class=l>Deploy to Github Pages</span><span class=w>
+</span><span class=w>
+</span><span class=w></span><span class=c># run when a commit or pr is pushed to &#34;master&#34; branch</span><span class=w>
+</span><span class=w></span><span class=nt>on</span><span class=p>:</span><span class=w>
+</span><span class=w>  </span><span class=nt>pull_request</span><span class=p>:</span><span class=w>
+</span><span class=w>  </span><span class=nt>push</span><span class=p>:</span><span class=w>
+</span><span class=w>    </span><span class=nt>branches</span><span class=p>:</span><span class=w>
+</span><span class=w>      </span>- <span class=l>master</span><span class=w>
+</span><span class=w>
+</span><span class=w></span><span class=nt>jobs</span><span class=p>:</span><span class=w>
+</span><span class=w>  </span><span class=nt>deploy</span><span class=p>:</span><span class=w>
+</span><span class=w>    </span><span class=nt>runs-on</span><span class=p>:</span><span class=w> </span><span class=l>ubuntu-18.04</span><span class=w>
+</span><span class=w>    </span><span class=nt>steps</span><span class=p>:</span><span class=w>
+</span><span class=w>      </span><span class=c># checkout to the commit that has been pushed</span><span class=w>
+</span><span class=w>      </span>- <span class=nt>uses</span><span class=p>:</span><span class=w> </span><span class=l>actions/checkout@v2</span><span class=w>
+</span><span class=w>        </span><span class=nt>with</span><span class=p>:</span><span class=w>
+</span><span class=w>          </span><span class=nt>submodules</span><span class=p>:</span><span class=w> </span><span class=kc>true</span><span class=w>  </span><span class=c># Fetch Hugo themes (true OR recursive)</span><span class=w>
+</span><span class=w>          </span><span class=nt>fetch-depth</span><span class=p>:</span><span class=w> </span><span class=m>0</span><span class=w>    </span><span class=c># Fetch all history for .GitInfo and .Lastmod</span><span class=w>
+</span><span class=w>
+</span><span class=w>      </span><span class=c># install Hugo</span><span class=w>
+</span><span class=w>      </span>- <span class=nt>name</span><span class=p>:</span><span class=w> </span><span class=l>Setup Hugo</span><span class=w>
+</span><span class=w>        </span><span class=nt>uses</span><span class=p>:</span><span class=w> </span><span class=l>peaceiris/actions-hugo@v2</span><span class=w>
+</span><span class=w>        </span><span class=nt>with</span><span class=p>:</span><span class=w>
+</span><span class=w>          </span><span class=nt>hugo-version</span><span class=p>:</span><span class=w> </span><span class=s1>&#39;0.77.0&#39;</span><span class=w>
+</span><span class=w>          </span><span class=nt>extended</span><span class=p>:</span><span class=w> </span><span class=kc>true</span><span class=w>
+</span><span class=w>
+</span><span class=w>      </span><span class=c># build website</span><span class=w>
+</span><span class=w>      </span>- <span class=nt>name</span><span class=p>:</span><span class=w> </span><span class=l>Build</span><span class=w>
+</span><span class=w>        </span><span class=nt>run</span><span class=p>:</span><span class=w> </span><span class=l>hugo --minify</span><span class=w>
+</span><span class=w>
+</span><span class=w>      </span><span class=c># push the generated content into the `main` (former `master`) branch.</span><span class=w>
+</span><span class=w>      </span>- <span class=nt>name</span><span class=p>:</span><span class=w> </span><span class=l>Deploy</span><span class=w>
+</span><span class=w>        </span><span class=nt>uses</span><span class=p>:</span><span class=w> </span><span class=l>peaceiris/actions-gh-pages@v3</span><span class=w>
+</span><span class=w>        </span><span class=nt>if</span><span class=p>:</span><span class=w> </span><span class=l>github.event_name == &#39;push&#39; &amp;&amp; github.ref == &#39;refs/heads/master&#39;</span><span class=w>
+</span><span class=w>        </span><span class=nt>with</span><span class=p>:</span><span class=w>
+</span><span class=w>          </span><span class=nt>github_token</span><span class=p>:</span><span class=w> </span><span class=l>${{ secrets.GITHUB_TOKEN }}</span><span class=w>
+</span><span class=w>          </span><span class=nt>publish_branch</span><span class=p>:</span><span class=w> </span><span class=l>gh-pages</span><span class=w> </span><span class=c># if your main branch is `master` use that here.</span><span class=w>
+</span><span class=w>          </span><span class=nt>publish_dir</span><span class=p>:</span><span class=w> </span><span class=l>./public</span><span class=w>
+</span></code></pre></div><p>提交后，每次改动master分支，github action会运行以上任务，自动打包文件到gh-pages分支，并部署</p></section><footer class=article-footer><section class=article-copyright><svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-copyright" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><circle cx="12" cy="12" r="9"/><path d="M14.5 9a3.5 4 0 100 6"/></svg><span>Licensed under CC BY-NC-SA 4.0</span></section></footer></article><aside class=related-contents--wrapper></aside><div class=disqus-container><div id=disqus_thread></div><script type=application/javascript>var disqus_config=function(){};(function(){if(["localhost","127.0.0.1"].indexOf(window.location.hostname)!=-1){document.getElementById('disqus_thread').innerHTML='Disqus comments not available by default when the website is previewed locally.';return}var b=document,a=b.createElement('script');a.async=!0,a.src='//hugo-theme-stack.disqus.com/embed.js',a.setAttribute('data-timestamp',+new Date),(b.head||b.body).appendChild(a)})()</script><noscript>Please enable JavaScript to view the <a href=https://disqus.com/?ref_noscript>comments powered by Disqus.</a></noscript><a href=https://disqus.com class=dsq-brlink>comments powered by <span class=logo-disqus>Disqus</span></a></div><style>.disqus-container{background-color:var(--card-background);border-radius:var(--card-border-radius);box-shadow:var(--shadow-l1);padding:var(--card-padding)}</style><script>window.addEventListener('onColorSchemeChange',a=>{DISQUS&&DISQUS.reset({reload:!0})})</script><footer class=site-footer><section class=copyright>&copy;
+2020 -
+2021 Feng Zhenbing's Blog</section><section class=powerby>Built with <a href=https://gohugo.io/ target=_blank rel=noopener>Hugo</a><br>Theme <b><a href=https://github.com/CaiJimmy/hugo-theme-stack target=_blank rel=noopener data-version=3.1.0>Stack</a></b> designed by <a href=https://jimmycai.com target=_blank rel=noopener>Jimmy</a></section></footer><div class=pswp tabindex=-1 role=dialog aria-hidden=true><div class=pswp__bg></div><div class=pswp__scroll-wrap><div class=pswp__container><div class=pswp__item></div><div class=pswp__item></div><div class=pswp__item></div></div><div class="pswp__ui pswp__ui--hidden"><div class=pswp__top-bar><div class=pswp__counter></div><button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+<button class="pswp__button pswp__button--share" title=Share></button>
+<button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+<button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button><div class=pswp__preloader><div class=pswp__preloader__icn><div class=pswp__preloader__cut><div class=pswp__preloader__donut></div></div></div></div></div><div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap"><div class=pswp__share-tooltip></div></div><button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)"></button>
+<button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)"></button><div class=pswp__caption><div class=pswp__caption__center></div></div></div></div></div><script src=https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js integrity="sha256-ePwmChbbvXbsO02lbM3HoHbSHTHFAeChekF1xKJdleo=" crossorigin=anonymous defer></script><script src=https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js integrity="sha256-UKkzOn/w1mBxRmLLGrSeyB4e1xbrp4xylgAWb3M42pU=" crossorigin=anonymous defer></script><link rel=stylesheet href=https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.css integrity="sha256-c0uckgykQ9v5k+IqViZOZKc47Jn7KQil4/MP3ySA3F8=" crossorigin=anonymous><link rel=stylesheet href=https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.css integrity="sha256-SBLU4vv6CA6lHsZ1XyTdhyjJxCjPif/TRkjnsyGAGnE=" crossorigin=anonymous></main><aside class="sidebar right-sidebar sticky"><section class="widget archives"><div class=widget-icon><svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-hash" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><line x1="5" y1="9" x2="19" y2="9"/><line x1="5" y1="15" x2="19" y2="15"/><line x1="11" y1="4" x2="7" y2="20"/><line x1="17" y1="4" x2="13" y2="20"/></svg></div><h2 class="widget-title section-title">目录</h2><div class=widget--toc><nav id=TableOfContents><ol><li><ol><li><a href=#hugo介绍>Hugo介绍</a></li><li><a href=#hugo安装>Hugo安装</a></li><li><a href=#hugo主题>hugo主题</a></li><li><a href=#初始化网站模板>初始化网站模板</a></li><li><a href=#修改配置>修改配置</a></li><li><a href=#github-pages-中部署>Github Pages 中部署</a></li></ol></li></ol></nav></div></section></aside></div><script src=https://cdn.jsdelivr.net/npm/node-vibrant@3.1.5/dist/vibrant.min.js integrity="sha256-5NovOZc4iwiAWTYIFiIM7DxKUXKWvpVEuMEPLzcm5/g=" crossorigin=anonymous defer></script><script type=text/javascript src=/ts/main.js defer></script><script>(function(){const a=document.createElement('link');a.href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap",a.type="text/css",a.rel="stylesheet",document.head.appendChild(a)})()</script></body></html>

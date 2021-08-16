@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>微服务 on Feng Zhenbing's Blog</title><link>https://fengzhenbing.github.io/tags/%E5%BE%AE%E6%9C%8D%E5%8A%A1/</link><description>Recent content in 微服务 on Feng Zhenbing's Blog</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Tue, 20 Jul 2021 00:00:00 +0000</lastBuildDate><atom:link href="https://fengzhenbing.github.io/tags/%E5%BE%AE%E6%9C%8D%E5%8A%A1/index.xml" rel="self" type="application/rss+xml"/><item><title>Envoy</title><link>https://fengzhenbing.github.io/p/envoy/</link><pubDate>Tue, 20 Jul 2021 00:00:00 +0000</pubDate><guid>https://fengzhenbing.github.io/p/envoy/</guid><description>Envoy概述 Envoy 是以 C++ 开发的高性能代理;
+其内置服务发现、负载均衡、TLS终止、HTTP/2、GRPC代理、熔断器、健康检查，基于百分比流量拆分的灰度发布、故障注入等功能
+Downstream：下游主机，指连接到Envoy的主机，这些主机用来发送请求并接受响应。 Upstream：上游主机，指接收来自Envoy连接和请求的主机，并返回响应。 Listener：服务或程序的监听器， Envoy暴露一个或多个监听器监听下游主机的请求，当监听到请求时，通过Filter Chain把对请求的处理全部抽象为Filter， 例如ReadFilter、WriteFilter、HttpFilter等。 Cluster：服务提供集群，指Envoy连接的一组逻辑相同的上游主机。Envoy通过服务发现功能来发现集群内的成员，通过负载均衡功能将流量路由到集群的各个成员。 xDS：xDS中的x是一个代词，类似云计算里的XaaS可以指代IaaS、PaaS、SaaS等。DS为Discovery Service，即发现服务的意思。xDS包括CDS（cluster discovery service）、RDS（route discovery service）、EDS（endpoint discovery service）、ADS（aggregated discovery service），其中ADS称为聚合的发现服务，是对CDS、RDS、LDS、EDS服务的统一封装，解决CDS、RDS、LDS、EDS信息更新顺序依赖的问题，从而保证以一定的顺序同步各类配置信息。以上Endpoint、Cluster、Route的概念介绍如下： Endpoint：一个具体的“应用实例”，类似于Kubernetes中的一个Pod； Cluster：可以理解“应用集群”，对应提供相同服务的一个或多个Endpoint， 类似Kubernetes中Service概念，即一个Service提供多个相同服务的Pod； Route：当我们做金丝雀发布部署时，同一个服务会有多个版本，这时需要Route规则规定请求如何路由到其中的某个版本上。 http://www.dockone.io/article/9116</description></item><item><title>服务链路追踪</title><link>https://fengzhenbing.github.io/p/%E6%9C%8D%E5%8A%A1%E9%93%BE%E8%B7%AF%E8%BF%BD%E8%B8%AA/</link><pubDate>Sat, 12 Jun 2021 00:00:00 +0000</pubDate><guid>https://fengzhenbing.github.io/p/%E6%9C%8D%E5%8A%A1%E9%93%BE%E8%B7%AF%E8%BF%BD%E8%B8%AA/</guid><description>背景 随着业务的发展，系统规模也会越来越大，各微服务间的调用关系也越来越错综复杂，每一个前端请求都会形成一条复杂的分布式服务调用链路，在每条链路中任何一个依赖服务出现延迟过高或错误的时候都会引起请求最后的失败。
+链路追踪原理 实现请求跟踪 当请求发送到分布式系统的入口端点时，只需要服务跟踪框架为该请求创建一个唯一的跟踪标识Trace ID，
+同时在分布式系统内部流转的时候，框架失踪保持该唯一标识，直到返回给请求方位置。
+trace：服务追踪的追踪单元是从客户发起请求（request）抵达被追踪系统的边界开始，到被追踪系统向客户返回响应（response）为止的过程，称为一
+个“trace”
+统计各处理单元的时间延迟 当请求到达各个服务组件时，也是通过一个唯一标识Span ID来标记它的开始，具体过程以及结束。对每一个Span来说，它必须有开始和结束两个节点，通过记录开始Span和结束Span的时间戳，就能统计出该Span的时间延迟，除了时间戳记录之外，它还可以包含一些其他元数据，比如时间名称、请求信息等。
+UI可视化 APM技术组件 Zipkin+Sleuth Apache SkyWalking Cat Pinpoint 特点对比</description></item><item><title>k8s Kubectl命令</title><link>https://fengzhenbing.github.io/p/k8s-kubectl%E5%91%BD%E4%BB%A4/</link><pubDate>Thu, 10 Jun 2021 00:00:00 +0000</pubDate><guid>https://fengzhenbing.github.io/p/k8s-kubectl%E5%91%BD%E4%BB%A4/</guid><description>kubelet日志 journalctl -fu kubelet kubectl -h kubectl get namespaces kubectl get pods -A kubectl logs -f --tail=200 -l app=account -n bookstore-microservices 常用命令 #查看端口映射 kubectl get svc -n kube-system #查看 secret kubectl get secret -n kube-system #查看 token kubectl describe secret kubernetes-dashboard --namespace=kube-system #k8s 无法启动，查看日志，查找Failed journalctl -xefu kubelet #查看pod错误日志 kubectl logs kubernetes-dashboard-8556c848b7-4kpzd --namespace=kube-system #对资源进行配置 kubectl apply -f kubernetes-dashboard.yaml kubectl delete -f kubernetes-dashboard.ya YAML配置文件管理对象 对象管理： # 创建deployment资源 kubectl create -f nginx-deployment.yaml # 查看deployment kubectl get deploy # 查看ReplicaSet kubectl get rs # 查看pods所有标签 kubectl get pods --show-labels # 根据标签查看pods kubectl get pods -l app=nginx # 滚动更新镜像 kubectl set image deployment/nginx-deployment nginx=nginx:1.</description></item><item><title>架构演变</title><link>https://fengzhenbing.github.io/p/%E6%9E%B6%E6%9E%84%E6%BC%94%E5%8F%98/</link><pubDate>Thu, 10 Jun 2021 00:00:00 +0000</pubDate><guid>https://fengzhenbing.github.io/p/%E6%9E%B6%E6%9E%84%E6%BC%94%E5%8F%98/</guid><description>单体架构(spring boot) 优点：所有代码都运行在同一个进程空间之内，所有模块、方法的调用都无须考虑网络分区、对象复制这些麻烦的事和性能损失。
+缺点：损失了各个功能模块的自治、隔离能力；
+​ 由于隔离能力的缺失难以阻断错误传播、不便于动态更新程序以外，还面临难以技术异构的困难
+​ 可以 使用OSGi 这种运行时模块化框架，但是太复杂了。
+SOA 架构（Service-Oriented Architecture） 面向服务的架构是一次具体地、系统性地成功解决分布式服务主要问题的架构模式。
+SOAP 协议被逐渐边缘化的本质原因：过于严格的规范定义带来过度的复杂性。而构建在 SOAP 基础之上的 ESB、BPM、SCA、SDO 等诸多上层建筑，进一步加剧了这种复杂性。
+微服务架构(spring cloud) 微服务是一种软件开发技术，是一种 SOA 的变体形式。
+升级背景：
+制约软件质量与业务能力提升的最大因素是人而非硬件： 单体架构没有什么有效阻断错误传播的手段 技术异构的需求从可选渐渐成为必须：很多 Java 不擅长的事情 人工智能python 分布式协调工具 Etcd ,NSI C 编写的 Redis， &amp;hellip; 由于隔离能力的缺失，单体除了难以阻断错误传播、不便于动态更新程序以外，还面临难以技术异构的困难，每个模块的代码都通常需要使用一样的程序语言，乃至一样的编程框架去开发。
+随着软件架构演进，构筑可靠系统从“追求尽量不出错”，到正视“出错是必然”的观念转变，才是微服务架构得以挑战并逐步开始取代运作了数十年的单体架构的底气所在
+微服务时代充满着自由的气息，微服务时代充斥着迷茫的选择。
+微服务架构(Kubernetes) 升级背景：
+微服务中的各种新技术名词，如配置中心、服务发现、网关、熔断、负载均衡等等带来的技术组件 Config、Eureka、Zuul、Hystrix、Ribbon、Feign 等
+占据了产品的大部分编译后的代码容量
+之前在应用层面而不是基础设施层面去解决这些分布式问题，完全是因为由硬件构成的基础设施，跟不上由软件构成的应用服务的灵活性的无奈之举
+以 Docker Swarm、Apache Mesos 与 Kubernetes 为主要竞争者的“容器战争”终于有了明确的结果，Kubernetes 登基加冕
+容器动态构建出 DNS 服务器、服务负载均衡器等一系列虚拟化的基础设施，去代替原有的应用层面的技术组件</description></item><item><title>Kubeadm安装Kubernetes</title><link>https://fengzhenbing.github.io/p/kubeadm%E5%AE%89%E8%A3%85kubernetes/</link><pubDate>Tue, 08 Jun 2021 00:00:00 +0000</pubDate><guid>https://fengzhenbing.github.io/p/kubeadm%E5%AE%89%E8%A3%85kubernetes/</guid><description>1.环境准备 安装 Kubernetes 最小需要 2 核处理器、2 GB 内存，且为 x86 架构（暂不支持 ARM 架构)
+本次实验操作系统：ubantu 20.04LTS
+Kubernetes 并不在主流 Debian 系统自带的软件源中，所以要手工注册，然后才能使用apt-get安装
+# 添加GPG Key $ sudo curl -fsSL https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key add - # 添加K8S软件源 $ sudo add-apt-repository &amp;#34;deb https://apt.kubernetes.io/ kubernetes-xenial main&amp;#34; 如果不能科学上网，可以使用阿里云的软件源地址
+# 添加GPG Key $ curl -fsSL http://mirrors.aliyun.com/kubernetes/apt/doc/apt-key.gpg | sudo apt-key add - # 添加K8S软件源 $ sudo add-apt-repository &amp;#34;deb http://mirrors.aliyun.com/kubernetes/apt kubernetes-xenial main&amp;#34; 添加源后需要更新
+sudo apt-get update 2. 安装 kubelet、kubectl、kubeadm 官网介绍：https://kubernetes.io/docs/reference/setup-tools/kubeadm/</description></item></channel></rss>
