@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>博客 on Feng Zhenbing's Blog</title><link>https://fengzhenbing.github.io/categories/%E5%8D%9A%E5%AE%A2/</link><description>Recent content in 博客 on Feng Zhenbing's Blog</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Sun, 22 Aug 2021 00:00:00 +0000</lastBuildDate><atom:link href="https://fengzhenbing.github.io/categories/%E5%8D%9A%E5%AE%A2/index.xml" rel="self" type="application/rss+xml"/><item><title>docusaurus构建website</title><link>https://fengzhenbing.github.io/p/docusaurus%E6%9E%84%E5%BB%BAwebsite/</link><pubDate>Sun, 22 Aug 2021 00:00:00 +0000</pubDate><guid>https://fengzhenbing.github.io/p/docusaurus%E6%9E%84%E5%BB%BAwebsite/</guid><description>docusaurus构建website 环境 Node.js version &amp;gt;= 12.13.0 以上(node -v 查看)，使用了国际化i18n，则Node.js version &amp;gt;=14以上
+Yarn version &amp;gt;= 1.5 ( yarn &amp;ndash;version查看). mac下可以使用n管理node版本
+Title logo等文案，首页展示 待讨论
+菜单调整 Nav : 文档 社区 新闻 博客 links 国际化切换 搜索
+Documentation Community News Blog Links
+Footer:
+首页 下载按钮 文档按钮 star按钮修改
+样式修改
+国际化语言 yarn write-translations --locale zh 参考https://docusaurus.io/zh-CN/docs/cli#docusaurus-write-translations-sitedir
+中英文两个版本的文件名称保持一致。文档中没有指定sidebar_position时，默认按文件名称在菜单栏排序</description></item></channel></rss>

@@ -1,4 +1,79 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Feng Zhenbing's Blog</title><link>https://fengzhenbing.github.io/</link><description>Recent content on Feng Zhenbing's Blog</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Sun, 15 Aug 2021 14:16:25 +0600</lastBuildDate><atom:link href="https://fengzhenbing.github.io/index.xml" rel="self" type="application/rss+xml"/><item><title>Prometheus监控JVM</title><link>https://fengzhenbing.github.io/p/prometheus%E7%9B%91%E6%8E%A7jvm/</link><pubDate>Sun, 15 Aug 2021 14:16:25 +0600</pubDate><guid>https://fengzhenbing.github.io/p/prometheus%E7%9B%91%E6%8E%A7jvm/</guid><description>&lt;h2 id="1-jmx_exporter">1. jmx_exporter&lt;/h2>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Feng Zhenbing's Blog</title><link>https://fengzhenbing.github.io/</link><description>Recent content on Feng Zhenbing's Blog</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Sun, 22 Aug 2021 00:00:00 +0000</lastBuildDate><atom:link href="https://fengzhenbing.github.io/index.xml" rel="self" type="application/rss+xml"/><item><title>docusaurus构建website</title><link>https://fengzhenbing.github.io/p/docusaurus%E6%9E%84%E5%BB%BAwebsite/</link><pubDate>Sun, 22 Aug 2021 00:00:00 +0000</pubDate><guid>https://fengzhenbing.github.io/p/docusaurus%E6%9E%84%E5%BB%BAwebsite/</guid><description>&lt;h2 id="docusaurus构建website">docusaurus构建website&lt;/h2>
+&lt;h3 id="环境">环境&lt;/h3>
+&lt;ul>
+&lt;li>
+&lt;p>Node.js version &amp;gt;= 12.13.0 以上(node -v 查看)，使用了国际化i18n，则Node.js version &amp;gt;=14以上&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>Yarn version &amp;gt;= 1.5 ( yarn &amp;ndash;version查看). mac下可以使用&lt;a class="link" href="https://fengzhenbing.github.io/p/mac%E4%B8%8Bnode%E5%8D%87%E7%BA%A7/" target="_blank" rel="noopener"
+>n管理node版本&lt;/a>&lt;/p>
+&lt;/li>
+&lt;/ul>
+&lt;h3 id="title-logo等文案首页展示">Title logo等文案，首页展示&lt;/h3>
+&lt;p>待讨论&lt;/p>
+&lt;h3 id="菜单调整">菜单调整&lt;/h3>
+&lt;ul>
+&lt;li>
+&lt;p>Nav : 文档 社区 新闻 博客 links 国际化切换 搜索&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>Documentation Community News Blog Links&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>Footer:&lt;/p>
+&lt;/li>
+&lt;/ul>
+&lt;h3 id="首页">首页&lt;/h3>
+&lt;ul>
+&lt;li>
+&lt;p>下载按钮 文档按钮 star按钮修改&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>样式修改&lt;/p>
+&lt;/li>
+&lt;/ul>
+&lt;h3 id="国际化语言">国际化语言&lt;/h3>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-shell" data-lang="shell">yarn write-translations --locale zh
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>参考https://docusaurus.io/zh-CN/docs/cli#docusaurus-write-translations-sitedir&lt;/p>
+&lt;p>中英文两个版本的文件名称保持一致。文档中没有指定sidebar_position时，默认按文件名称在菜单栏排序&lt;/p>
+&lt;p>看中文效果&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-shell" data-lang="shell"> yarn run start -- --locale zh
+&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="多版本">多版本&lt;/h3>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-shell" data-lang="shell">yarn run docusaurus docs:version 2.3.0
+yarn run docusaurus docs:version 2.4.0
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>历史版本的国际化参考&lt;/p>
+&lt;p>&lt;a href="https://docusaurus.io/zh-CN/docs/api/plugins/@docusaurus/plugin-content-docs#i18n">https://docusaurus.io/zh-CN/docs/api/plugins/@docusaurus/plugin-content-docs#i18n&lt;/a>&lt;/p>
+&lt;p>归档目录&lt;/p>
+&lt;p>&lt;img src="https://gitee.com/fengzhenbing/picgo/raw/master/image-20210822214033782.png" alt="image-20210822214033782" />&lt;/p>
+&lt;p>归档文件翻译目录&lt;/p>
+&lt;p>&lt;img src="https://gitee.com/fengzhenbing/picgo/raw/master/image-20210822214124926.png" alt="image-20210822214124926" />&lt;/p>
+&lt;h3 id="hugo文档迁移注意事项">hugo文档迁移注意事项&lt;/h3>
+&lt;ul>
+&lt;li>
+&lt;p>约定大于配置：很多目录都是约定好的。&lt;/p>
+&lt;p>建议快速通读一遍&lt;a class="link" href="https://docusaurus.io/zh-CN/docs" target="_blank" rel="noopener"
+>文档&lt;/a>，遇到编译问题，能快速定位到具体章节去查看。&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>keywords必须为数组,原来写的字符串&lt;/p>
+&lt;p>keywords: [&amp;ldquo;Apache shenyu&amp;rdquo;]&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>不支持md文件里的html标签 比如 &lt;!-- raw HTML omitted -->&lt;!-- raw HTML omitted -->&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>sidebar_position: 1 指定文档在菜单栏的顺序第一位。&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>md文件中title就是菜单栏显示的名称，无法显示不一样的菜单名和文档标题名。&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>md中&lt;!-- raw HTML omitted --> 类似的标签，在发布时生效。&lt;/p>
+&lt;p>本地想看效果，可以yarn build.然后将静态文件通过nginx代理访问。&lt;/p>
+&lt;/li>
+&lt;/ul>
+&lt;h3 id="参考">参考&lt;/h3>
+&lt;p>&lt;a href="https://docusaurus.io/zh-CN/docs">https://docusaurus.io/zh-CN/docs&lt;/a>&lt;/p></description></item><item><title>Prometheus监控JVM</title><link>https://fengzhenbing.github.io/p/prometheus%E7%9B%91%E6%8E%A7jvm/</link><pubDate>Sun, 15 Aug 2021 14:16:25 +0600</pubDate><guid>https://fengzhenbing.github.io/p/prometheus%E7%9B%91%E6%8E%A7jvm/</guid><description>&lt;h2 id="1-jmx_exporter">1. jmx_exporter&lt;/h2>
 &lt;h3 id="下载jmx_exporter">下载jmx_exporter&lt;/h3>
 &lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-shell" data-lang="shell">ubuntu:/# mkdir -p /usr/local/prometheus/jmx_exporter
 ubuntu:/# &lt;span class="nb">cd&lt;/span> /usr/local/prometheus/jmx_exporter
@@ -72,7 +147,19 @@ docker run -d --name=grafana -p 3000:3000 grafana/grafana
 &lt;li>JMX Exporter 项目地址: &lt;a href="https://github.com/prometheus/jmx_exporter">https://github.com/prometheus/jmx_exporter&lt;/a>&lt;/li>
 &lt;li>JVM 监控面板: &lt;a href="https://grafana.com/grafana/dashboards/3457">https://grafana.com/grafana/dashboards/3457&lt;/a>&lt;/li>
 &lt;li>Grafana(&lt;a href="https://grafana.com/">https://grafana.com/&lt;/a>)&lt;/li>
-&lt;/ul></description></item><item><title>Disruptor高性能队列</title><link>https://fengzhenbing.github.io/p/disruptor%E9%AB%98%E6%80%A7%E8%83%BD%E9%98%9F%E5%88%97/</link><pubDate>Tue, 20 Jul 2021 00:00:00 +0000</pubDate><guid>https://fengzhenbing.github.io/p/disruptor%E9%AB%98%E6%80%A7%E8%83%BD%E9%98%9F%E5%88%97/</guid><description>&lt;h2 id="disruptor通过以下设计来解决队列速度慢的问题">Disruptor通过以下设计来解决队列速度慢的问题：&lt;/h2>
+&lt;/ul></description></item><item><title>mac下node升级</title><link>https://fengzhenbing.github.io/p/mac%E4%B8%8Bnode%E5%8D%87%E7%BA%A7/</link><pubDate>Wed, 21 Jul 2021 00:00:00 +0000</pubDate><guid>https://fengzhenbing.github.io/p/mac%E4%B8%8Bnode%E5%8D%87%E7%BA%A7/</guid><description>&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-shell" data-lang="shell">&lt;span class="c1"># 清除nodejs的cache&lt;/span>
+sudo npm cache clean -f
+&lt;span class="c1"># 由于您可能已经拥有node，最简单的安装方式n是npm：&lt;/span>
+sudo npm install -g n
+&lt;span class="c1"># node所有版本&lt;/span>
+npm view node versions
+&lt;span class="c1"># 升级到最新版本&lt;/span>
+sudo n latest
+&lt;span class="c1"># 升级到稳定版本&lt;/span>
+sudo n stable
+&lt;span class="c1"># 升级到具体版本号&lt;/span>
+sudo n xx.xx
+&lt;/code>&lt;/pre>&lt;/div></description></item><item><title>Disruptor高性能队列</title><link>https://fengzhenbing.github.io/p/disruptor%E9%AB%98%E6%80%A7%E8%83%BD%E9%98%9F%E5%88%97/</link><pubDate>Tue, 20 Jul 2021 00:00:00 +0000</pubDate><guid>https://fengzhenbing.github.io/p/disruptor%E9%AB%98%E6%80%A7%E8%83%BD%E9%98%9F%E5%88%97/</guid><description>&lt;h2 id="disruptor通过以下设计来解决队列速度慢的问题">Disruptor通过以下设计来解决队列速度慢的问题：&lt;/h2>
 &lt;ul>
 &lt;li>
 &lt;p>环形数组结构&lt;/p>
@@ -105,7 +192,16 @@ docker run -d --name=grafana -p 3000:3000 grafana/grafana
 &lt;/ul>
 &lt;/li>
 &lt;/ul>
-&lt;p>&lt;a href="http://www.dockone.io/article/9116">http://www.dockone.io/article/9116&lt;/a>&lt;/p></description></item><item><title>服务链路追踪</title><link>https://fengzhenbing.github.io/p/%E6%9C%8D%E5%8A%A1%E9%93%BE%E8%B7%AF%E8%BF%BD%E8%B8%AA/</link><pubDate>Sat, 12 Jun 2021 00:00:00 +0000</pubDate><guid>https://fengzhenbing.github.io/p/%E6%9C%8D%E5%8A%A1%E9%93%BE%E8%B7%AF%E8%BF%BD%E8%B8%AA/</guid><description>&lt;h2 id="背景">背景&lt;/h2>
+&lt;p>&lt;a href="http://www.dockone.io/article/9116">http://www.dockone.io/article/9116&lt;/a>&lt;/p></description></item><item><title>图解shenyu</title><link>https://fengzhenbing.github.io/p/%E5%9B%BE%E8%A7%A3shenyu/</link><pubDate>Sat, 19 Jun 2021 00:00:00 +0000</pubDate><guid>https://fengzhenbing.github.io/p/%E5%9B%BE%E8%A7%A3shenyu/</guid><description>&lt;h3 id="spi">spi&lt;/h3>
+&lt;p>&lt;img src="https://gitee.com/fengzhenbing/picgo/raw/master/image-20210822220553452.png" alt="image-20210822220553452" />&lt;/p>
+&lt;h3 id="数据同步">数据同步&lt;/h3>
+&lt;p>&lt;img src="https://gitee.com/fengzhenbing/picgo/raw/master/image-20210822220755858.png" alt="image-20210822220755858" />&lt;/p>
+&lt;h3 id="请求执行路径">请求执行路径&lt;/h3>
+&lt;p>&lt;img src="https://gitee.com/fengzhenbing/picgo/raw/master/image-20210822220834008.png" alt="image-20210822220834008" />&lt;/p>
+&lt;h3 id="服务调用">服务调用&lt;/h3>
+&lt;p>&lt;img src="https://gitee.com/fengzhenbing/picgo/raw/master/image-20210822220248073.png" alt="image-20210822220248073" />&lt;/p>
+&lt;h3 id="admin定时探活">admin定时探活&lt;/h3>
+&lt;p>&lt;img src="https://gitee.com/fengzhenbing/picgo/raw/master/image-20210822221107509.png" alt="image-20210822221107509" />&lt;/p></description></item><item><title>服务链路追踪</title><link>https://fengzhenbing.github.io/p/%E6%9C%8D%E5%8A%A1%E9%93%BE%E8%B7%AF%E8%BF%BD%E8%B8%AA/</link><pubDate>Sat, 12 Jun 2021 00:00:00 +0000</pubDate><guid>https://fengzhenbing.github.io/p/%E6%9C%8D%E5%8A%A1%E9%93%BE%E8%B7%AF%E8%BF%BD%E8%B8%AA/</guid><description>&lt;h2 id="背景">背景&lt;/h2>
 &lt;p>随着业务的发展，系统规模也会越来越大，各微服务间的调用关系也越来越错综复杂，每一个前端请求都会形成一条复杂的分布式服务调用链路，在每条链路中任何一个依赖服务出现延迟过高或错误的时候都会引起请求最后的失败。&lt;/p>
 &lt;h2 id="链路追踪原理">链路追踪原理&lt;/h2>
 &lt;h3 id="实现请求跟踪">实现请求跟踪&lt;/h3>
@@ -241,7 +337,8 @@ kubectl autoscale deployment nginx-deployment --min&lt;span class="o">=&lt;/span
 &lt;ul>
 &lt;li>&lt;strong>后端设施&lt;/strong>：指数据库、消息队列、日志、存储，等等这一类用于支撑业务逻辑运行，但本身无业务含义的技术组件，这些后端设施都运行在云中，无服务中称其为“后端即服务”（Backend as a Service，BaaS）。&lt;/li>
 &lt;li>&lt;strong>函数&lt;/strong>： 指业务逻辑代码，这里函数的概念与粒度，都已经很接近于程序编码角度的函数了，其区别是无服务中的函数运行在云端，不必考虑算力问题，不必考虑容量规划（从技术角度可以不考虑，从计费的角度你的钱包够不够用还是要掂量一下的），无服务中称其为“函数即服务”（Function as a Service，FaaS）。&lt;/li>
-&lt;/ul></description></item><item><title>Kubeadm安装Kubernetes</title><link>https://fengzhenbing.github.io/p/kubeadm%E5%AE%89%E8%A3%85kubernetes/</link><pubDate>Tue, 08 Jun 2021 00:00:00 +0000</pubDate><guid>https://fengzhenbing.github.io/p/kubeadm%E5%AE%89%E8%A3%85kubernetes/</guid><description>&lt;h2 id="1环境准备">1.环境准备&lt;/h2>
+&lt;/ul>
+&lt;p>学习参考https://icyfenix.cn/architecture/architect-history/&lt;/p></description></item><item><title>Kubeadm安装Kubernetes</title><link>https://fengzhenbing.github.io/p/kubeadm%E5%AE%89%E8%A3%85kubernetes/</link><pubDate>Tue, 08 Jun 2021 00:00:00 +0000</pubDate><guid>https://fengzhenbing.github.io/p/kubeadm%E5%AE%89%E8%A3%85kubernetes/</guid><description>&lt;h2 id="1环境准备">1.环境准备&lt;/h2>
 &lt;p>安装 Kubernetes 最小需要 2 核处理器、2 GB 内存，且为 x86 架构（暂不支持 ARM 架构)&lt;/p>
 &lt;p>本次实验操作系统：ubantu 20.04LTS&lt;/p>
 &lt;p>Kubernetes 并不在主流 Debian 系统自带的软件源中，所以要手工注册，然后才能使用&lt;code>apt-get&lt;/code>安装&lt;/p>
