@@ -72,6 +72,8 @@ yarn run docusaurus docs:version 2.4.0
 &lt;p>本地想看效果，可以yarn build.然后将静态文件通过nginx代理访问。&lt;/p>
 &lt;/li>
 &lt;/ul>
+&lt;p>插画使用: &lt;a href="https://www.iconfont.cn/illustrations/detail?spm=a313x.7781069.1998910419.d9df05512&amp;amp;cid=24712">https://www.iconfont.cn/illustrations/detail?spm=a313x.7781069.1998910419.d9df05512&amp;amp;cid=24712&lt;/a>&lt;/p>
+&lt;p>&lt;a href="https://www.iconfont.cn/collections/detail?spm=a313x.7781069.1998910419.d9df05512&amp;amp;cid=34403">https://www.iconfont.cn/collections/detail?spm=a313x.7781069.1998910419.d9df05512&amp;amp;cid=34403&lt;/a>&lt;/p>
 &lt;h3 id="参考">参考&lt;/h3>
 &lt;p>&lt;a href="https://docusaurus.io/zh-CN/docs">https://docusaurus.io/zh-CN/docs&lt;/a>&lt;/p></description></item><item><title>Prometheus监控JVM</title><link>https://fengzhenbing.github.io/p/prometheus%E7%9B%91%E6%8E%A7jvm/</link><pubDate>Sun, 15 Aug 2021 14:16:25 +0600</pubDate><guid>https://fengzhenbing.github.io/p/prometheus%E7%9B%91%E6%8E%A7jvm/</guid><description>&lt;h2 id="1-jmx_exporter">1. jmx_exporter&lt;/h2>
 &lt;h3 id="下载jmx_exporter">下载jmx_exporter&lt;/h3>
