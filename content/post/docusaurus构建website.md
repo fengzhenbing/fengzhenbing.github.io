@@ -100,6 +100,10 @@ https://docusaurus.io/zh-CN/docs/api/plugins/@docusaurus/plugin-content-docs#i18
 
 
 
+插画使用: https://www.iconfont.cn/illustrations/detail?spm=a313x.7781069.1998910419.d9df05512&cid=24712
+
+https://www.iconfont.cn/collections/detail?spm=a313x.7781069.1998910419.d9df05512&cid=34403
+
 ### 参考
 
 https://docusaurus.io/zh-CN/docs

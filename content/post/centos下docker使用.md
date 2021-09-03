@@ -16,7 +16,7 @@ sudo systemctl stop docker
 ## 安装nginx
 docker search nginx
 docker pull nginx
-docker run --name my-nginx  -it -p 80:80 \
+docker run --name my-nginx --privileged=true  -it -p 80:80 \
 -v /home/docker/nginx/conf/nginx.conf:/etc/nginx/nginx.conf:rw \
 -v /home/docker/nginx/conf/conf.d:/etc/nginx/conf.d:rw \
 -v /home/docker/nginx/html:/usr/share/nginx/html:rw \
