@@ -798,7 +798,13 @@ docker run -itd --name rabbitmq-test -e &lt;span class="nv">RABBITMQ_DEFAULT_USE
 docker &lt;span class="nb">exec&lt;/span> -it rabbitmq-test /bin/bash
 &lt;/code>&lt;/pre>&lt;/div></description></item><item><title>康威定律</title><link>https://fengzhenbing.github.io/p/%E5%BA%B7%E5%A8%81%E5%AE%9A%E5%BE%8B/</link><pubDate>Wed, 13 Jan 2021 00:00:00 +0000</pubDate><guid>https://fengzhenbing.github.io/p/%E5%BA%B7%E5%A8%81%E5%AE%9A%E5%BE%8B/</guid><description>&lt;h2 id="康威定律组织决定产品形态">康威定律：组织决定产品形态&lt;/h2>
 &lt;h3 id="第一定律">第一定律&lt;/h3>
-&lt;p>&lt;strong>组织设计的产品/设计等价于这个组织的沟通结构。&lt;/strong>&lt;/p></description></item><item><title>Synchronized锁</title><link>https://fengzhenbing.github.io/p/synchronized%E9%94%81/</link><pubDate>Tue, 15 Dec 2020 00:00:00 +0000</pubDate><guid>https://fengzhenbing.github.io/p/synchronized%E9%94%81/</guid><description>&lt;h2 id="synchronized">Synchronized&lt;/h2>
+&lt;p>&lt;strong>组织设计的产品/设计等价于这个组织的沟通结构。&lt;/strong>&lt;/p>
+&lt;h3 id="第二定律">第二定律&lt;/h3>
+&lt;p>时间再多一件事情也不可能做的完美，但总有时间做完一件事情&lt;/p>
+&lt;h3 id="第三定律">第三定律&lt;/h3>
+&lt;p>线型系统和线型组织架构间有潜在的异质同态特性&lt;/p>
+&lt;h3 id="第四定律">第四定律&lt;/h3>
+&lt;p>大的系统组织总是比小系统更倾向于分解&lt;/p></description></item><item><title>Synchronized锁</title><link>https://fengzhenbing.github.io/p/synchronized%E9%94%81/</link><pubDate>Tue, 15 Dec 2020 00:00:00 +0000</pubDate><guid>https://fengzhenbing.github.io/p/synchronized%E9%94%81/</guid><description>&lt;h2 id="synchronized">Synchronized&lt;/h2>
 &lt;ul>
 &lt;li>&lt;strong>Object.wait()&lt;/strong>：释放当前对象锁，并进入阻塞队列(wait set)&lt;/li>
 &lt;li>&lt;strong>Object.notify()&lt;/strong>：唤醒当前对象阻塞队列(wait set)里的任一线程（并不保证唤醒哪一个）&lt;/li>
