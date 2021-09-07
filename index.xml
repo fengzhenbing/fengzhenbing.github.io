@@ -1,4 +1,87 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Feng Zhenbing's Blog</title><link>https://fengzhenbing.github.io/</link><description>Recent content on Feng Zhenbing's Blog</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Sun, 22 Aug 2021 00:00:00 +0000</lastBuildDate><atom:link href="https://fengzhenbing.github.io/index.xml" rel="self" type="application/rss+xml"/><item><title>docusaurus构建website</title><link>https://fengzhenbing.github.io/p/docusaurus%E6%9E%84%E5%BB%BAwebsite/</link><pubDate>Sun, 22 Aug 2021 00:00:00 +0000</pubDate><guid>https://fengzhenbing.github.io/p/docusaurus%E6%9E%84%E5%BB%BAwebsite/</guid><description>&lt;h2 id="docusaurus构建website">docusaurus构建website&lt;/h2>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Feng Zhenbing's Blog</title><link>https://fengzhenbing.github.io/</link><description>Recent content on Feng Zhenbing's Blog</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Wed, 01 Sep 2021 00:00:00 +0000</lastBuildDate><atom:link href="https://fengzhenbing.github.io/index.xml" rel="self" type="application/rss+xml"/><item><title>分布式任务调度Hodor</title><link>https://fengzhenbing.github.io/p/%E5%88%86%E5%B8%83%E5%BC%8F%E4%BB%BB%E5%8A%A1%E8%B0%83%E5%BA%A6hodor/</link><pubDate>Wed, 01 Sep 2021 00:00:00 +0000</pubDate><guid>https://fengzhenbing.github.io/p/%E5%88%86%E5%B8%83%E5%BC%8F%E4%BB%BB%E5%8A%A1%E8%B0%83%E5%BA%A6hodor/</guid><description>&lt;h2 id="分布式任务调度hodor源码分析整体结构">分布式任务调度Hodor源码分析（整体结构）&lt;/h2>
+&lt;h3 id="简介">简介&lt;/h3>
+&lt;p>Hodor是一个高性能的分布式任务调度框架。&lt;/p>
+&lt;p>github地址(&lt;a href="https://github.com/tincopper/hodor">https://github.com/tincopper/hodor&lt;/a>)&lt;/p>
+&lt;h3 id="架构图">架构图&lt;/h3>
+&lt;blockquote>
+&lt;p>因无任何文档，以下架构图纯阅读源码个人理解后手工所画：&lt;/p>
+&lt;/blockquote>
+&lt;p>&lt;img src="https://gitee.com/fengzhenbing/picgo/raw/master/image-20210907231952228.png" alt="image-20210907231952228" />&lt;/p>
+&lt;h3 id="代码目录及分析">代码目录及分析&lt;/h3>
+&lt;ul>
+&lt;li>
+&lt;p>hodor-admin&lt;/p>
+&lt;p>待开发：配合前端页面做任务展示&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>hodor-client&lt;/p>
+&lt;p>客户端，用户app通过该客户端将任务信息提交到hodor-server，供其&lt;strong>调度&lt;/strong>&lt;/p>
+&lt;p>集成了nettyserver服务，接收来自hodor-server的任务&lt;strong>执行&lt;/strong>请求&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>hodor-client-demo&lt;/p>
+&lt;p>用户app示例：集成了hodor-client&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>hodor-common&lt;/p>
+&lt;p>通用库&lt;/p>
+&lt;ul>
+&lt;li>环形队列&lt;/li>
+&lt;li>观察者模式（事件发布监听）模型&lt;/li>
+&lt;li>Excutor：多线程封装&lt;/li>
+&lt;li>Extension: SPI扩展方式封装&lt;/li>
+&lt;li>负载均衡&lt;/li>
+&lt;li>存储：本地缓存/mysql/h2&lt;/li>
+&lt;li>异常&lt;/li>
+&lt;li>日志&lt;/li>
+&lt;li>Distributor高性能队列&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>
+&lt;p>hodor-core&lt;/p>
+&lt;p>简单的spring mybatis 工程：对任务/任务执行记录等数据入库（mysql）&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>hodor-extension&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>hodor-model&lt;/p>
+&lt;p>实体&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>hodor-register&lt;/p>
+&lt;p>注册中心封装，目前只实现了zookeeper&lt;/p>
+&lt;ul>
+&lt;li>hodor-register-api&lt;/li>
+&lt;li>Hodor-register-zookeeper&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>
+&lt;p>hodor-remoting&lt;/p>
+&lt;p>netty http客户端&lt;/p>
+&lt;p>netty http服务端&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>hodor-scheduler&lt;/p>
+&lt;p>任务定时的封装&lt;/p>
+&lt;p>目前只实现了quartz&lt;/p>
+&lt;p>quartz当到达&lt;/p>
+&lt;ul>
+&lt;li>hodor-scheduler-api&lt;/li>
+&lt;li>hodor-scheduler-quartz&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>
+&lt;p>hodor-server&lt;/p>
+&lt;p>1，hodor-server集成了注册中心客户端，监听server服务的变更；&lt;/p>
+&lt;p>2， hodor-server注册到注册中心，并选举一个leader&lt;/p>
+&lt;p>3， hodor-server通过集成hodor-remoting的nettyserver接收hodor-client发送过来的注册定时任务的命令&lt;/p>
+&lt;p>4， hodor-server通过注册的server服务，合理分配任务&lt;/p>
+&lt;p>5，记录任务到db，并记录日志，再向hodor-scheduler-quartz注册任务&lt;/p>
+&lt;p>6，hodor-scheduler-quartz当某个任务到达执行时刻，触发 hodor-server的任务执行器去下发任务&lt;/p>
+&lt;p>7， hodor-server通过集成hodor-remoting的nettyclient向hodor-client下发任务执行命令&lt;/p>
+&lt;/li>
+&lt;/ul></description></item><item><title>docusaurus构建website</title><link>https://fengzhenbing.github.io/p/docusaurus%E6%9E%84%E5%BB%BAwebsite/</link><pubDate>Sun, 22 Aug 2021 00:00:00 +0000</pubDate><guid>https://fengzhenbing.github.io/p/docusaurus%E6%9E%84%E5%BB%BAwebsite/</guid><description>&lt;h2 id="docusaurus构建website">docusaurus构建website&lt;/h2>
 &lt;h3 id="环境">环境&lt;/h3>
 &lt;ul>
 &lt;li>
@@ -1760,7 +1843,7 @@ return Mono.just(routeDefinition);
 &lt;li>springgateway 接收注册中心心跳事件，发送路由刷新事件，&lt;/li>
 &lt;li>CachingRouteLocator 最终调用DiscoveryClientRouteDefinitionLocator#getRouteDefinitions 获取注册中心最新的路由&lt;/li>
 &lt;/ul>
-&lt;p>代码实现:https://github.com/fengzhenbing/spring-cloud-gateway-demo.git&lt;/p></description></item><item><title>07.precidate的对路由进行选择</title><link>https://fengzhenbing.github.io/p/07.precidate%E7%9A%84%E5%AF%B9%E8%B7%AF%E7%94%B1%E8%BF%9B%E8%A1%8C%E9%80%89%E6%8B%A9/</link><pubDate>Thu, 10 Dec 2020 08:06:25 +0600</pubDate><guid>https://fengzhenbing.github.io/p/07.precidate%E7%9A%84%E5%AF%B9%E8%B7%AF%E7%94%B1%E8%BF%9B%E8%A1%8C%E9%80%89%E6%8B%A9/</guid><description>&lt;h1 id="precidate选择路由">precidate选择路由&lt;/h1></description></item><item><title>08.filter的配置加载及合并</title><link>https://fengzhenbing.github.io/p/08.filter%E7%9A%84%E9%85%8D%E7%BD%AE%E5%8A%A0%E8%BD%BD%E5%8F%8A%E5%90%88%E5%B9%B6/</link><pubDate>Thu, 10 Dec 2020 08:06:25 +0600</pubDate><guid>https://fengzhenbing.github.io/p/08.filter%E7%9A%84%E9%85%8D%E7%BD%AE%E5%8A%A0%E8%BD%BD%E5%8F%8A%E5%90%88%E5%B9%B6/</guid><description/></item><item><title>soul整体结构</title><link>https://fengzhenbing.github.io/p/soul%E6%95%B4%E4%BD%93%E7%BB%93%E6%9E%84/</link><pubDate>Thu, 10 Dec 2020 08:06:25 +0600</pubDate><guid>https://fengzhenbing.github.io/p/soul%E6%95%B4%E4%BD%93%E7%BB%93%E6%9E%84/</guid><description>&lt;h3 id="soul介绍">soul介绍&lt;/h3>
+&lt;p>代码实现:https://github.com/fengzhenbing/spring-cloud-gateway-demo.git&lt;/p></description></item><item><title>07.precidate的对路由进行选择</title><link>https://fengzhenbing.github.io/p/07.precidate%E7%9A%84%E5%AF%B9%E8%B7%AF%E7%94%B1%E8%BF%9B%E8%A1%8C%E9%80%89%E6%8B%A9/</link><pubDate>Thu, 10 Dec 2020 08:06:25 +0600</pubDate><guid>https://fengzhenbing.github.io/p/07.precidate%E7%9A%84%E5%AF%B9%E8%B7%AF%E7%94%B1%E8%BF%9B%E8%A1%8C%E9%80%89%E6%8B%A9/</guid><description>&lt;h1 id="precidate选择路由">precidate选择路由&lt;/h1></description></item><item><title>08.filter的配置加载及合并</title><link>https://fengzhenbing.github.io/p/08.filter%E7%9A%84%E9%85%8D%E7%BD%AE%E5%8A%A0%E8%BD%BD%E5%8F%8A%E5%90%88%E5%B9%B6/</link><pubDate>Thu, 10 Dec 2020 08:06:25 +0600</pubDate><guid>https://fengzhenbing.github.io/p/08.filter%E7%9A%84%E9%85%8D%E7%BD%AE%E5%8A%A0%E8%BD%BD%E5%8F%8A%E5%90%88%E5%B9%B6/</guid><description/></item><item><title>soul整体结构</title><link>https://fengzhenbing.github.io/p/soul%E6%95%B4%E4%BD%93%E7%BB%93%E6%9E%84/</link><pubDate>Thu, 10 Dec 2020 08:06:25 +0600</pubDate><guid>https://fengzhenbing.github.io/p/soul%E6%95%B4%E4%BD%93%E7%BB%93%E6%9E%84/</guid><description>&lt;h3 id="shenyu介绍">ShenYu介绍&lt;/h3>
 &lt;p>&lt;a class="link" href="https://dromara.org/zh/" target="_blank" rel="noopener"
 >官网&lt;/a>&lt;/p>
 &lt;p>&lt;img src="https://dromara.org/img/architecture/soul-framework.png" alt="img" />&lt;/p>
@@ -2416,7 +2499,89 @@ tail -f test.sink.txt
 &lt;li>At most once&lt;/li>
 &lt;li>At least once&lt;/li>
 &lt;li>Exactly once&lt;/li>
-&lt;/ol></description></item><item><title>全局事物</title><link>https://fengzhenbing.github.io/p/%E5%85%A8%E5%B1%80%E4%BA%8B%E7%89%A9/</link><pubDate>Thu, 13 Aug 2020 14:16:25 +0600</pubDate><guid>https://fengzhenbing.github.io/p/%E5%85%A8%E5%B1%80%E4%BA%8B%E7%89%A9/</guid><description>&lt;p>&lt;img src="https://gitee.com/fengzhenbing/picgo/raw/master/20200526140940829.png" alt="20200526140940829" />&lt;/p>
+&lt;/ol></description></item><item><title>单例</title><link>https://fengzhenbing.github.io/p/%E5%8D%95%E4%BE%8B/</link><pubDate>Fri, 21 Aug 2020 00:00:00 +0000</pubDate><guid>https://fengzhenbing.github.io/p/%E5%8D%95%E4%BE%8B/</guid><description>&lt;h3 id="单例模式">单例模式&lt;/h3>
+&lt;blockquote>
+&lt;p>在运行期间，保证某个类只创建一个实例，保证一个类仅有一个实例，并提供一个访问它的全局访问点&lt;/p>
+&lt;/blockquote>
+&lt;h3 id="饿汉式">饿汉式&lt;/h3>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-java" data-lang="java">&lt;span class="kd">public&lt;/span> &lt;span class="kd">class&lt;/span> &lt;span class="nc">Singleton&lt;/span> &lt;span class="o">{&lt;/span>
+&lt;span class="kd">private&lt;/span> &lt;span class="kd">static&lt;/span> &lt;span class="n">Singleton&lt;/span> &lt;span class="n">instance&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="k">new&lt;/span> &lt;span class="n">Singleton&lt;/span>&lt;span class="o">();&lt;/span>
+&lt;span class="kd">private&lt;/span> &lt;span class="nf">Singleton&lt;/span>&lt;span class="o">()&lt;/span> &lt;span class="o">{&lt;/span>
+&lt;span class="o">}&lt;/span>
+&lt;span class="kd">public&lt;/span> &lt;span class="kd">static&lt;/span> &lt;span class="n">Singleton&lt;/span> &lt;span class="nf">getInstance&lt;/span>&lt;span class="o">()&lt;/span> &lt;span class="o">{&lt;/span>
+&lt;span class="k">return&lt;/span> &lt;span class="n">instance&lt;/span>&lt;span class="o">;&lt;/span>
+&lt;span class="o">}&lt;/span>
+&lt;span class="o">}&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;ul>
+&lt;li>优点就是实现简单，而且安全可靠&lt;/li>
+&lt;li>缺点，没有懒加载，可能用不到，却实例化了&lt;/li>
+&lt;/ul>
+&lt;h3 id="懒汉式">懒汉式&lt;/h3>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-java" data-lang="java">&lt;span class="kd">public&lt;/span> &lt;span class="kd">class&lt;/span> &lt;span class="nc">SingletonSafe&lt;/span> &lt;span class="o">{&lt;/span>
+&lt;span class="c1">// 防止指令重排
+&lt;/span>&lt;span class="c1">&lt;/span> &lt;span class="kd">private&lt;/span> &lt;span class="kd">static&lt;/span> &lt;span class="kd">volatile&lt;/span> &lt;span class="n">SingletonSafe&lt;/span> &lt;span class="n">singleton&lt;/span>&lt;span class="o">;&lt;/span>
+&lt;span class="kd">private&lt;/span> &lt;span class="nf">SingletonSafe&lt;/span>&lt;span class="o">()&lt;/span> &lt;span class="o">{&lt;/span>
+&lt;span class="o">}&lt;/span>
+&lt;span class="kd">public&lt;/span> &lt;span class="kd">static&lt;/span> &lt;span class="n">SingletonSafe&lt;/span> &lt;span class="nf">getSingleton&lt;/span>&lt;span class="o">()&lt;/span> &lt;span class="o">{&lt;/span>
+&lt;span class="k">if&lt;/span> &lt;span class="o">(&lt;/span>&lt;span class="n">singleton&lt;/span> &lt;span class="o">==&lt;/span> &lt;span class="kc">null&lt;/span>&lt;span class="o">)&lt;/span> &lt;span class="o">{&lt;/span>
+&lt;span class="kd">synchronized&lt;/span> &lt;span class="o">(&lt;/span>&lt;span class="n">SingletonSafe&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">class&lt;/span>&lt;span class="o">)&lt;/span> &lt;span class="o">{&lt;/span>
+&lt;span class="k">if&lt;/span> &lt;span class="o">(&lt;/span>&lt;span class="n">singleton&lt;/span> &lt;span class="o">==&lt;/span> &lt;span class="kc">null&lt;/span>&lt;span class="o">)&lt;/span> &lt;span class="o">{&lt;/span>
+&lt;span class="n">singleton&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="k">new&lt;/span> &lt;span class="n">SingletonSafe&lt;/span>&lt;span class="o">();&lt;/span>
+&lt;span class="o">}&lt;/span>
+&lt;span class="o">}&lt;/span>
+&lt;span class="o">}&lt;/span>
+&lt;span class="k">return&lt;/span> &lt;span class="n">singleton&lt;/span>&lt;span class="o">;&lt;/span>
+&lt;span class="o">}&lt;/span>
+&lt;span class="o">}&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>双重检查，保证线程安全&lt;/p>
+&lt;h3 id="静态内部类">静态内部类&lt;/h3>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-java" data-lang="java">&lt;span class="kd">public&lt;/span> &lt;span class="kd">class&lt;/span> &lt;span class="nc">Singleton&lt;/span> &lt;span class="o">{&lt;/span>
+&lt;span class="kd">private&lt;/span> &lt;span class="kd">static&lt;/span> &lt;span class="kd">class&lt;/span> &lt;span class="nc">SingletonHolder&lt;/span> &lt;span class="o">{&lt;/span>
+&lt;span class="kd">private&lt;/span> &lt;span class="kd">static&lt;/span> &lt;span class="n">Singleton&lt;/span> &lt;span class="n">instance&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="k">new&lt;/span> &lt;span class="n">Singleton&lt;/span>&lt;span class="o">();&lt;/span>
+&lt;span class="o">}&lt;/span>
+&lt;span class="kd">private&lt;/span> &lt;span class="nf">Singleton&lt;/span>&lt;span class="o">()&lt;/span> &lt;span class="o">{&lt;/span>
+&lt;span class="o">}&lt;/span>
+&lt;span class="kd">public&lt;/span> &lt;span class="kd">static&lt;/span> &lt;span class="n">Singleton&lt;/span> &lt;span class="nf">getInstance&lt;/span>&lt;span class="o">()&lt;/span> &lt;span class="o">{&lt;/span>
+&lt;span class="k">return&lt;/span> &lt;span class="n">SingletonHolder&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">instance&lt;/span>&lt;span class="o">;&lt;/span>
+&lt;span class="o">}&lt;/span>
+&lt;span class="o">}&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;ul>
+&lt;li>通过静态内部类的方式实现单例模式是线程安全的，同时静态内部类不会在Singleton类加载时就加载，而是在调用getInstance()方法时才进行加载，达到了懒加载的效果。&lt;/li>
+&lt;li>缺点：可能会有反射攻击或者反序列化攻击&lt;/li>
+&lt;/ul>
+&lt;h3 id="通过枚举实现单例模式推荐">通过枚举实现单例模式（推荐）&lt;/h3>
+&lt;p>effective java推荐&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-java" data-lang="java">&lt;span class="kd">public&lt;/span> &lt;span class="kd">enum&lt;/span> &lt;span class="n">Singleton&lt;/span> &lt;span class="o">{&lt;/span>
+&lt;span class="cm">/**
+&lt;/span>&lt;span class="cm"> * Inst singleton.
+&lt;/span>&lt;span class="cm"> */&lt;/span>
+&lt;span class="n">INST&lt;/span>&lt;span class="o">;&lt;/span>
+&lt;span class="cm">/**
+&lt;/span>&lt;span class="cm"> * The Singles.
+&lt;/span>&lt;span class="cm"> */&lt;/span>
+&lt;span class="kd">private&lt;/span> &lt;span class="kd">static&lt;/span> &lt;span class="kd">final&lt;/span> &lt;span class="n">Map&lt;/span>&lt;span class="o">&amp;lt;&lt;/span>&lt;span class="n">String&lt;/span>&lt;span class="o">,&lt;/span> &lt;span class="n">Object&lt;/span>&lt;span class="o">&amp;gt;&lt;/span> &lt;span class="n">SINGLES&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="k">new&lt;/span> &lt;span class="n">ConcurrentHashMap&lt;/span>&lt;span class="o">&amp;lt;&amp;gt;();&lt;/span>
+&lt;span class="cm">/**
+&lt;/span>&lt;span class="cm"> * Single.
+&lt;/span>&lt;span class="cm"> *
+&lt;/span>&lt;span class="cm"> * @param clazz the clazz
+&lt;/span>&lt;span class="cm"> * @param o the o
+&lt;/span>&lt;span class="cm"> */&lt;/span>
+&lt;span class="kd">public&lt;/span> &lt;span class="kt">void&lt;/span> &lt;span class="nf">single&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="kd">final&lt;/span> &lt;span class="n">Class&lt;/span> &lt;span class="n">clazz&lt;/span>&lt;span class="o">,&lt;/span> &lt;span class="kd">final&lt;/span> &lt;span class="n">Object&lt;/span> &lt;span class="n">o&lt;/span>&lt;span class="o">)&lt;/span> &lt;span class="o">{&lt;/span>
+&lt;span class="n">SINGLES&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">put&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">clazz&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">getName&lt;/span>&lt;span class="o">(),&lt;/span> &lt;span class="n">o&lt;/span>&lt;span class="o">);&lt;/span>
+&lt;span class="o">}&lt;/span>
+&lt;span class="cm">/**
+&lt;/span>&lt;span class="cm"> * Get t.
+&lt;/span>&lt;span class="cm"> *
+&lt;/span>&lt;span class="cm"> * @param &amp;lt;T&amp;gt; the type parameter
+&lt;/span>&lt;span class="cm"> * @param clazz the clazz
+&lt;/span>&lt;span class="cm"> * @return the t
+&lt;/span>&lt;span class="cm"> */&lt;/span>
+&lt;span class="nd">@SuppressWarnings&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="s">&amp;#34;unchecked&amp;#34;&lt;/span>&lt;span class="o">)&lt;/span>
+&lt;span class="kd">public&lt;/span> &lt;span class="o">&amp;lt;&lt;/span>&lt;span class="n">T&lt;/span>&lt;span class="o">&amp;gt;&lt;/span> &lt;span class="n">T&lt;/span> &lt;span class="nf">get&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="kd">final&lt;/span> &lt;span class="n">Class&lt;/span>&lt;span class="o">&amp;lt;&lt;/span>&lt;span class="n">T&lt;/span>&lt;span class="o">&amp;gt;&lt;/span> &lt;span class="n">clazz&lt;/span>&lt;span class="o">)&lt;/span> &lt;span class="o">{&lt;/span>
+&lt;span class="k">return&lt;/span> &lt;span class="o">(&lt;/span>&lt;span class="n">T&lt;/span>&lt;span class="o">)&lt;/span> &lt;span class="n">SINGLES&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">get&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">clazz&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">getName&lt;/span>&lt;span class="o">());&lt;/span>
+&lt;span class="o">}&lt;/span>
+&lt;span class="o">}&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div></description></item><item><title>全局事物</title><link>https://fengzhenbing.github.io/p/%E5%85%A8%E5%B1%80%E4%BA%8B%E7%89%A9/</link><pubDate>Thu, 13 Aug 2020 14:16:25 +0600</pubDate><guid>https://fengzhenbing.github.io/p/%E5%85%A8%E5%B1%80%E4%BA%8B%E7%89%A9/</guid><description>&lt;p>&lt;img src="https://gitee.com/fengzhenbing/picgo/raw/master/20200526140940829.png" alt="20200526140940829" />&lt;/p>
 &lt;h2 id="两段式提交">两段式提交&lt;/h2>
 &lt;p>（2 Phase Commit，2PC）&lt;/p>
 &lt;h3 id="准备阶段">&lt;strong>准备阶段&lt;/strong>&lt;/h3>

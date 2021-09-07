@@ -1,4 +1,27 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Posts on Feng Zhenbing's Blog</title><link>https://fengzhenbing.github.io/post/</link><description>Recent content in Posts on Feng Zhenbing's Blog</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Sun, 22 Aug 2021 00:00:00 +0000</lastBuildDate><atom:link href="https://fengzhenbing.github.io/post/index.xml" rel="self" type="application/rss+xml"/><item><title>docusaurus构建website</title><link>https://fengzhenbing.github.io/p/docusaurus%E6%9E%84%E5%BB%BAwebsite/</link><pubDate>Sun, 22 Aug 2021 00:00:00 +0000</pubDate><guid>https://fengzhenbing.github.io/p/docusaurus%E6%9E%84%E5%BB%BAwebsite/</guid><description>docusaurus构建website 环境 Node.js version &amp;gt;= 12.13.0 以上(node -v 查看)，使用了国际化i18n，则Node.js version &amp;gt;=14以上
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Posts on Feng Zhenbing's Blog</title><link>https://fengzhenbing.github.io/post/</link><description>Recent content in Posts on Feng Zhenbing's Blog</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Wed, 01 Sep 2021 00:00:00 +0000</lastBuildDate><atom:link href="https://fengzhenbing.github.io/post/index.xml" rel="self" type="application/rss+xml"/><item><title>分布式任务调度Hodor</title><link>https://fengzhenbing.github.io/p/%E5%88%86%E5%B8%83%E5%BC%8F%E4%BB%BB%E5%8A%A1%E8%B0%83%E5%BA%A6hodor/</link><pubDate>Wed, 01 Sep 2021 00:00:00 +0000</pubDate><guid>https://fengzhenbing.github.io/p/%E5%88%86%E5%B8%83%E5%BC%8F%E4%BB%BB%E5%8A%A1%E8%B0%83%E5%BA%A6hodor/</guid><description>分布式任务调度Hodor源码分析（整体结构） 简介 Hodor是一个高性能的分布式任务调度框架。
+github地址(https://github.com/tincopper/hodor)
+架构图 因无任何文档，以下架构图纯阅读源码个人理解后手工所画：
+代码目录及分析 hodor-admin
+待开发：配合前端页面做任务展示
+hodor-client
+客户端，用户app通过该客户端将任务信息提交到hodor-server，供其调度
+集成了nettyserver服务，接收来自hodor-server的任务执行请求
+hodor-client-demo
+用户app示例：集成了hodor-client
+hodor-common
+通用库
+环形队列 观察者模式（事件发布监听）模型 Excutor：多线程封装 Extension: SPI扩展方式封装 负载均衡 存储：本地缓存/mysql/h2 异常 日志 Distributor高性能队列 hodor-core
+简单的spring mybatis 工程：对任务/任务执行记录等数据入库（mysql）
+hodor-extension
+hodor-model
+实体
+hodor-register
+注册中心封装，目前只实现了zookeeper
+hodor-register-api Hodor-register-zookeeper hodor-remoting
+netty http客户端
+netty http服务端
+hodor-scheduler
+任务定时的封装</description></item><item><title>docusaurus构建website</title><link>https://fengzhenbing.github.io/p/docusaurus%E6%9E%84%E5%BB%BAwebsite/</link><pubDate>Sun, 22 Aug 2021 00:00:00 +0000</pubDate><guid>https://fengzhenbing.github.io/p/docusaurus%E6%9E%84%E5%BB%BAwebsite/</guid><description>docusaurus构建website 环境 Node.js version &amp;gt;= 12.13.0 以上(node -v 查看)，使用了国际化i18n，则Node.js version &amp;gt;=14以上
 Yarn version &amp;gt;= 1.5 ( yarn &amp;ndash;version查看). mac下可以使用n管理node版本
 Title logo等文案，首页展示 待讨论
 菜单调整 Nav : 文档 社区 新闻 博客 links 国际化切换 搜索
@@ -27,7 +50,8 @@ Cms搜集器在old 区回收时采用， 但是内存碎片达到一定量，会
 不移动：降低了延迟，但内存碎片，内存分配复杂， 吞吐量有所下降。
 垃圾回收器</description></item><item><title>Hugo搭建博客</title><link>https://fengzhenbing.github.io/p/hugo%E6%90%AD%E5%BB%BA%E5%8D%9A%E5%AE%A2/</link><pubDate>Tue, 08 Dec 2020 08:06:25 +0600</pubDate><guid>https://fengzhenbing.github.io/p/hugo%E6%90%AD%E5%BB%BA%E5%8D%9A%E5%AE%A2/</guid><description>通过Hugo搭建静态博客网站，再通过github pages部署运行
 Hugo介绍 Hugo是一种用Go语言编写的快速，现代的静态网站生成器，旨在让网站创建再次变得有趣。 性能高，安全性和易用性是主要特点 拥有超快的速度，强大的内容管理和强大的模板语言，使其非常适合各种静态网站。 Hugo安装 # mac上安装 brew install hugo # windows可通过Chocolatey上安装 choco install hugo -confirm # 版本验证 hugo version hugo主题 查找你喜欢的主题 在此我选择的主题为toha 详情 初始化网站模板 # 首先在github下创建xxx.github.io的仓库 git clone https://github.com/fengzhenbing/fengzhenbing.github.io.git cd ./fengzhenbing.github.io # 初始化模板 hugo new site ./ -f=yaml --force #添加hugo-toha主题 git submodule add https://github.com/hugo-toha/toha.git themes/toha #本地运行 hugo server -t toha -w 修改配置 参考themes/toha/exampleSite，配置网站根目录下的config.yml文件，配置网站各个模块
-baseURL:https://fengzhenbing.github.io/languageCode:en-usdefaultContentLanguage:cntitle:&amp;#34;Feng Zhenbing&amp;#39;s Blog&amp;#34;theme:&amp;#34;toha&amp;#34;# Manage languages# For any more details, you can check the official documentation: https://gohugo.</description></item><item><title>全局事物</title><link>https://fengzhenbing.github.io/p/%E5%85%A8%E5%B1%80%E4%BA%8B%E7%89%A9/</link><pubDate>Thu, 13 Aug 2020 14:16:25 +0600</pubDate><guid>https://fengzhenbing.github.io/p/%E5%85%A8%E5%B1%80%E4%BA%8B%E7%89%A9/</guid><description>两段式提交 （2 Phase Commit，2PC）
+baseURL:https://fengzhenbing.github.io/languageCode:en-usdefaultContentLanguage:cntitle:&amp;#34;Feng Zhenbing&amp;#39;s Blog&amp;#34;theme:&amp;#34;toha&amp;#34;# Manage languages# For any more details, you can check the official documentation: https://gohugo.</description></item><item><title>单例</title><link>https://fengzhenbing.github.io/p/%E5%8D%95%E4%BE%8B/</link><pubDate>Fri, 21 Aug 2020 00:00:00 +0000</pubDate><guid>https://fengzhenbing.github.io/p/%E5%8D%95%E4%BE%8B/</guid><description>单例模式 在运行期间，保证某个类只创建一个实例，保证一个类仅有一个实例，并提供一个访问它的全局访问点
+饿汉式 public class Singleton { private static Singleton instance = new Singleton(); private Singleton() { } public static Singleton getInstance() { return instance; } } 优点就是实现简单，而且安全可靠 缺点，没有懒加载，可能用不到，却实例化了 懒汉式 public class SingletonSafe { // 防止指令重排 private static volatile SingletonSafe singleton; private SingletonSafe() { } public static SingletonSafe getSingleton() { if (singleton == null) { synchronized (SingletonSafe.class) { if (singleton == null) { singleton = new SingletonSafe(); } } } return singleton; } } 双重检查，保证线程安全</description></item><item><title>全局事物</title><link>https://fengzhenbing.github.io/p/%E5%85%A8%E5%B1%80%E4%BA%8B%E7%89%A9/</link><pubDate>Thu, 13 Aug 2020 14:16:25 +0600</pubDate><guid>https://fengzhenbing.github.io/p/%E5%85%A8%E5%B1%80%E4%BA%8B%E7%89%A9/</guid><description>两段式提交 （2 Phase Commit，2PC）
 准备阶段 重操作
 提交阶段 轻操作
 三段式提交 （3 Phase Commit，3PC）
