@@ -1,15 +1,15 @@
 <!doctype html><html lang=en-us><head><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1"><meta name=description content="shardingsphere（5.0.0.beta）源码总览"><title>shardingsphere（5.0.0.beta）源码总览</title><link rel=canonical href=https://fengzhenbing.github.io/p/shardingsphere5.0.0.beta%E6%BA%90%E7%A0%81%E6%80%BB%E8%A7%88/><link rel=stylesheet href=/scss/style.min.css><meta property="og:title" content="shardingsphere（5.0.0.beta）源码总览"><meta property="og:description" content="shardingsphere（5.0.0.beta）源码总览"><meta property="og:url" content="https://fengzhenbing.github.io/p/shardingsphere5.0.0.beta%E6%BA%90%E7%A0%81%E6%80%BB%E8%A7%88/"><meta property="og:site_name" content="Feng Zhenbing's Blog"><meta property="og:type" content="article"><meta property="article:section" content="Post"><meta property="article:tag" content="shardingsphere"><meta property="article:tag" content="源码"><meta property="article:tag" content="shardingsphere目录"><meta property="article:published_time" content="2021-09-02T00:00:00+00:00"><meta property="article:modified_time" content="2021-09-02T00:00:00+00:00"><meta name=twitter:title content="shardingsphere（5.0.0.beta）源码总览"><meta name=twitter:description content="shardingsphere（5.0.0.beta）源码总览"></head><body class="article-page has-toc"><script>(function(){const a='StackColorScheme';localStorage.getItem(a)||localStorage.setItem(a,"auto")})()</script><script>(function(){const b='StackColorScheme',a=localStorage.getItem(b),c=window.matchMedia('(prefers-color-scheme: dark)').matches===!0;a=='dark'||a==='auto'&&c?document.documentElement.dataset.scheme='dark':document.documentElement.dataset.scheme='light'})()</script><div class="container main-container flex
 extended"><div id=article-toolbar><a href=https://fengzhenbing.github.io/ class=back-home><svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-chevron-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><polyline points="15 6 9 12 15 18"/></svg><span>返回</span></a></div><main class="main full-width"><article class=main-article><header class=article-header><div class=article-details><header class=article-category><a href=/categories/shardingsphere/>shardingsphere</a>
-<a href=/categories/%E6%BA%90%E7%A0%81/>源码</a></header><h2 class=article-title><a href=/p/shardingsphere5.0.0.beta%E6%BA%90%E7%A0%81%E6%80%BB%E8%A7%88/>shardingsphere（5.0.0.beta）源码总览</a></h2><h3 class=article-subtitle>shardingsphere（5.0.0.beta）源码总览</h3><footer class=article-time><div><svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><path d="M11.795 21H5a2 2 0 01-2-2V7a2 2 0 012-2h12a2 2 0 012 2v4"/><circle cx="18" cy="18" r="4"/><path d="M15 3v4"/><path d="M7 3v4"/><path d="M3 11h16"/><path d="M18 16.496V18l1 1"/></svg><time class=article-time--published>Sep 02, 2021</time></div><div><svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><circle cx="12" cy="12" r="9"/><polyline points="12 7 12 12 15 15"/></svg><time class=article-time--reading>阅读时长: 6 分钟</time></div></footer></div></header><section class=article-content><p>shardingsphere作为极为优秀的开源的分布式数据库解决方案，通过阅读源码可以学到很多软件设计与开发的知识。</p><p>本次我继续按照之前读源码的方式<code>从整体要细节，带着问题读源码的方式</code>记录这次深入学习 shardingsphere的过程。</p><h3 id=源码版本>源码版本</h3><ul><li>5.0.0.beta <a class=link href=https://shardingsphere.apache.org/document/5.0.0-beta/cn/overview/ target=_blank rel=noopener>官方文档</a></li><li>源码地址 <a href=https://github.com/apache/shardingsphere/tree/5.0.0-beta>https://github.com/apache/shardingsphere/tree/5.0.0-beta</a></li></ul><h3 id=项目结构>项目结构</h3><p>先大概理解各个模块的主要功能点</p><table><thead><tr><th>一级目录</th><th>说明</th></tr></thead><tbody><tr><td>examples</td><td>各种使用例子</td></tr><tr><td>shardingsphere-agent</td><td>监控, 对接apm,链路追踪</td></tr><tr><td>shardingsphere-db-protocol</td><td>数据库协议</td></tr><tr><td>shardingsphere-distribution</td><td>相关打包发步用</td></tr><tr><td>shardingsphere-distsql-parser</td><td>distsql新功能: ShardingSphere 特有的内置 SQL 语言，提供了标准 SQL 之外的增量功能操作能力。</td></tr><tr><td>shardingsphere-features</td><td><strong>常用功能</strong>shardingsphere-db-discovery 基于MGR主从切换的功能shardingsphere-encrypt 加解密shardingsphere-readwrite-splitting 读写分离 <code>**重点**</code>shardingsphere-shadow 影子库shardingsphere-sharding 分库分表 <code>**重点**</code></td></tr><tr><td>shardingsphere-governance</td><td>数据治理：结合注册中心，提供给前端页面使用</td></tr><tr><td>shardingsphere-infra</td><td><strong>引擎内核</strong>：shardingsphere-infra-authority proxy的权限控制shardingsphere-infra-binder sql解析后的结果绑定封装 SQLStatement封装为各类上下文contextshardingsphere-infra-common 重要的实体类及工具 的元数据metadata,SPI,yaml工具，rule接口等shardingsphere-infra-context 上下文相关shardingsphere-infra-datetime 时间服务shardingsphere-infra-executor 执行器引擎 <code>**重点**</code>shardingsphere-infra-merge 归并引擎<code>**重点**</code>shardingsphere-infra-optimize 优化引擎<code>**重点**</code>shardingsphere-infra-parser 解析引擎<code>**重点**</code>shardingsphere-infra-rewrite 改写引擎<code>**重点**</code>shardingsphere-infra-route 路由引擎<code>**重点**</code></td></tr><tr><td>shardingsphere-jdbc</td><td>jdbc核心功能：增强版的 JDBC 驱动，完全兼容 JDBC 和各种 ORM 框架。装饰器模式，对原生的DataSource,Connection,Statement(PrepareStatement),ResultSet进行包装，</td></tr><tr><td>shardingsphere-proxy</td><td>透明化的数据库代理提供封装了数据库二进制协议的服务端版本，用于完成对异构语言的支持</td></tr><tr><td>shardingsphere-scaling</td><td>数据迁移相关:弹性伸缩</td></tr><tr><td>shardingsphere-sql-parser</td><td>sql解析器：antlr4 词法语法解析出SqlStatement,提供各类数据库的方言实现。SQL 解析作为分库分表类产品的核心，其性能和兼容性是<strong>最重要</strong>的衡量指标</td></tr><tr><td>shardingsphere-test</td><td>测试引擎</td></tr><tr><td>shardingsphere-transaction</td><td>事务：整合现有的成熟事务方案，本地事务、两阶段事务（XA）和柔性事务（Seata AT 事务）提供统一的分布式事务接口</td></tr></tbody></table><p>对于重点核心内容有个大致认识，后面再单独分模块分析。</p><h3 id=代码分析>代码分析</h3><p>shardingsphere-jdbc是用的最多的接入方式，以 shardingsphere-jdbc的insert一条数据为例，先过一遍流程。</p><p><code>INSERT INTO t_order (user_id, address_id, status) VALUES (?, ?, ?)</code></p><h4 id=分析入口>分析入口</h4><p>使用org.apache.shardingsphere.example.sharding.raw.jdbc.YamlConfigurationExampleMain 的分库分表示例，插入数据。</p><pre><code>public final class YamlConfigurationExampleMain {
-    private static ShardingType shardingType = ShardingType.SHARDING_DATABASES_AND_TABLES;
-    public static void main(final String[] args) throws SQLException, IOException {
-    	// 初始化得到的DataSource为ShardingSphereDataSource
-        DataSource dataSource = YamlDataSourceFactory.newInstance(shardingType);
-        ExampleExecuteTemplate.run(getExampleService(dataSource));
-    }
-    ...
-}
-</code></pre><p>YamlDataSourceFactory.newInstance(shardingType)调用<code>ShardingSphereDataSourceFactory.createDataSource</code>得到ShardingSphereDataSource，可以看到ShardingSphereDataSource是对JDBC规范DataSource的实现。</p><p>同样，后续用的Connection、Statement、PrepareStatement都有对应的ShardingConnection、ShardingStatment、ShardingPreparedStatement的实现。</p><div class=highlight><pre class=chroma><code class=language-java data-lang=java><span class=kd>public</span> <span class=kd>final</span> <span class=kd>class</span> <span class=nc>ShardingSphereDataSourceFactory</span> <span class=o>{</span>
+<a href=/categories/%E6%BA%90%E7%A0%81/>源码</a></header><h2 class=article-title><a href=/p/shardingsphere5.0.0.beta%E6%BA%90%E7%A0%81%E6%80%BB%E8%A7%88/>shardingsphere（5.0.0.beta）源码总览</a></h2><h3 class=article-subtitle>shardingsphere（5.0.0.beta）源码总览</h3><footer class=article-time><div><svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><path d="M11.795 21H5a2 2 0 01-2-2V7a2 2 0 012-2h12a2 2 0 012 2v4"/><circle cx="18" cy="18" r="4"/><path d="M15 3v4"/><path d="M7 3v4"/><path d="M3 11h16"/><path d="M18 16.496V18l1 1"/></svg><time class=article-time--published>Sep 02, 2021</time></div><div><svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><circle cx="12" cy="12" r="9"/><polyline points="12 7 12 12 15 15"/></svg><time class=article-time--reading>阅读时长: 6 分钟</time></div></footer></div></header><section class=article-content><p>shardingsphere作为极为优秀的开源分布式数据库解决方案，通过阅读源码可以学到很多软件设计与开发的知识。</p><p>本次我继续按照之前读源码的方式<code>从整体到细节，带着问题读源码的方式</code>记录这次深入学习 shardingsphere的过程。</p><h3 id=源码版本>源码版本</h3><ul><li>5.0.0.beta <a class=link href=https://shardingsphere.apache.org/document/5.0.0-beta/cn/overview/ target=_blank rel=noopener>官方文档</a></li><li>源码地址 <a href=https://github.com/apache/shardingsphere/tree/5.0.0-beta>https://github.com/apache/shardingsphere/tree/5.0.0-beta</a></li></ul><h3 id=项目结构>项目结构</h3><p>先大概理解各个模块的主要功能点</p><table><thead><tr><th>一级目录</th><th>说明</th></tr></thead><tbody><tr><td>examples</td><td>各种使用例子</td></tr><tr><td>shardingsphere-agent</td><td>监控, 对接apm,链路追踪</td></tr><tr><td>shardingsphere-db-protocol</td><td>数据库协议</td></tr><tr><td>shardingsphere-distribution</td><td>相关打包发步用</td></tr><tr><td>shardingsphere-distsql-parser</td><td>distsql新功能: ShardingSphere 特有的内置 SQL 语言，提供了标准 SQL 之外的增量功能操作能力。</td></tr><tr><td>shardingsphere-features</td><td><strong>常用功能</strong>shardingsphere-db-discovery 基于MGR主从切换的功能shardingsphere-encrypt 加解密shardingsphere-readwrite-splitting 读写分离 <code>**重点**</code>shardingsphere-shadow 影子库shardingsphere-sharding 分库分表 <code>**重点**</code></td></tr><tr><td>shardingsphere-governance</td><td>数据治理：结合注册中心，提供给前端页面使用</td></tr><tr><td>shardingsphere-infra</td><td><strong>引擎内核</strong>：shardingsphere-infra-authority proxy的权限控制shardingsphere-infra-binder sql解析后的结果绑定封装 SQLStatement封装为各类上下文contextshardingsphere-infra-common 重要的实体类及工具 的元数据metadata,SPI,yaml工具，rule接口等shardingsphere-infra-context 上下文相关shardingsphere-infra-datetime 时间服务shardingsphere-infra-executor 执行器引擎 <code>**重点**</code>shardingsphere-infra-merge 归并引擎<code>**重点**</code>shardingsphere-infra-optimize 优化引擎<code>**重点**</code>shardingsphere-infra-parser 解析引擎<code>**重点**</code>shardingsphere-infra-rewrite 改写引擎<code>**重点**</code>shardingsphere-infra-route 路由引擎<code>**重点**</code></td></tr><tr><td>shardingsphere-jdbc</td><td>jdbc核心功能：增强版的 JDBC 驱动，完全兼容 JDBC 和各种 ORM 框架。装饰器模式，对原生的DataSource,Connection,Statement(PrepareStatement),ResultSet进行包装，</td></tr><tr><td>shardingsphere-proxy</td><td>透明化的数据库代理提供封装了数据库二进制协议的服务端版本，用于完成对异构语言的支持</td></tr><tr><td>shardingsphere-scaling</td><td>数据迁移相关:弹性伸缩</td></tr><tr><td>shardingsphere-sql-parser</td><td>sql解析器：antlr4 词法语法解析出SqlStatement,提供各类数据库的方言实现。SQL 解析作为分库分表类产品的核心，其性能和兼容性是<strong>最重要</strong>的衡量指标</td></tr><tr><td>shardingsphere-test</td><td>测试引擎</td></tr><tr><td>shardingsphere-transaction</td><td>事务：整合现有的成熟事务方案，本地事务、两阶段事务（XA）和柔性事务（Seata AT 事务）提供统一的分布式事务接口</td></tr></tbody></table><p>对于重点核心内容有个大致认识，后面再单独分模块分析。</p><h3 id=代码分析>代码分析</h3><p>shardingsphere-jdbc是用的最多的接入方式，以 shardingsphere-jdbc的insert一条数据为例，先过一遍流程。</p><p><code>INSERT INTO t_order (user_id, address_id, status) VALUES (?, ?, ?)</code></p><h4 id=分析入口>分析入口</h4><p>使用org.apache.shardingsphere.example.sharding.raw.jdbc.YamlConfigurationExampleMain 的分库分表示例，插入数据。</p><div class=highlight><pre class=chroma><code class=language-java data-lang=java><span class=kd>public</span> <span class=kd>final</span> <span class=kd>class</span> <span class=nc>YamlConfigurationExampleMain</span> <span class=o>{</span>
+    <span class=kd>private</span> <span class=kd>static</span> <span class=n>ShardingType</span> <span class=n>shardingType</span> <span class=o>=</span> <span class=n>ShardingType</span><span class=o>.</span><span class=na>SHARDING_DATABASES_AND_TABLES</span><span class=o>;</span>
+    <span class=kd>public</span> <span class=kd>static</span> <span class=kt>void</span> <span class=nf>main</span><span class=o>(</span><span class=kd>final</span> <span class=n>String</span><span class=o>[]</span> <span class=n>args</span><span class=o>)</span> <span class=kd>throws</span> <span class=n>SQLException</span><span class=o>,</span> <span class=n>IOException</span> <span class=o>{</span>
+    	<span class=c1>// 初始化得到的DataSource为ShardingSphereDataSource
+</span><span class=c1></span>        <span class=n>DataSource</span> <span class=n>dataSource</span> <span class=o>=</span> <span class=n>YamlDataSourceFactory</span><span class=o>.</span><span class=na>newInstance</span><span class=o>(</span><span class=n>shardingType</span><span class=o>);</span>
+        <span class=n>ExampleExecuteTemplate</span><span class=o>.</span><span class=na>run</span><span class=o>(</span><span class=n>getExampleService</span><span class=o>(</span><span class=n>dataSource</span><span class=o>));</span>
+    <span class=o>}</span>
+    <span class=o>...</span>
+<span class=o>}</span>
+</code></pre></div><p>YamlDataSourceFactory.newInstance(shardingType)调用<code>ShardingSphereDataSourceFactory.createDataSource</code>得到ShardingSphereDataSource，可以看到ShardingSphereDataSource是对JDBC规范DataSource的实现。</p><p>同样，后续用的Connection、Statement、PrepareStatement都有对应的ShardingConnection、ShardingStatment、ShardingPreparedStatement的实现。</p><div class=highlight><pre class=chroma><code class=language-java data-lang=java><span class=kd>public</span> <span class=kd>final</span> <span class=kd>class</span> <span class=nc>ShardingSphereDataSourceFactory</span> <span class=o>{</span>
   <span class=o>...</span>
     <span class=kd>public</span> <span class=kd>static</span> <span class=n>DataSource</span> <span class=nf>createDataSource</span><span class=o>(</span><span class=kd>final</span> <span class=n>Map</span><span class=o>&lt;</span><span class=n>String</span><span class=o>,</span> <span class=n>DataSource</span><span class=o>&gt;</span> <span class=n>dataSourceMap</span><span class=o>,</span> <span class=kd>final</span> <span class=n>Collection</span><span class=o>&lt;</span><span class=n>RuleConfiguration</span><span class=o>&gt;</span> <span class=n>configurations</span><span class=o>,</span> <span class=kd>final</span> <span class=n>Properties</span> <span class=n>props</span><span class=o>)</span> <span class=kd>throws</span> <span class=n>SQLException</span> <span class=o>{</span>
         <span class=k>return</span> <span class=k>new</span> <span class=n>ShardingSphereDataSource</span><span class=o>(</span><span class=n>dataSourceMap</span><span class=o>,</span> <span class=n>configurations</span><span class=o>,</span> <span class=n>props</span><span class=o>);</span>
@@ -52,44 +52,44 @@ extended"><div id=article-toolbar><a href=https://fengzhenbing.github.io/ class=
     <span class=o>}</span>
     <span class=o>...</span>
 <span class=o>}</span>
-</code></pre></div><p>org.apache.shardingsphere.driver.jdbc.core.statement.ShardingSpherePreparedStatement</p><pre><code>public final class ShardingSpherePreparedStatement extends AbstractPreparedStatementAdapter {
-...
-	 @Override
-    public ResultSet executeQuery() throws SQLException {
-        ResultSet result;
-        try {
-            clearPrevious();
-            executionContext = createExecutionContext();
-            List&lt;QueryResult&gt; queryResults = executeQuery0();
-            // 执行的查询结构通过归并引擎归并
-            MergedResult mergedResult = mergeQuery(queryResults);
-            result = new ShardingSphereResultSet(getResultSetsForShardingSphereResultSet(), mergedResult, this, executionContext);
-        } finally {
-            clearBatch();
-        }
-        currentResultSet = result;
-        return result;
-    }
+</code></pre></div><p>org.apache.shardingsphere.driver.jdbc.core.statement.ShardingSpherePreparedStatement</p><div class=highlight><pre class=chroma><code class=language-JAVA data-lang=JAVA><span class=kd>public</span> <span class=kd>final</span> <span class=kd>class</span> <span class=nc>ShardingSpherePreparedStatement</span> <span class=kd>extends</span> <span class=n>AbstractPreparedStatementAdapter</span> <span class=o>{</span>
+<span class=o>...</span>
+	 <span class=nd>@Override</span>
+    <span class=kd>public</span> <span class=n>ResultSet</span> <span class=nf>executeQuery</span><span class=o>()</span> <span class=kd>throws</span> <span class=n>SQLException</span> <span class=o>{</span>
+        <span class=n>ResultSet</span> <span class=n>result</span><span class=o>;</span>
+        <span class=k>try</span> <span class=o>{</span>
+            <span class=n>clearPrevious</span><span class=o>();</span>
+            <span class=n>executionContext</span> <span class=o>=</span> <span class=n>createExecutionContext</span><span class=o>();</span>
+            <span class=n>List</span><span class=o>&lt;</span><span class=n>QueryResult</span><span class=o>&gt;</span> <span class=n>queryResults</span> <span class=o>=</span> <span class=n>executeQuery0</span><span class=o>();</span>
+            <span class=c1>// 执行的查询结构通过归并引擎归并
+</span><span class=c1></span>            <span class=n>MergedResult</span> <span class=n>mergedResult</span> <span class=o>=</span> <span class=n>mergeQuery</span><span class=o>(</span><span class=n>queryResults</span><span class=o>);</span>
+            <span class=n>result</span> <span class=o>=</span> <span class=k>new</span> <span class=n>ShardingSphereResultSet</span><span class=o>(</span><span class=n>getResultSetsForShardingSphereResultSet</span><span class=o>(),</span> <span class=n>mergedResult</span><span class=o>,</span> <span class=k>this</span><span class=o>,</span> <span class=n>executionContext</span><span class=o>);</span>
+        <span class=o>}</span> <span class=k>finally</span> <span class=o>{</span>
+            <span class=n>clearBatch</span><span class=o>();</span>
+        <span class=o>}</span>
+        <span class=n>currentResultSet</span> <span class=o>=</span> <span class=n>result</span><span class=o>;</span>
+        <span class=k>return</span> <span class=n>result</span><span class=o>;</span>
+    <span class=o>}</span>
     
-    @Override
-    public int executeUpdate() throws SQLException {
-    ...
-    }
-    @Override
-    public boolean execute() throws SQLException {
-    ...
-    }
+    <span class=nd>@Override</span>
+    <span class=kd>public</span> <span class=kt>int</span> <span class=nf>executeUpdate</span><span class=o>()</span> <span class=kd>throws</span> <span class=n>SQLException</span> <span class=o>{</span>
+    <span class=o>...</span>
+    <span class=o>}</span>
+    <span class=nd>@Override</span>
+    <span class=kd>public</span> <span class=kt>boolean</span> <span class=nf>execute</span><span class=o>()</span> <span class=kd>throws</span> <span class=n>SQLException</span> <span class=o>{</span>
+    <span class=o>...</span>
+    <span class=o>}</span>
     
-   // 调用归并引擎
- private MergedResult mergeQuery(final List&lt;QueryResult&gt; queryResults) throws SQLException {
-        ShardingSphereMetaData metaData = metaDataContexts.getDefaultMetaData();
-        MergeEngine mergeEngine = new MergeEngine(
-                metaDataContexts.getDefaultMetaData().getResource().getDatabaseType(), metaData.getSchema(), metaDataContexts.getProps(), metaData.getRuleMetaData().getRules());
-        return mergeEngine.merge(queryResults, executionContext.getSqlStatementContext());
-    }
-...
-}
-</code></pre><h4 id=执行流程>执行流程</h4><p>再接着调试栈来看</p><p><img src=https://gitee.com/fengzhenbing/picgo/raw/master/image-20210909233033903.png alt=image-20210909233033903></p><p>执行流程为</p><p><img src=https://gitee.com/fengzhenbing/picgo/raw/master/image-20210910003744036.png alt=image-20210910003744036></p><p>下面简单分析：</p><div class=highlight><pre class=chroma><code class=language-JAVA data-lang=JAVA><span class=kd>public</span> <span class=kd>final</span> <span class=kd>class</span> <span class=nc>ShardingSpherePreparedStatement</span> <span class=kd>extends</span> <span class=n>AbstractPreparedStatementAdapter</span> <span class=o>{</span>
+   <span class=c1>// 调用归并引擎
+</span><span class=c1></span> <span class=kd>private</span> <span class=n>MergedResult</span> <span class=nf>mergeQuery</span><span class=o>(</span><span class=kd>final</span> <span class=n>List</span><span class=o>&lt;</span><span class=n>QueryResult</span><span class=o>&gt;</span> <span class=n>queryResults</span><span class=o>)</span> <span class=kd>throws</span> <span class=n>SQLException</span> <span class=o>{</span>
+        <span class=n>ShardingSphereMetaData</span> <span class=n>metaData</span> <span class=o>=</span> <span class=n>metaDataContexts</span><span class=o>.</span><span class=na>getDefaultMetaData</span><span class=o>();</span>
+        <span class=n>MergeEngine</span> <span class=n>mergeEngine</span> <span class=o>=</span> <span class=k>new</span> <span class=n>MergeEngine</span><span class=o>(</span>
+                <span class=n>metaDataContexts</span><span class=o>.</span><span class=na>getDefaultMetaData</span><span class=o>().</span><span class=na>getResource</span><span class=o>().</span><span class=na>getDatabaseType</span><span class=o>(),</span> <span class=n>metaData</span><span class=o>.</span><span class=na>getSchema</span><span class=o>(),</span> <span class=n>metaDataContexts</span><span class=o>.</span><span class=na>getProps</span><span class=o>(),</span> <span class=n>metaData</span><span class=o>.</span><span class=na>getRuleMetaData</span><span class=o>().</span><span class=na>getRules</span><span class=o>());</span>
+        <span class=k>return</span> <span class=n>mergeEngine</span><span class=o>.</span><span class=na>merge</span><span class=o>(</span><span class=n>queryResults</span><span class=o>,</span> <span class=n>executionContext</span><span class=o>.</span><span class=na>getSqlStatementContext</span><span class=o>());</span>
+    <span class=o>}</span>
+<span class=o>...</span>
+<span class=o>}</span>
+</code></pre></div><h4 id=执行流程>执行流程</h4><p>再接着调试栈来看</p><p><img src=https://gitee.com/fengzhenbing/picgo/raw/master/image-20210909233033903.png alt=image-20210909233033903></p><p>执行流程为</p><p><img src=https://gitee.com/fengzhenbing/picgo/raw/master/image-20210910003744036.png alt=image-20210910003744036></p><p>下面简单分析：</p><div class=highlight><pre class=chroma><code class=language-JAVA data-lang=JAVA><span class=kd>public</span> <span class=kd>final</span> <span class=kd>class</span> <span class=nc>ShardingSpherePreparedStatement</span> <span class=kd>extends</span> <span class=n>AbstractPreparedStatementAdapter</span> <span class=o>{</span>
     <span class=kd>private</span> <span class=nf>ShardingSpherePreparedStatement</span><span class=o>(</span><span class=kd>final</span> <span class=n>ShardingSphereConnection</span> <span class=n>connection</span><span class=o>,</span> <span class=kd>final</span> <span class=n>String</span> <span class=n>sql</span><span class=o>,</span>
                                             <span class=kd>final</span> <span class=kt>int</span> <span class=n>resultSetType</span><span class=o>,</span> <span class=kd>final</span> <span class=kt>int</span> <span class=n>resultSetConcurrency</span><span class=o>,</span> <span class=kd>final</span> <span class=kt>int</span> <span class=n>resultSetHoldability</span><span class=o>,</span> <span class=kd>final</span> <span class=kt>boolean</span> <span class=n>returnGeneratedKeys</span><span class=o>)</span> <span class=kd>throws</span> <span class=n>SQLException</span> <span class=o>{</span>
        <span class=o>....</span>
@@ -196,136 +196,136 @@ extended"><div id=article-toolbar><a href=https://fengzhenbing.github.io/ class=
         <span class=o>}</span>
     <span class=o>}</span>
 <span class=o>}</span>
-</code></pre></div><h5 id=路由引擎>路由引擎</h5><pre><code>@RequiredArgsConstructor
-public final class SQLRouteEngine {
+</code></pre></div><h5 id=解析引擎>解析引擎</h5><h5 id=路由引擎>路由引擎</h5><div class=highlight><pre class=chroma><code class=language-JAVA data-lang=JAVA><span class=nd>@RequiredArgsConstructor</span>
+<span class=kd>public</span> <span class=kd>final</span> <span class=kd>class</span> <span class=nc>SQLRouteEngine</span> <span class=o>{</span>
     
-    private final Collection&lt;ShardingSphereRule&gt; rules;
+    <span class=kd>private</span> <span class=kd>final</span> <span class=n>Collection</span><span class=o>&lt;</span><span class=n>ShardingSphereRule</span><span class=o>&gt;</span> <span class=n>rules</span><span class=o>;</span>
     
-    private final ConfigurationProperties props;
+    <span class=kd>private</span> <span class=kd>final</span> <span class=n>ConfigurationProperties</span> <span class=n>props</span><span class=o>;</span>
     
-    /**
-     * Route SQL.
-     *
-     * @param logicSQL logic SQL
-     * @param metaData ShardingSphere meta data
-     * @return route context
-     */
-    public RouteContext route(final LogicSQL logicSQL, final ShardingSphereMetaData metaData) {
-        SQLRouteExecutor executor = isNeedAllSchemas(logicSQL.getSqlStatementContext().getSqlStatement()) ? new AllSQLRouteExecutor() : new PartialSQLRouteExecutor(rules, props);
-        // 进行路由计算，生成路由结果上下文RouteContext
-        return executor.route(logicSQL, metaData);
-    }
+    <span class=cm>/**
+</span><span class=cm>     * Route SQL.
+</span><span class=cm>     *
+</span><span class=cm>     * @param logicSQL logic SQL
+</span><span class=cm>     * @param metaData ShardingSphere meta data
+</span><span class=cm>     * @return route context
+</span><span class=cm>     */</span>
+    <span class=kd>public</span> <span class=n>RouteContext</span> <span class=nf>route</span><span class=o>(</span><span class=kd>final</span> <span class=n>LogicSQL</span> <span class=n>logicSQL</span><span class=o>,</span> <span class=kd>final</span> <span class=n>ShardingSphereMetaData</span> <span class=n>metaData</span><span class=o>)</span> <span class=o>{</span>
+        <span class=n>SQLRouteExecutor</span> <span class=n>executor</span> <span class=o>=</span> <span class=n>isNeedAllSchemas</span><span class=o>(</span><span class=n>logicSQL</span><span class=o>.</span><span class=na>getSqlStatementContext</span><span class=o>().</span><span class=na>getSqlStatement</span><span class=o>())</span> <span class=o>?</span> <span class=k>new</span> <span class=n>AllSQLRouteExecutor</span><span class=o>()</span> <span class=o>:</span> <span class=k>new</span> <span class=n>PartialSQLRouteExecutor</span><span class=o>(</span><span class=n>rules</span><span class=o>,</span> <span class=n>props</span><span class=o>);</span>
+        <span class=c1>// 进行路由计算，生成路由结果上下文RouteContext
+</span><span class=c1></span>        <span class=k>return</span> <span class=n>executor</span><span class=o>.</span><span class=na>route</span><span class=o>(</span><span class=n>logicSQL</span><span class=o>,</span> <span class=n>metaData</span><span class=o>);</span>
+    <span class=o>}</span>
     
-    // TODO use dynamic config to judge UnconfiguredSchema
-    private boolean isNeedAllSchemas(final SQLStatement sqlStatement) {
-        return sqlStatement instanceof MySQLShowTablesStatement;
-    }
-}
-</code></pre><h5 id=sql改写>SQL改写</h5><p><img src=https://shardingsphere.apache.org/document/current/img/sharding/rewrite_architecture_cn.png alt=X></p><blockquote><p>加密的SQL改写</p><p>影子库SQL改写</p><p>分片的SQL改写</p></blockquote><p><img src=https://gitee.com/fengzhenbing/picgo/raw/master/image-20210910002416276.png alt=image-20210910002416276></p><h5 id=执行引擎>执行引擎</h5><blockquote><p>将路由和改写完成之后的真实 SQL 安全且高效发送到底层数据源执行。</p></blockquote><pre><code>  public final class DriverJDBCExecutor {
-  ...
+    <span class=c1>// TODO use dynamic config to judge UnconfiguredSchema
+</span><span class=c1></span>    <span class=kd>private</span> <span class=kt>boolean</span> <span class=nf>isNeedAllSchemas</span><span class=o>(</span><span class=kd>final</span> <span class=n>SQLStatement</span> <span class=n>sqlStatement</span><span class=o>)</span> <span class=o>{</span>
+        <span class=k>return</span> <span class=n>sqlStatement</span> <span class=k>instanceof</span> <span class=n>MySQLShowTablesStatement</span><span class=o>;</span>
+    <span class=o>}</span>
+<span class=o>}</span>
+</code></pre></div><h5 id=sql改写>SQL改写</h5><p><img src=https://shardingsphere.apache.org/document/current/img/sharding/rewrite_architecture_cn.png alt=X></p><blockquote><p>加密的SQL改写</p><p>影子库SQL改写</p><p>分片的SQL改写</p></blockquote><p><img src=https://gitee.com/fengzhenbing/picgo/raw/master/image-20210910002416276.png alt=image-20210910002416276></p><h5 id=执行引擎>执行引擎</h5><blockquote><p>将路由和改写完成之后的真实 SQL 安全且高效发送到底层数据源执行。</p></blockquote><div class=highlight><pre class=chroma><code class=language-JAVA data-lang=JAVA>  <span class=kd>public</span> <span class=kd>final</span> <span class=kd>class</span> <span class=nc>DriverJDBCExecutor</span> <span class=o>{</span>
+  <span class=o>...</span>
   
-  /**
-     * Execute update.
-     *
-     * @param executionGroupContext execution group context
-     * @param sqlStatementContext SQL statement context
-     * @param routeUnits route units
-     * @param callback JDBC executor callback  回调
-     * @return effected records count
-     * @throws SQLException SQL exception
-     */
-    public int executeUpdate(final ExecutionGroupContext&lt;JDBCExecutionUnit&gt; executionGroupContext,
-                             final SQLStatementContext&lt;?&gt; sqlStatementContext, final Collection&lt;RouteUnit&gt; routeUnits, final JDBCExecutorCallback&lt;Integer&gt; callback) throws SQLException {
-        try {
-            // 执行引擎初始化 
-            ExecuteProcessEngine.initialize(sqlStatementContext, executionGroupContext, metaDataContexts.getProps());
-            List&lt;Integer&gt; results = jdbcLockEngine.execute(executionGroupContext, sqlStatementContext, routeUnits, callback);
-            int result = isNeedAccumulate(metaDataContexts.getDefaultMetaData().getRuleMetaData().getRules(), sqlStatementContext) ? accumulate(results) : results.get(0);
-            ExecuteProcessEngine.finish(executionGroupContext.getExecutionID());
-            return result;
-        } finally {
-            ExecuteProcessEngine.clean();
-        }
-    }
-    ...
-}    
-</code></pre><h5 id=归并引擎>归并引擎</h5><p>对于查询类，有结果会使用归并引擎合并结果 <code>MergeEngine(..).merge(..)</code></p><blockquote><p>将从各个数据节点获取的多数据结果集，组合成为一个结果集并正确的返回至请求客户端，称为结果归并。</p></blockquote><p>org.apache.shardingsphere.infra.merge.MergeEngine</p><pre><code>public final class MergeEngine {
+  <span class=cm>/**
+</span><span class=cm>     * Execute update.
+</span><span class=cm>     *
+</span><span class=cm>     * @param executionGroupContext execution group context
+</span><span class=cm>     * @param sqlStatementContext SQL statement context
+</span><span class=cm>     * @param routeUnits route units
+</span><span class=cm>     * @param callback JDBC executor callback  回调
+</span><span class=cm>     * @return effected records count
+</span><span class=cm>     * @throws SQLException SQL exception
+</span><span class=cm>     */</span>
+    <span class=kd>public</span> <span class=kt>int</span> <span class=nf>executeUpdate</span><span class=o>(</span><span class=kd>final</span> <span class=n>ExecutionGroupContext</span><span class=o>&lt;</span><span class=n>JDBCExecutionUnit</span><span class=o>&gt;</span> <span class=n>executionGroupContext</span><span class=o>,</span>
+                             <span class=kd>final</span> <span class=n>SQLStatementContext</span><span class=o>&lt;?&gt;</span> <span class=n>sqlStatementContext</span><span class=o>,</span> <span class=kd>final</span> <span class=n>Collection</span><span class=o>&lt;</span><span class=n>RouteUnit</span><span class=o>&gt;</span> <span class=n>routeUnits</span><span class=o>,</span> <span class=kd>final</span> <span class=n>JDBCExecutorCallback</span><span class=o>&lt;</span><span class=n>Integer</span><span class=o>&gt;</span> <span class=n>callback</span><span class=o>)</span> <span class=kd>throws</span> <span class=n>SQLException</span> <span class=o>{</span>
+        <span class=k>try</span> <span class=o>{</span>
+            <span class=c1>// 执行引擎初始化 
+</span><span class=c1></span>            <span class=n>ExecuteProcessEngine</span><span class=o>.</span><span class=na>initialize</span><span class=o>(</span><span class=n>sqlStatementContext</span><span class=o>,</span> <span class=n>executionGroupContext</span><span class=o>,</span> <span class=n>metaDataContexts</span><span class=o>.</span><span class=na>getProps</span><span class=o>());</span>
+            <span class=n>List</span><span class=o>&lt;</span><span class=n>Integer</span><span class=o>&gt;</span> <span class=n>results</span> <span class=o>=</span> <span class=n>jdbcLockEngine</span><span class=o>.</span><span class=na>execute</span><span class=o>(</span><span class=n>executionGroupContext</span><span class=o>,</span> <span class=n>sqlStatementContext</span><span class=o>,</span> <span class=n>routeUnits</span><span class=o>,</span> <span class=n>callback</span><span class=o>);</span>
+            <span class=kt>int</span> <span class=n>result</span> <span class=o>=</span> <span class=n>isNeedAccumulate</span><span class=o>(</span><span class=n>metaDataContexts</span><span class=o>.</span><span class=na>getDefaultMetaData</span><span class=o>().</span><span class=na>getRuleMetaData</span><span class=o>().</span><span class=na>getRules</span><span class=o>(),</span> <span class=n>sqlStatementContext</span><span class=o>)</span> <span class=o>?</span> <span class=n>accumulate</span><span class=o>(</span><span class=n>results</span><span class=o>)</span> <span class=o>:</span> <span class=n>results</span><span class=o>.</span><span class=na>get</span><span class=o>(</span><span class=n>0</span><span class=o>);</span>
+            <span class=n>ExecuteProcessEngine</span><span class=o>.</span><span class=na>finish</span><span class=o>(</span><span class=n>executionGroupContext</span><span class=o>.</span><span class=na>getExecutionID</span><span class=o>());</span>
+            <span class=k>return</span> <span class=n>result</span><span class=o>;</span>
+        <span class=o>}</span> <span class=k>finally</span> <span class=o>{</span>
+            <span class=n>ExecuteProcessEngine</span><span class=o>.</span><span class=na>clean</span><span class=o>();</span>
+        <span class=o>}</span>
+    <span class=o>}</span>
+    <span class=o>...</span>
+<span class=o>}</span>    
+</code></pre></div><h5 id=归并引擎>归并引擎</h5><p>对于查询类，有结果会使用归并引擎合并结果 <code>MergeEngine(..).merge(..)</code></p><blockquote><p>将从各个数据节点获取的多数据结果集，组合成为一个结果集并正确的返回至请求客户端，称为结果归并。</p></blockquote><p>org.apache.shardingsphere.infra.merge.MergeEngine</p><div class=highlight><pre class=chroma><code class=language-JAVA data-lang=JAVA><span class=kd>public</span> <span class=kd>final</span> <span class=kd>class</span> <span class=nc>MergeEngine</span> <span class=o>{</span>
     
-    static {
-        ShardingSphereServiceLoader.register(ResultProcessEngine.class);
-    }
+    <span class=kd>static</span> <span class=o>{</span>
+        <span class=n>ShardingSphereServiceLoader</span><span class=o>.</span><span class=na>register</span><span class=o>(</span><span class=n>ResultProcessEngine</span><span class=o>.</span><span class=na>class</span><span class=o>);</span>
+    <span class=o>}</span>
     
-    private final DatabaseType databaseType;
+    <span class=kd>private</span> <span class=kd>final</span> <span class=n>DatabaseType</span> <span class=n>databaseType</span><span class=o>;</span>
     
-    private final ShardingSphereSchema schema;
+    <span class=kd>private</span> <span class=kd>final</span> <span class=n>ShardingSphereSchema</span> <span class=n>schema</span><span class=o>;</span>
     
-    private final ConfigurationProperties props;
+    <span class=kd>private</span> <span class=kd>final</span> <span class=n>ConfigurationProperties</span> <span class=n>props</span><span class=o>;</span>
     
-    @SuppressWarnings(&quot;rawtypes&quot;)
-    private final Map&lt;ShardingSphereRule, ResultProcessEngine&gt; engines;
+    <span class=nd>@SuppressWarnings</span><span class=o>(</span><span class=s>&#34;rawtypes&#34;</span><span class=o>)</span>
+    <span class=kd>private</span> <span class=kd>final</span> <span class=n>Map</span><span class=o>&lt;</span><span class=n>ShardingSphereRule</span><span class=o>,</span> <span class=n>ResultProcessEngine</span><span class=o>&gt;</span> <span class=n>engines</span><span class=o>;</span>
     
-    public MergeEngine(final DatabaseType databaseType, final ShardingSphereSchema schema, final ConfigurationProperties props, final Collection&lt;ShardingSphereRule&gt; rules) {
-        this.databaseType = databaseType;
-        this.schema = schema;
-        this.props = props;
-        engines = OrderedSPIRegistry.getRegisteredServices(rules, ResultProcessEngine.class);
-    }
+    <span class=kd>public</span> <span class=nf>MergeEngine</span><span class=o>(</span><span class=kd>final</span> <span class=n>DatabaseType</span> <span class=n>databaseType</span><span class=o>,</span> <span class=kd>final</span> <span class=n>ShardingSphereSchema</span> <span class=n>schema</span><span class=o>,</span> <span class=kd>final</span> <span class=n>ConfigurationProperties</span> <span class=n>props</span><span class=o>,</span> <span class=kd>final</span> <span class=n>Collection</span><span class=o>&lt;</span><span class=n>ShardingSphereRule</span><span class=o>&gt;</span> <span class=n>rules</span><span class=o>)</span> <span class=o>{</span>
+        <span class=k>this</span><span class=o>.</span><span class=na>databaseType</span> <span class=o>=</span> <span class=n>databaseType</span><span class=o>;</span>
+        <span class=k>this</span><span class=o>.</span><span class=na>schema</span> <span class=o>=</span> <span class=n>schema</span><span class=o>;</span>
+        <span class=k>this</span><span class=o>.</span><span class=na>props</span> <span class=o>=</span> <span class=n>props</span><span class=o>;</span>
+        <span class=n>engines</span> <span class=o>=</span> <span class=n>OrderedSPIRegistry</span><span class=o>.</span><span class=na>getRegisteredServices</span><span class=o>(</span><span class=n>rules</span><span class=o>,</span> <span class=n>ResultProcessEngine</span><span class=o>.</span><span class=na>class</span><span class=o>);</span>
+    <span class=o>}</span>
     
-    /**
-     * Merge.
-     *
-     * @param queryResults query results
-     * @param sqlStatementContext SQL statement context
-     * @return merged result
-     * @throws SQLException SQL exception
-     */
-    public MergedResult merge(final List&lt;QueryResult&gt; queryResults, final SQLStatementContext&lt;?&gt; sqlStatementContext) throws SQLException {
-       //生成合并结果集
-        Optional&lt;MergedResult&gt; mergedResult = executeMerge(queryResults, sqlStatementContext);
-        //对合并结果集装饰处理
-        Optional&lt;MergedResult&gt; result = mergedResult.isPresent() ? Optional.of(decorate(mergedResult.get(), sqlStatementContext)) : decorate(queryResults.get(0), sqlStatementContext);
-        return result.orElseGet(() -&gt; new TransparentMergedResult(queryResults.get(0)));
-    }
+    <span class=cm>/**
+</span><span class=cm>     * Merge.
+</span><span class=cm>     *
+</span><span class=cm>     * @param queryResults query results
+</span><span class=cm>     * @param sqlStatementContext SQL statement context
+</span><span class=cm>     * @return merged result
+</span><span class=cm>     * @throws SQLException SQL exception
+</span><span class=cm>     */</span>
+    <span class=kd>public</span> <span class=n>MergedResult</span> <span class=nf>merge</span><span class=o>(</span><span class=kd>final</span> <span class=n>List</span><span class=o>&lt;</span><span class=n>QueryResult</span><span class=o>&gt;</span> <span class=n>queryResults</span><span class=o>,</span> <span class=kd>final</span> <span class=n>SQLStatementContext</span><span class=o>&lt;?&gt;</span> <span class=n>sqlStatementContext</span><span class=o>)</span> <span class=kd>throws</span> <span class=n>SQLException</span> <span class=o>{</span>
+       <span class=c1>//生成合并结果集
+</span><span class=c1></span>        <span class=n>Optional</span><span class=o>&lt;</span><span class=n>MergedResult</span><span class=o>&gt;</span> <span class=n>mergedResult</span> <span class=o>=</span> <span class=n>executeMerge</span><span class=o>(</span><span class=n>queryResults</span><span class=o>,</span> <span class=n>sqlStatementContext</span><span class=o>);</span>
+        <span class=c1>//对合并结果集装饰处理
+</span><span class=c1></span>        <span class=n>Optional</span><span class=o>&lt;</span><span class=n>MergedResult</span><span class=o>&gt;</span> <span class=n>result</span> <span class=o>=</span> <span class=n>mergedResult</span><span class=o>.</span><span class=na>isPresent</span><span class=o>()</span> <span class=o>?</span> <span class=n>Optional</span><span class=o>.</span><span class=na>of</span><span class=o>(</span><span class=n>decorate</span><span class=o>(</span><span class=n>mergedResult</span><span class=o>.</span><span class=na>get</span><span class=o>(),</span> <span class=n>sqlStatementContext</span><span class=o>))</span> <span class=o>:</span> <span class=n>decorate</span><span class=o>(</span><span class=n>queryResults</span><span class=o>.</span><span class=na>get</span><span class=o>(</span><span class=n>0</span><span class=o>),</span> <span class=n>sqlStatementContext</span><span class=o>);</span>
+        <span class=k>return</span> <span class=n>result</span><span class=o>.</span><span class=na>orElseGet</span><span class=o>(()</span> <span class=o>-&gt;</span> <span class=k>new</span> <span class=n>TransparentMergedResult</span><span class=o>(</span><span class=n>queryResults</span><span class=o>.</span><span class=na>get</span><span class=o>(</span><span class=n>0</span><span class=o>)));</span>
+    <span class=o>}</span>
     
-    @SuppressWarnings({&quot;unchecked&quot;, &quot;rawtypes&quot;})
-    private Optional&lt;MergedResult&gt; executeMerge(final List&lt;QueryResult&gt; queryResults, final SQLStatementContext&lt;?&gt; sqlStatementContext) throws SQLException {
-        for (Entry&lt;ShardingSphereRule, ResultProcessEngine&gt; entry : engines.entrySet()) {
-            if (entry.getValue() instanceof ResultMergerEngine) {
-                ResultMerger resultMerger = ((ResultMergerEngine) entry.getValue()).newInstance(databaseType, entry.getKey(), props, sqlStatementContext);
-                // ResultMerger进行合并
-                return Optional.of(resultMerger.merge(queryResults, sqlStatementContext, schema));
-            }
-        }
-        return Optional.empty();
-    }
+    <span class=nd>@SuppressWarnings</span><span class=o>({</span><span class=s>&#34;unchecked&#34;</span><span class=o>,</span> <span class=s>&#34;rawtypes&#34;</span><span class=o>})</span>
+    <span class=kd>private</span> <span class=n>Optional</span><span class=o>&lt;</span><span class=n>MergedResult</span><span class=o>&gt;</span> <span class=nf>executeMerge</span><span class=o>(</span><span class=kd>final</span> <span class=n>List</span><span class=o>&lt;</span><span class=n>QueryResult</span><span class=o>&gt;</span> <span class=n>queryResults</span><span class=o>,</span> <span class=kd>final</span> <span class=n>SQLStatementContext</span><span class=o>&lt;?&gt;</span> <span class=n>sqlStatementContext</span><span class=o>)</span> <span class=kd>throws</span> <span class=n>SQLException</span> <span class=o>{</span>
+        <span class=k>for</span> <span class=o>(</span><span class=n>Entry</span><span class=o>&lt;</span><span class=n>ShardingSphereRule</span><span class=o>,</span> <span class=n>ResultProcessEngine</span><span class=o>&gt;</span> <span class=n>entry</span> <span class=o>:</span> <span class=n>engines</span><span class=o>.</span><span class=na>entrySet</span><span class=o>())</span> <span class=o>{</span>
+            <span class=k>if</span> <span class=o>(</span><span class=n>entry</span><span class=o>.</span><span class=na>getValue</span><span class=o>()</span> <span class=k>instanceof</span> <span class=n>ResultMergerEngine</span><span class=o>)</span> <span class=o>{</span>
+                <span class=n>ResultMerger</span> <span class=n>resultMerger</span> <span class=o>=</span> <span class=o>((</span><span class=n>ResultMergerEngine</span><span class=o>)</span> <span class=n>entry</span><span class=o>.</span><span class=na>getValue</span><span class=o>()).</span><span class=na>newInstance</span><span class=o>(</span><span class=n>databaseType</span><span class=o>,</span> <span class=n>entry</span><span class=o>.</span><span class=na>getKey</span><span class=o>(),</span> <span class=n>props</span><span class=o>,</span> <span class=n>sqlStatementContext</span><span class=o>);</span>
+                <span class=c1>// ResultMerger进行合并
+</span><span class=c1></span>                <span class=k>return</span> <span class=n>Optional</span><span class=o>.</span><span class=na>of</span><span class=o>(</span><span class=n>resultMerger</span><span class=o>.</span><span class=na>merge</span><span class=o>(</span><span class=n>queryResults</span><span class=o>,</span> <span class=n>sqlStatementContext</span><span class=o>,</span> <span class=n>schema</span><span class=o>));</span>
+            <span class=o>}</span>
+        <span class=o>}</span>
+        <span class=k>return</span> <span class=n>Optional</span><span class=o>.</span><span class=na>empty</span><span class=o>();</span>
+    <span class=o>}</span>
     
-    @SuppressWarnings({&quot;unchecked&quot;, &quot;rawtypes&quot;})
-    private MergedResult decorate(final MergedResult mergedResult, final SQLStatementContext&lt;?&gt; sqlStatementContext) throws SQLException {
-        MergedResult result = null;
-        for (Entry&lt;ShardingSphereRule, ResultProcessEngine&gt; entry : engines.entrySet()) {
-            if (entry.getValue() instanceof ResultDecoratorEngine) {
-                ResultDecorator resultDecorator = ((ResultDecoratorEngine) entry.getValue()).newInstance(databaseType, schema, entry.getKey(), props, sqlStatementContext);
-                result = null == result ? resultDecorator.decorate(mergedResult, sqlStatementContext, entry.getKey()) : resultDecorator.decorate(result, sqlStatementContext, entry.getKey());
-            }
-        }
-        return null == result ? mergedResult : result;
-    }
+    <span class=nd>@SuppressWarnings</span><span class=o>({</span><span class=s>&#34;unchecked&#34;</span><span class=o>,</span> <span class=s>&#34;rawtypes&#34;</span><span class=o>})</span>
+    <span class=kd>private</span> <span class=n>MergedResult</span> <span class=nf>decorate</span><span class=o>(</span><span class=kd>final</span> <span class=n>MergedResult</span> <span class=n>mergedResult</span><span class=o>,</span> <span class=kd>final</span> <span class=n>SQLStatementContext</span><span class=o>&lt;?&gt;</span> <span class=n>sqlStatementContext</span><span class=o>)</span> <span class=kd>throws</span> <span class=n>SQLException</span> <span class=o>{</span>
+        <span class=n>MergedResult</span> <span class=n>result</span> <span class=o>=</span> <span class=kc>null</span><span class=o>;</span>
+        <span class=k>for</span> <span class=o>(</span><span class=n>Entry</span><span class=o>&lt;</span><span class=n>ShardingSphereRule</span><span class=o>,</span> <span class=n>ResultProcessEngine</span><span class=o>&gt;</span> <span class=n>entry</span> <span class=o>:</span> <span class=n>engines</span><span class=o>.</span><span class=na>entrySet</span><span class=o>())</span> <span class=o>{</span>
+            <span class=k>if</span> <span class=o>(</span><span class=n>entry</span><span class=o>.</span><span class=na>getValue</span><span class=o>()</span> <span class=k>instanceof</span> <span class=n>ResultDecoratorEngine</span><span class=o>)</span> <span class=o>{</span>
+                <span class=n>ResultDecorator</span> <span class=n>resultDecorator</span> <span class=o>=</span> <span class=o>((</span><span class=n>ResultDecoratorEngine</span><span class=o>)</span> <span class=n>entry</span><span class=o>.</span><span class=na>getValue</span><span class=o>()).</span><span class=na>newInstance</span><span class=o>(</span><span class=n>databaseType</span><span class=o>,</span> <span class=n>schema</span><span class=o>,</span> <span class=n>entry</span><span class=o>.</span><span class=na>getKey</span><span class=o>(),</span> <span class=n>props</span><span class=o>,</span> <span class=n>sqlStatementContext</span><span class=o>);</span>
+                <span class=n>result</span> <span class=o>=</span> <span class=kc>null</span> <span class=o>==</span> <span class=n>result</span> <span class=o>?</span> <span class=n>resultDecorator</span><span class=o>.</span><span class=na>decorate</span><span class=o>(</span><span class=n>mergedResult</span><span class=o>,</span> <span class=n>sqlStatementContext</span><span class=o>,</span> <span class=n>entry</span><span class=o>.</span><span class=na>getKey</span><span class=o>())</span> <span class=o>:</span> <span class=n>resultDecorator</span><span class=o>.</span><span class=na>decorate</span><span class=o>(</span><span class=n>result</span><span class=o>,</span> <span class=n>sqlStatementContext</span><span class=o>,</span> <span class=n>entry</span><span class=o>.</span><span class=na>getKey</span><span class=o>());</span>
+            <span class=o>}</span>
+        <span class=o>}</span>
+        <span class=k>return</span> <span class=kc>null</span> <span class=o>==</span> <span class=n>result</span> <span class=o>?</span> <span class=n>mergedResult</span> <span class=o>:</span> <span class=n>result</span><span class=o>;</span>
+    <span class=o>}</span>
     
-    @SuppressWarnings({&quot;unchecked&quot;, &quot;rawtypes&quot;})
-    private Optional&lt;MergedResult&gt; decorate(final QueryResult queryResult, final SQLStatementContext&lt;?&gt; sqlStatementContext) throws SQLException {
-        MergedResult result = null;
-        for (Entry&lt;ShardingSphereRule, ResultProcessEngine&gt; entry : engines.entrySet()) {
-            if (entry.getValue() instanceof ResultDecoratorEngine) {
-                ResultDecorator resultDecorator = ((ResultDecoratorEngine) entry.getValue()).newInstance(databaseType, schema, entry.getKey(), props, sqlStatementContext);
-                result = null == result ? resultDecorator.decorate(queryResult, sqlStatementContext, entry.getKey()) : resultDecorator.decorate(result, sqlStatementContext, entry.getKey());
-            }
-        }
-        return Optional.ofNullable(result);
-    }
-}
-</code></pre><p>ResultMerger</p><p><img src=https://gitee.com/fengzhenbing/picgo/raw/master/image-20210910010533225.png alt=image-20210910010533225></p><ul><li>以上对整个流程中各个关键节点进行简单分析，后续对每个节点做详细学习</li></ul></section><footer class=article-footer><section class=article-tags><a href=/tags/shardingsphere/>shardingsphere</a>
+    <span class=nd>@SuppressWarnings</span><span class=o>({</span><span class=s>&#34;unchecked&#34;</span><span class=o>,</span> <span class=s>&#34;rawtypes&#34;</span><span class=o>})</span>
+    <span class=kd>private</span> <span class=n>Optional</span><span class=o>&lt;</span><span class=n>MergedResult</span><span class=o>&gt;</span> <span class=nf>decorate</span><span class=o>(</span><span class=kd>final</span> <span class=n>QueryResult</span> <span class=n>queryResult</span><span class=o>,</span> <span class=kd>final</span> <span class=n>SQLStatementContext</span><span class=o>&lt;?&gt;</span> <span class=n>sqlStatementContext</span><span class=o>)</span> <span class=kd>throws</span> <span class=n>SQLException</span> <span class=o>{</span>
+        <span class=n>MergedResult</span> <span class=n>result</span> <span class=o>=</span> <span class=kc>null</span><span class=o>;</span>
+        <span class=k>for</span> <span class=o>(</span><span class=n>Entry</span><span class=o>&lt;</span><span class=n>ShardingSphereRule</span><span class=o>,</span> <span class=n>ResultProcessEngine</span><span class=o>&gt;</span> <span class=n>entry</span> <span class=o>:</span> <span class=n>engines</span><span class=o>.</span><span class=na>entrySet</span><span class=o>())</span> <span class=o>{</span>
+            <span class=k>if</span> <span class=o>(</span><span class=n>entry</span><span class=o>.</span><span class=na>getValue</span><span class=o>()</span> <span class=k>instanceof</span> <span class=n>ResultDecoratorEngine</span><span class=o>)</span> <span class=o>{</span>
+                <span class=n>ResultDecorator</span> <span class=n>resultDecorator</span> <span class=o>=</span> <span class=o>((</span><span class=n>ResultDecoratorEngine</span><span class=o>)</span> <span class=n>entry</span><span class=o>.</span><span class=na>getValue</span><span class=o>()).</span><span class=na>newInstance</span><span class=o>(</span><span class=n>databaseType</span><span class=o>,</span> <span class=n>schema</span><span class=o>,</span> <span class=n>entry</span><span class=o>.</span><span class=na>getKey</span><span class=o>(),</span> <span class=n>props</span><span class=o>,</span> <span class=n>sqlStatementContext</span><span class=o>);</span>
+                <span class=n>result</span> <span class=o>=</span> <span class=kc>null</span> <span class=o>==</span> <span class=n>result</span> <span class=o>?</span> <span class=n>resultDecorator</span><span class=o>.</span><span class=na>decorate</span><span class=o>(</span><span class=n>queryResult</span><span class=o>,</span> <span class=n>sqlStatementContext</span><span class=o>,</span> <span class=n>entry</span><span class=o>.</span><span class=na>getKey</span><span class=o>())</span> <span class=o>:</span> <span class=n>resultDecorator</span><span class=o>.</span><span class=na>decorate</span><span class=o>(</span><span class=n>result</span><span class=o>,</span> <span class=n>sqlStatementContext</span><span class=o>,</span> <span class=n>entry</span><span class=o>.</span><span class=na>getKey</span><span class=o>());</span>
+            <span class=o>}</span>
+        <span class=o>}</span>
+        <span class=k>return</span> <span class=n>Optional</span><span class=o>.</span><span class=na>ofNullable</span><span class=o>(</span><span class=n>result</span><span class=o>);</span>
+    <span class=o>}</span>
+<span class=o>}</span>
+</code></pre></div><p>ResultMerger</p><p><img src=https://gitee.com/fengzhenbing/picgo/raw/master/image-20210910010533225.png alt=image-20210910010533225></p><ul><li>以上对整个流程中各个关键节点进行简单分析，后续对每个节点做详细学习</li></ul></section><footer class=article-footer><section class=article-tags><a href=/tags/shardingsphere/>shardingsphere</a>
 <a href=/tags/%E6%BA%90%E7%A0%81/>源码</a>
-<a href=/tags/shardingsphere%E7%9B%AE%E5%BD%95/>shardingsphere目录</a></section><section class=article-copyright><svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-copyright" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><circle cx="12" cy="12" r="9"/><path d="M14.5 9a3.5 4 0 100 6"/></svg><span>Licensed under CC BY-NC-SA 4.0</span></section></footer></article><aside class=related-contents--wrapper><h2 class=section-title>相关文章</h2><div class=related-contents><div class="flex article-list--tile"><article><a href=/p/%E5%88%86%E5%B8%83%E5%BC%8F%E4%BB%BB%E5%8A%A1%E8%B0%83%E5%BA%A6hodor/><div class=article-details><h2 class=article-title>分布式任务调度Hodor</h2></div></a></article><article><a href=/p/02.reactor%E5%93%8D%E5%BA%94%E5%BC%8F%E7%BC%96%E7%A8%8B%E5%AD%A6%E4%B9%A0/><div class=article-details><h2 class=article-title>02.reactor响应式编程学习</h2></div></a></article><article><a href=/p/07.precidate%E7%9A%84%E5%AF%B9%E8%B7%AF%E7%94%B1%E8%BF%9B%E8%A1%8C%E9%80%89%E6%8B%A9/><div class=article-details><h2 class=article-title>07.precidate的对路由进行选择</h2></div></a></article><article><a href=/p/08.filter%E7%9A%84%E9%85%8D%E7%BD%AE%E5%8A%A0%E8%BD%BD%E5%8F%8A%E5%90%88%E5%B9%B6/><div class=article-details><h2 class=article-title>08.filter的配置加载及合并</h2></div></a></article><article><a href=/p/03.scg-nettywebserver%E5%90%AF%E5%8A%A8%E8%BF%87%E7%A8%8B/><div class=article-details><h2 class=article-title>03.scg NettyWebServer启动过程</h2></div></a></article></div></div></aside><div class=disqus-container><div id=disqus_thread></div><script type=application/javascript>var disqus_config=function(){};(function(){if(["localhost","127.0.0.1"].indexOf(window.location.hostname)!=-1){document.getElementById('disqus_thread').innerHTML='Disqus comments not available by default when the website is previewed locally.';return}var b=document,a=b.createElement('script');a.async=!0,a.src='//hugo-theme-stack.disqus.com/embed.js',a.setAttribute('data-timestamp',+new Date),(b.head||b.body).appendChild(a)})()</script><noscript>Please enable JavaScript to view the <a href=https://disqus.com/?ref_noscript>comments powered by Disqus.</a></noscript><a href=https://disqus.com class=dsq-brlink>comments powered by <span class=logo-disqus>Disqus</span></a></div><style>.disqus-container{background-color:var(--card-background);border-radius:var(--card-border-radius);box-shadow:var(--shadow-l1);padding:var(--card-padding)}</style><script>window.addEventListener('onColorSchemeChange',a=>{DISQUS&&DISQUS.reset({reload:!0})})</script><footer class=site-footer><section class=copyright>&copy;
+<a href=/tags/shardingsphere%E7%9B%AE%E5%BD%95/>shardingsphere目录</a></section><section class=article-copyright><svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-copyright" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><circle cx="12" cy="12" r="9"/><path d="M14.5 9a3.5 4 0 100 6"/></svg><span>Licensed under CC BY-NC-SA 4.0</span></section></footer></article><aside class=related-contents--wrapper><h2 class=section-title>相关文章</h2><div class=related-contents><div class="flex article-list--tile"><article><a href=/p/%E5%88%86%E5%B8%83%E5%BC%8F%E4%BB%BB%E5%8A%A1%E8%B0%83%E5%BA%A6hodor/><div class=article-details><h2 class=article-title>分布式任务调度Hodor</h2></div></a></article><article><a href=/p/05.route%E8%B7%AF%E7%94%B1%E7%9A%84%E9%85%8D%E7%BD%AE%E5%8A%A0%E8%BD%BD/><div class=article-details><h2 class=article-title>05.route路由的配置加载</h2></div></a></article><article><a href=/p/08.filter%E7%9A%84%E9%85%8D%E7%BD%AE%E5%8A%A0%E8%BD%BD%E5%8F%8A%E5%90%88%E5%B9%B6/><div class=article-details><h2 class=article-title>08.filter的配置加载及合并</h2></div></a></article><article><a href=/p/03.scg-nettywebserver%E5%90%AF%E5%8A%A8%E8%BF%87%E7%A8%8B/><div class=article-details><h2 class=article-title>03.scg NettyWebServer启动过程</h2></div></a></article><article><a href=/p/01.gateway%E6%95%B4%E4%BD%93%E9%80%BB%E8%BE%91/><div class=article-details><h2 class=article-title>01.gateway整体逻辑</h2></div></a></article></div></div></aside><div class=disqus-container><div id=disqus_thread></div><script type=application/javascript>var disqus_config=function(){};(function(){if(["localhost","127.0.0.1"].indexOf(window.location.hostname)!=-1){document.getElementById('disqus_thread').innerHTML='Disqus comments not available by default when the website is previewed locally.';return}var b=document,a=b.createElement('script');a.async=!0,a.src='//hugo-theme-stack.disqus.com/embed.js',a.setAttribute('data-timestamp',+new Date),(b.head||b.body).appendChild(a)})()</script><noscript>Please enable JavaScript to view the <a href=https://disqus.com/?ref_noscript>comments powered by Disqus.</a></noscript><a href=https://disqus.com class=dsq-brlink>comments powered by <span class=logo-disqus>Disqus</span></a></div><style>.disqus-container{background-color:var(--card-background);border-radius:var(--card-border-radius);box-shadow:var(--shadow-l1);padding:var(--card-padding)}</style><script>window.addEventListener('onColorSchemeChange',a=>{DISQUS&&DISQUS.reset({reload:!0})})</script><footer class=site-footer><section class=copyright>&copy;
 2020 -
 2021 Feng Zhenbing's Blog</section><section class=powerby>Built with <a href=https://gohugo.io/ target=_blank rel=noopener>Hugo</a><br>Theme <b><a href=https://github.com/CaiJimmy/hugo-theme-stack target=_blank rel=noopener data-version=3.1.0>Stack</a></b> designed by <a href=https://jimmycai.com target=_blank rel=noopener>Jimmy</a></section></footer><div class=pswp tabindex=-1 role=dialog aria-hidden=true><div class=pswp__bg></div><div class=pswp__scroll-wrap><div class=pswp__container><div class=pswp__item></div><div class=pswp__item></div><div class=pswp__item></div></div><div class="pswp__ui pswp__ui--hidden"><div class=pswp__top-bar><div class=pswp__counter></div><button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
 <button class="pswp__button pswp__button--share" title=Share></button>
