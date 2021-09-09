@@ -1,4 +1,429 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Feng Zhenbing's Blog</title><link>https://fengzhenbing.github.io/</link><description>Recent content on Feng Zhenbing's Blog</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Wed, 01 Sep 2021 00:00:00 +0000</lastBuildDate><atom:link href="https://fengzhenbing.github.io/index.xml" rel="self" type="application/rss+xml"/><item><title>分布式任务调度Hodor</title><link>https://fengzhenbing.github.io/p/%E5%88%86%E5%B8%83%E5%BC%8F%E4%BB%BB%E5%8A%A1%E8%B0%83%E5%BA%A6hodor/</link><pubDate>Wed, 01 Sep 2021 00:00:00 +0000</pubDate><guid>https://fengzhenbing.github.io/p/%E5%88%86%E5%B8%83%E5%BC%8F%E4%BB%BB%E5%8A%A1%E8%B0%83%E5%BA%A6hodor/</guid><description>&lt;h2 id="分布式任务调度hodor源码分析整体结构">分布式任务调度Hodor源码分析（整体结构）&lt;/h2>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Feng Zhenbing's Blog</title><link>https://fengzhenbing.github.io/</link><description>Recent content on Feng Zhenbing's Blog</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Thu, 02 Sep 2021 00:00:00 +0000</lastBuildDate><atom:link href="https://fengzhenbing.github.io/index.xml" rel="self" type="application/rss+xml"/><item><title>shardingsphere（5.0.0.beta）源码总览</title><link>https://fengzhenbing.github.io/p/shardingsphere5.0.0.beta%E6%BA%90%E7%A0%81%E6%80%BB%E8%A7%88/</link><pubDate>Thu, 02 Sep 2021 00:00:00 +0000</pubDate><guid>https://fengzhenbing.github.io/p/shardingsphere5.0.0.beta%E6%BA%90%E7%A0%81%E6%80%BB%E8%A7%88/</guid><description>&lt;p>shardingsphere作为极为优秀的开源的分布式数据库解决方案，通过阅读源码可以学到很多软件设计与开发的知识。&lt;/p>
+&lt;p>本次我继续按照之前读源码的方式&lt;code>从整体要细节，带着问题读源码的方式&lt;/code>记录这次深入学习 shardingsphere的过程。&lt;/p>
+&lt;h3 id="源码版本">源码版本&lt;/h3>
+&lt;ul>
+&lt;li>5.0.0.beta &lt;a class="link" href="https://shardingsphere.apache.org/document/5.0.0-beta/cn/overview/" target="_blank" rel="noopener"
+>官方文档&lt;/a>&lt;/li>
+&lt;li>源码地址 &lt;a href="https://github.com/apache/shardingsphere/tree/5.0.0-beta">https://github.com/apache/shardingsphere/tree/5.0.0-beta&lt;/a>&lt;/li>
+&lt;/ul>
+&lt;h3 id="项目结构">项目结构&lt;/h3>
+&lt;p>先大概理解各个模块的主要功能点&lt;/p>
+&lt;table>
+&lt;thead>
+&lt;tr>
+&lt;th>一级目录&lt;/th>
+&lt;th>说明&lt;/th>
+&lt;/tr>
+&lt;/thead>
+&lt;tbody>
+&lt;tr>
+&lt;td>examples&lt;/td>
+&lt;td>各种使用例子&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>shardingsphere-agent&lt;/td>
+&lt;td>监控, 对接apm,链路追踪&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>shardingsphere-db-protocol&lt;/td>
+&lt;td>数据库协议&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>shardingsphere-distribution&lt;/td>
+&lt;td>相关打包发步用&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>shardingsphere-distsql-parser&lt;/td>
+&lt;td>distsql新功能:&lt;!-- raw HTML omitted --> ShardingSphere 特有的内置 SQL 语言，提供了标准 SQL 之外的增量功能操作能力。&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>shardingsphere-features&lt;/td>
+&lt;td>&lt;strong>常用功能&lt;/strong>&lt;!-- raw HTML omitted -->shardingsphere-db-discovery 基于MGR主从切换的功能&lt;!-- raw HTML omitted -->shardingsphere-encrypt 加解密&lt;!-- raw HTML omitted -->shardingsphere-readwrite-splitting 读写分离 &lt;code>**重点**&lt;/code>&lt;!-- raw HTML omitted -->shardingsphere-shadow 影子库&lt;!-- raw HTML omitted -->shardingsphere-sharding 分库分表 &lt;code>**重点**&lt;/code>&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>shardingsphere-governance&lt;/td>
+&lt;td>数据治理：结合注册中心，提供给前端页面使用&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>shardingsphere-infra&lt;/td>
+&lt;td>&lt;strong>引擎内核&lt;/strong>：&lt;!-- raw HTML omitted -->shardingsphere-infra-authority proxy的权限控制&lt;!-- raw HTML omitted -->&lt;!-- raw HTML omitted -->shardingsphere-infra-binder sql解析后的结果绑定封装&lt;!-- raw HTML omitted --> SQLStatement封装为各类上下文context&lt;!-- raw HTML omitted -->&lt;!-- raw HTML omitted -->shardingsphere-infra-common 重要的实体类及工具 &lt;!-- raw HTML omitted -->&lt;!-- raw HTML omitted -->的元数据metadata,SPI,yaml工具，rule接口等&lt;!-- raw HTML omitted -->&lt;!-- raw HTML omitted -->shardingsphere-infra-context 上下文相关&lt;!-- raw HTML omitted -->&lt;!-- raw HTML omitted -->shardingsphere-infra-datetime 时间服务&lt;!-- raw HTML omitted -->shardingsphere-infra-executor 执行器引擎 &lt;code>**重点**&lt;/code>&lt;!-- raw HTML omitted -->shardingsphere-infra-merge 归并引擎&lt;code>**重点**&lt;/code>&lt;!-- raw HTML omitted -->shardingsphere-infra-optimize 优化引擎&lt;code>**重点**&lt;/code>&lt;!-- raw HTML omitted -->shardingsphere-infra-parser 解析引擎&lt;code>**重点**&lt;/code>&lt;!-- raw HTML omitted -->shardingsphere-infra-rewrite 改写引擎&lt;code>**重点**&lt;/code>&lt;!-- raw HTML omitted -->shardingsphere-infra-route 路由引擎&lt;code>**重点**&lt;/code>&lt;!-- raw HTML omitted -->&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>shardingsphere-jdbc&lt;/td>
+&lt;td>jdbc核心功能：增强版的 JDBC 驱动，完全兼容 JDBC 和各种 ORM 框架。&lt;!-- raw HTML omitted -->装饰器模式，对原生的DataSource,Connection,&lt;!-- raw HTML omitted -->Statement(PrepareStatement),ResultSet进行包装，&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>shardingsphere-proxy&lt;/td>
+&lt;td>透明化的数据库代理&lt;!-- raw HTML omitted -->提供封装了数据库二进制协议的服务端版本，用于完成对异构语言的支持&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>shardingsphere-scaling&lt;/td>
+&lt;td>数据迁移相关:弹性伸缩&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>shardingsphere-sql-parser&lt;/td>
+&lt;td>sql解析器：antlr4 词法语法解析出SqlStatement,提供各类数据库的方言实现。&lt;!-- raw HTML omitted -->SQL 解析作为分库分表类产品的核心，其性能和兼容性是&lt;strong>最重要&lt;/strong>的衡量指标&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>shardingsphere-test&lt;/td>
+&lt;td>测试引擎&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>shardingsphere-transaction&lt;/td>
+&lt;td>事务：整合现有的成熟事务方案，&lt;!-- raw HTML omitted -->本地事务、&lt;!-- raw HTML omitted -->两阶段事务（XA）&lt;!-- raw HTML omitted -->和柔性事务（Seata AT 事务）提供统一的分布式事务接口&lt;/td>
+&lt;/tr>
+&lt;/tbody>
+&lt;/table>
+&lt;p>对于重点核心内容有个大致认识，后面再单独分模块分析。&lt;/p>
+&lt;h3 id="代码分析">代码分析&lt;/h3>
+&lt;p>shardingsphere-jdbc是用的最多的接入方式，以 shardingsphere-jdbc的insert一条数据为例，先过一遍流程。&lt;/p>
+&lt;p>&lt;code>INSERT INTO t_order (user_id, address_id, status) VALUES (?, ?, ?)&lt;/code>&lt;/p>
+&lt;h4 id="分析入口">分析入口&lt;/h4>
+&lt;p>使用org.apache.shardingsphere.example.sharding.raw.jdbc.YamlConfigurationExampleMain 的分库分表示例，插入数据。&lt;/p>
+&lt;pre>&lt;code>public final class YamlConfigurationExampleMain {
+private static ShardingType shardingType = ShardingType.SHARDING_DATABASES_AND_TABLES;
+public static void main(final String[] args) throws SQLException, IOException {
+// 初始化得到的DataSource为ShardingSphereDataSource
+DataSource dataSource = YamlDataSourceFactory.newInstance(shardingType);
+ExampleExecuteTemplate.run(getExampleService(dataSource));
+}
+...
+}
+&lt;/code>&lt;/pre>&lt;p>YamlDataSourceFactory.newInstance(shardingType)调用&lt;code>ShardingSphereDataSourceFactory.createDataSource&lt;/code>得到ShardingSphereDataSource，可以看到ShardingSphereDataSource是对JDBC规范DataSource的实现。&lt;/p>
+&lt;p>同样，后续用的Connection、Statement、PrepareStatement都有对应的ShardingConnection、ShardingStatment、ShardingPreparedStatement的实现。&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-java" data-lang="java">&lt;span class="kd">public&lt;/span> &lt;span class="kd">final&lt;/span> &lt;span class="kd">class&lt;/span> &lt;span class="nc">ShardingSphereDataSourceFactory&lt;/span> &lt;span class="o">{&lt;/span>
+&lt;span class="o">...&lt;/span>
+&lt;span class="kd">public&lt;/span> &lt;span class="kd">static&lt;/span> &lt;span class="n">DataSource&lt;/span> &lt;span class="nf">createDataSource&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="kd">final&lt;/span> &lt;span class="n">Map&lt;/span>&lt;span class="o">&amp;lt;&lt;/span>&lt;span class="n">String&lt;/span>&lt;span class="o">,&lt;/span> &lt;span class="n">DataSource&lt;/span>&lt;span class="o">&amp;gt;&lt;/span> &lt;span class="n">dataSourceMap&lt;/span>&lt;span class="o">,&lt;/span> &lt;span class="kd">final&lt;/span> &lt;span class="n">Collection&lt;/span>&lt;span class="o">&amp;lt;&lt;/span>&lt;span class="n">RuleConfiguration&lt;/span>&lt;span class="o">&amp;gt;&lt;/span> &lt;span class="n">configurations&lt;/span>&lt;span class="o">,&lt;/span> &lt;span class="kd">final&lt;/span> &lt;span class="n">Properties&lt;/span> &lt;span class="n">props&lt;/span>&lt;span class="o">)&lt;/span> &lt;span class="kd">throws&lt;/span> &lt;span class="n">SQLException&lt;/span> &lt;span class="o">{&lt;/span>
+&lt;span class="k">return&lt;/span> &lt;span class="k">new&lt;/span> &lt;span class="n">ShardingSphereDataSource&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">dataSourceMap&lt;/span>&lt;span class="o">,&lt;/span> &lt;span class="n">configurations&lt;/span>&lt;span class="o">,&lt;/span> &lt;span class="n">props&lt;/span>&lt;span class="o">);&lt;/span>
+&lt;span class="o">}&lt;/span>
+&lt;span class="o">...&lt;/span>
+&lt;span class="o">}&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;h4 id="jdbc">jdbc&lt;/h4>
+&lt;p>shardingsphere-jdbc下shardingsphere-jdbc-core中定义了jdbc规范的ShardingSphere实现&lt;/p>
+&lt;ul>
+&lt;li>
+&lt;p>AbstractXXXAdapter对jdbc规范接口做一次适配&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>都继承了父类AbstractUnsupportedOperationXxx : 各个数据库厂家对jdbc规范没有完整实现，ShardingSphere对这些没实现方法统一在&lt;/p>
+&lt;p>AbstractUnsupportedOperationXxx 中抛出不支持的异常，指明用户不可以使用。&lt;/p>
+&lt;/li>
+&lt;/ul>
+&lt;p>org.apache.shardingsphere.driver.jdbc.core.datasource.ShardingSphereDataSource&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-JAVA" data-lang="JAVA">&lt;span class="kd">public&lt;/span> &lt;span class="kd">final&lt;/span> &lt;span class="kd">class&lt;/span> &lt;span class="nc">ShardingSphereDataSource&lt;/span> &lt;span class="kd">extends&lt;/span> &lt;span class="n">AbstractUnsupportedOperationDataSource&lt;/span> &lt;span class="kd">implements&lt;/span> &lt;span class="n">AutoCloseable&lt;/span> &lt;span class="o">{&lt;/span>
+&lt;span class="kd">private&lt;/span> &lt;span class="kd">final&lt;/span> &lt;span class="n">MetaDataContexts&lt;/span> &lt;span class="n">metaDataContexts&lt;/span>&lt;span class="o">;&lt;/span>
+&lt;span class="kd">private&lt;/span> &lt;span class="kd">final&lt;/span> &lt;span class="n">TransactionContexts&lt;/span> &lt;span class="n">transactionContexts&lt;/span>&lt;span class="o">;&lt;/span>
+&lt;span class="o">...&lt;/span>
+&lt;span class="nd">@Override&lt;/span>
+&lt;span class="kd">public&lt;/span> &lt;span class="n">ShardingSphereConnection&lt;/span> &lt;span class="nf">getConnection&lt;/span>&lt;span class="o">()&lt;/span> &lt;span class="o">{&lt;/span>
+&lt;span class="k">return&lt;/span> &lt;span class="k">new&lt;/span> &lt;span class="n">ShardingSphereConnection&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">getDataSourceMap&lt;/span>&lt;span class="o">(),&lt;/span> &lt;span class="n">metaDataContexts&lt;/span>&lt;span class="o">,&lt;/span> &lt;span class="n">transactionContexts&lt;/span>&lt;span class="o">,&lt;/span> &lt;span class="n">TransactionTypeHolder&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">get&lt;/span>&lt;span class="o">());&lt;/span>
+&lt;span class="o">}&lt;/span>
+&lt;span class="nd">@Override&lt;/span>
+&lt;span class="kd">public&lt;/span> &lt;span class="n">ShardingSphereConnection&lt;/span> &lt;span class="nf">getConnection&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="kd">final&lt;/span> &lt;span class="n">String&lt;/span> &lt;span class="n">username&lt;/span>&lt;span class="o">,&lt;/span> &lt;span class="kd">final&lt;/span> &lt;span class="n">String&lt;/span> &lt;span class="n">password&lt;/span>&lt;span class="o">)&lt;/span> &lt;span class="o">{&lt;/span>
+&lt;span class="k">return&lt;/span> &lt;span class="n">getConnection&lt;/span>&lt;span class="o">();&lt;/span>
+&lt;span class="o">}&lt;/span>
+&lt;span class="o">...&lt;/span>
+&lt;span class="o">}&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>org.apache.shardingsphere.driver.jdbc.core.connection.ShardingSphereConnection&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-JAVA" data-lang="JAVA">&lt;span class="kd">public&lt;/span> &lt;span class="kd">final&lt;/span> &lt;span class="kd">class&lt;/span> &lt;span class="nc">ShardingSphereConnection&lt;/span> &lt;span class="kd">extends&lt;/span> &lt;span class="n">AbstractConnectionAdapter&lt;/span> &lt;span class="kd">implements&lt;/span> &lt;span class="n">ExecutorJDBCManager&lt;/span> &lt;span class="o">{&lt;/span>
+&lt;span class="c1">// 数据源map
+&lt;/span>&lt;span class="c1">&lt;/span> &lt;span class="kd">private&lt;/span> &lt;span class="kd">final&lt;/span> &lt;span class="n">Map&lt;/span>&lt;span class="o">&amp;lt;&lt;/span>&lt;span class="n">String&lt;/span>&lt;span class="o">,&lt;/span> &lt;span class="n">DataSource&lt;/span>&lt;span class="o">&amp;gt;&lt;/span> &lt;span class="n">dataSourceMap&lt;/span>&lt;span class="o">;&lt;/span>
+&lt;span class="kd">private&lt;/span> &lt;span class="kd">final&lt;/span> &lt;span class="n">MetaDataContexts&lt;/span> &lt;span class="n">metaDataContexts&lt;/span>&lt;span class="o">;&lt;/span>
+&lt;span class="c1">//事务类型 LOCAL, XA, BASE;
+&lt;/span>&lt;span class="c1">&lt;/span> &lt;span class="kd">private&lt;/span> &lt;span class="kd">final&lt;/span> &lt;span class="n">TransactionType&lt;/span> &lt;span class="n">transactionType&lt;/span>&lt;span class="o">;&lt;/span>
+&lt;span class="kd">private&lt;/span> &lt;span class="kd">final&lt;/span> &lt;span class="n">ShardingTransactionManager&lt;/span> &lt;span class="n">shardingTransactionManager&lt;/span>&lt;span class="o">;&lt;/span>
+&lt;span class="o">...&lt;/span>
+&lt;span class="nd">@Override&lt;/span>
+&lt;span class="kd">public&lt;/span> &lt;span class="n">PreparedStatement&lt;/span> &lt;span class="nf">prepareStatement&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="kd">final&lt;/span> &lt;span class="n">String&lt;/span> &lt;span class="n">sql&lt;/span>&lt;span class="o">,&lt;/span> &lt;span class="kd">final&lt;/span> &lt;span class="kt">int&lt;/span> &lt;span class="n">resultSetType&lt;/span>&lt;span class="o">,&lt;/span> &lt;span class="kd">final&lt;/span> &lt;span class="kt">int&lt;/span> &lt;span class="n">resultSetConcurrency&lt;/span>&lt;span class="o">,&lt;/span> &lt;span class="kd">final&lt;/span> &lt;span class="kt">int&lt;/span> &lt;span class="n">resultSetHoldability&lt;/span>&lt;span class="o">)&lt;/span> &lt;span class="kd">throws&lt;/span> &lt;span class="n">SQLException&lt;/span> &lt;span class="o">{&lt;/span>
+&lt;span class="k">return&lt;/span> &lt;span class="k">new&lt;/span> &lt;span class="n">ShardingSpherePreparedStatement&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="k">this&lt;/span>&lt;span class="o">,&lt;/span> &lt;span class="n">sql&lt;/span>&lt;span class="o">,&lt;/span> &lt;span class="n">resultSetType&lt;/span>&lt;span class="o">,&lt;/span> &lt;span class="n">resultSetConcurrency&lt;/span>&lt;span class="o">,&lt;/span> &lt;span class="n">resultSetHoldability&lt;/span>&lt;span class="o">);&lt;/span>
+&lt;span class="o">}&lt;/span>
+&lt;span class="o">...&lt;/span>
+&lt;span class="nd">@Override&lt;/span>
+&lt;span class="kd">public&lt;/span> &lt;span class="n">Statement&lt;/span> &lt;span class="nf">createStatement&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="kd">final&lt;/span> &lt;span class="kt">int&lt;/span> &lt;span class="n">resultSetType&lt;/span>&lt;span class="o">,&lt;/span> &lt;span class="kd">final&lt;/span> &lt;span class="kt">int&lt;/span> &lt;span class="n">resultSetConcurrency&lt;/span>&lt;span class="o">,&lt;/span> &lt;span class="kd">final&lt;/span> &lt;span class="kt">int&lt;/span> &lt;span class="n">resultSetHoldability&lt;/span>&lt;span class="o">)&lt;/span> &lt;span class="o">{&lt;/span>
+&lt;span class="k">return&lt;/span> &lt;span class="k">new&lt;/span> &lt;span class="n">ShardingSphereStatement&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="k">this&lt;/span>&lt;span class="o">,&lt;/span> &lt;span class="n">resultSetType&lt;/span>&lt;span class="o">,&lt;/span> &lt;span class="n">resultSetConcurrency&lt;/span>&lt;span class="o">,&lt;/span> &lt;span class="n">resultSetHoldability&lt;/span>&lt;span class="o">);&lt;/span>
+&lt;span class="o">}&lt;/span>
+&lt;span class="o">...&lt;/span>
+&lt;span class="o">}&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>org.apache.shardingsphere.driver.jdbc.core.statement.ShardingSpherePreparedStatement&lt;/p>
+&lt;pre>&lt;code>public final class ShardingSpherePreparedStatement extends AbstractPreparedStatementAdapter {
+...
+@Override
+public ResultSet executeQuery() throws SQLException {
+ResultSet result;
+try {
+clearPrevious();
+executionContext = createExecutionContext();
+List&amp;lt;QueryResult&amp;gt; queryResults = executeQuery0();
+// 执行的查询结构通过归并引擎归并
+MergedResult mergedResult = mergeQuery(queryResults);
+result = new ShardingSphereResultSet(getResultSetsForShardingSphereResultSet(), mergedResult, this, executionContext);
+} finally {
+clearBatch();
+}
+currentResultSet = result;
+return result;
+}
+@Override
+public int executeUpdate() throws SQLException {
+...
+}
+@Override
+public boolean execute() throws SQLException {
+...
+}
+// 调用归并引擎
+private MergedResult mergeQuery(final List&amp;lt;QueryResult&amp;gt; queryResults) throws SQLException {
+ShardingSphereMetaData metaData = metaDataContexts.getDefaultMetaData();
+MergeEngine mergeEngine = new MergeEngine(
+metaDataContexts.getDefaultMetaData().getResource().getDatabaseType(), metaData.getSchema(), metaDataContexts.getProps(), metaData.getRuleMetaData().getRules());
+return mergeEngine.merge(queryResults, executionContext.getSqlStatementContext());
+}
+...
+}
+&lt;/code>&lt;/pre>&lt;h4 id="执行流程">执行流程&lt;/h4>
+&lt;p>再接着调试栈来看&lt;/p>
+&lt;p>&lt;img src="https://gitee.com/fengzhenbing/picgo/raw/master/image-20210909233033903.png" alt="image-20210909233033903" />&lt;/p>
+&lt;p>执行流程为&lt;/p>
+&lt;p>&lt;img src="https://gitee.com/fengzhenbing/picgo/raw/master/image-20210910003744036.png" alt="image-20210910003744036" />&lt;/p>
+&lt;p>下面简单分析：&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-JAVA" data-lang="JAVA">&lt;span class="kd">public&lt;/span> &lt;span class="kd">final&lt;/span> &lt;span class="kd">class&lt;/span> &lt;span class="nc">ShardingSpherePreparedStatement&lt;/span> &lt;span class="kd">extends&lt;/span> &lt;span class="n">AbstractPreparedStatementAdapter&lt;/span> &lt;span class="o">{&lt;/span>
+&lt;span class="kd">private&lt;/span> &lt;span class="nf">ShardingSpherePreparedStatement&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="kd">final&lt;/span> &lt;span class="n">ShardingSphereConnection&lt;/span> &lt;span class="n">connection&lt;/span>&lt;span class="o">,&lt;/span> &lt;span class="kd">final&lt;/span> &lt;span class="n">String&lt;/span> &lt;span class="n">sql&lt;/span>&lt;span class="o">,&lt;/span>
+&lt;span class="kd">final&lt;/span> &lt;span class="kt">int&lt;/span> &lt;span class="n">resultSetType&lt;/span>&lt;span class="o">,&lt;/span> &lt;span class="kd">final&lt;/span> &lt;span class="kt">int&lt;/span> &lt;span class="n">resultSetConcurrency&lt;/span>&lt;span class="o">,&lt;/span> &lt;span class="kd">final&lt;/span> &lt;span class="kt">int&lt;/span> &lt;span class="n">resultSetHoldability&lt;/span>&lt;span class="o">,&lt;/span> &lt;span class="kd">final&lt;/span> &lt;span class="kt">boolean&lt;/span> &lt;span class="n">returnGeneratedKeys&lt;/span>&lt;span class="o">)&lt;/span> &lt;span class="kd">throws&lt;/span> &lt;span class="n">SQLException&lt;/span> &lt;span class="o">{&lt;/span>
+&lt;span class="o">....&lt;/span>
+&lt;span class="c1">// 各种初始化省略
+&lt;/span>&lt;span class="c1">&lt;/span>
+&lt;span class="c1">// 敲黑板： 1， 使用解析器引擎解析sql语句，得到结果sqlStatement。 SqlStatement封装了sql解析后各类AST节点（DDL,DML,DCL...）后面细讲
+&lt;/span>&lt;span class="c1">&lt;/span> &lt;span class="n">ShardingSphereSQLParserEngine&lt;/span> &lt;span class="n">sqlParserEngine&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="k">new&lt;/span> &lt;span class="n">ShardingSphereSQLParserEngine&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">DatabaseTypeRegistry&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">getTrunkDatabaseTypeName&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">metaDataContexts&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">getDefaultMetaData&lt;/span>&lt;span class="o">().&lt;/span>&lt;span class="na">getResource&lt;/span>&lt;span class="o">().&lt;/span>&lt;span class="na">getDatabaseType&lt;/span>&lt;span class="o">()));&lt;/span>
+&lt;span class="n">sqlStatement&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">sqlParserEngine&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">parse&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">sql&lt;/span>&lt;span class="o">,&lt;/span> &lt;span class="kc">true&lt;/span>&lt;span class="o">);&lt;/span>
+&lt;span class="o">...&lt;/span>
+&lt;span class="c1">// sql执行器 RawExecutor
+&lt;/span>&lt;span class="c1">&lt;/span> &lt;span class="n">rawExecutor&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="k">new&lt;/span> &lt;span class="n">RawExecutor&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">metaDataContexts&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">getExecutorEngine&lt;/span>&lt;span class="o">(),&lt;/span> &lt;span class="n">connection&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">isHoldTransaction&lt;/span>&lt;span class="o">(),&lt;/span> &lt;span class="n">metaDataContexts&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">getProps&lt;/span>&lt;span class="o">());&lt;/span>
+&lt;span class="o">....&lt;/span>
+&lt;span class="c1">// 各种初始化省略
+&lt;/span>&lt;span class="c1">&lt;/span> &lt;span class="o">}&lt;/span>
+&lt;span class="o">...&lt;/span>
+&lt;span class="nd">@Override&lt;/span>
+&lt;span class="kd">public&lt;/span> &lt;span class="kt">int&lt;/span> &lt;span class="nf">executeUpdate&lt;/span>&lt;span class="o">()&lt;/span> &lt;span class="kd">throws&lt;/span> &lt;span class="n">SQLException&lt;/span> &lt;span class="o">{&lt;/span>
+&lt;span class="k">try&lt;/span> &lt;span class="o">{&lt;/span>
+&lt;span class="n">clearPrevious&lt;/span>&lt;span class="o">();&lt;/span>
+&lt;span class="c1">// 创建执行的上下文，创建过程中完成了路由的解析，sQL改写真实sql,
+&lt;/span>&lt;span class="c1">&lt;/span> &lt;span class="n">executionContext&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">createExecutionContext&lt;/span>&lt;span class="o">();&lt;/span>
+&lt;span class="k">if&lt;/span> &lt;span class="o">(&lt;/span>&lt;span class="n">metaDataContexts&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">getDefaultMetaData&lt;/span>&lt;span class="o">().&lt;/span>&lt;span class="na">getRuleMetaData&lt;/span>&lt;span class="o">().&lt;/span>&lt;span class="na">getRules&lt;/span>&lt;span class="o">().&lt;/span>&lt;span class="na">stream&lt;/span>&lt;span class="o">().&lt;/span>&lt;span class="na">anyMatch&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">each&lt;/span> &lt;span class="o">-&amp;gt;&lt;/span> &lt;span class="n">each&lt;/span> &lt;span class="k">instanceof&lt;/span> &lt;span class="n">RawExecutionRule&lt;/span>&lt;span class="o">))&lt;/span> &lt;span class="o">{&lt;/span>
+&lt;span class="n">Collection&lt;/span>&lt;span class="o">&amp;lt;&lt;/span>&lt;span class="n">ExecuteResult&lt;/span>&lt;span class="o">&amp;gt;&lt;/span> &lt;span class="n">executeResults&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">rawExecutor&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">execute&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">createRawExecutionGroupContext&lt;/span>&lt;span class="o">(),&lt;/span> &lt;span class="n">executionContext&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">getSqlStatementContext&lt;/span>&lt;span class="o">(),&lt;/span> &lt;span class="k">new&lt;/span> &lt;span class="n">RawSQLExecutorCallback&lt;/span>&lt;span class="o">());&lt;/span>
+&lt;span class="n">accumulate&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">executeResults&lt;/span>&lt;span class="o">);&lt;/span>
+&lt;span class="o">}&lt;/span>
+&lt;span class="c1">// 下面会调用执行
+&lt;/span>&lt;span class="c1">&lt;/span> &lt;span class="n">ExecutionGroupContext&lt;/span>&lt;span class="o">&amp;lt;&lt;/span>&lt;span class="n">JDBCExecutionUnit&lt;/span>&lt;span class="o">&amp;gt;&lt;/span> &lt;span class="n">executionGroupContext&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">createExecutionGroupContext&lt;/span>&lt;span class="o">();&lt;/span>
+&lt;span class="n">cacheStatements&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">executionGroupContext&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">getInputGroups&lt;/span>&lt;span class="o">());&lt;/span>
+&lt;span class="c1">// DriverJDBCExecutor会调用执行引擎执行 driverJDBCExecutor.executeUpdate下面会简单分析
+&lt;/span>&lt;span class="c1">&lt;/span> &lt;span class="k">return&lt;/span> &lt;span class="n">driverJDBCExecutor&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">executeUpdate&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">executionGroupContext&lt;/span>&lt;span class="o">,&lt;/span>
+&lt;span class="n">executionContext&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">getSqlStatementContext&lt;/span>&lt;span class="o">(),&lt;/span> &lt;span class="n">executionContext&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">getRouteContext&lt;/span>&lt;span class="o">().&lt;/span>&lt;span class="na">getRouteUnits&lt;/span>&lt;span class="o">(),&lt;/span> &lt;span class="n">createExecuteUpdateCallback&lt;/span>&lt;span class="o">());&lt;/span>
+&lt;span class="o">}&lt;/span> &lt;span class="k">finally&lt;/span> &lt;span class="o">{&lt;/span>
+&lt;span class="n">clearBatch&lt;/span>&lt;span class="o">();&lt;/span>
+&lt;span class="o">}&lt;/span>
+&lt;span class="o">}&lt;/span>
+&lt;span class="o">...&lt;/span>
+&lt;span class="c1">// 创建执行的上下文
+&lt;/span>&lt;span class="c1">&lt;/span> &lt;span class="kd">private&lt;/span> &lt;span class="n">ExecutionContext&lt;/span> &lt;span class="nf">createExecutionContext&lt;/span>&lt;span class="o">()&lt;/span> &lt;span class="o">{&lt;/span>
+&lt;span class="c1">// 创建逻辑SQL
+&lt;/span>&lt;span class="c1">&lt;/span> &lt;span class="n">LogicSQL&lt;/span> &lt;span class="n">logicSQL&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">createLogicSQL&lt;/span>&lt;span class="o">();&lt;/span>
+&lt;span class="c1">// SQLCheckEngine检查SQL的是否合法
+&lt;/span>&lt;span class="c1">&lt;/span> &lt;span class="n">SQLCheckEngine&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">check&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">logicSQL&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">getSqlStatementContext&lt;/span>&lt;span class="o">().&lt;/span>&lt;span class="na">getSqlStatement&lt;/span>&lt;span class="o">(),&lt;/span> &lt;span class="n">logicSQL&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">getParameters&lt;/span>&lt;span class="o">(),&lt;/span>
+&lt;span class="n">metaDataContexts&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">getDefaultMetaData&lt;/span>&lt;span class="o">().&lt;/span>&lt;span class="na">getRuleMetaData&lt;/span>&lt;span class="o">().&lt;/span>&lt;span class="na">getRules&lt;/span>&lt;span class="o">(),&lt;/span> &lt;span class="n">DefaultSchema&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">LOGIC_NAME&lt;/span>&lt;span class="o">,&lt;/span> &lt;span class="n">metaDataContexts&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">getMetaDataMap&lt;/span>&lt;span class="o">(),&lt;/span> &lt;span class="kc">null&lt;/span>&lt;span class="o">);&lt;/span>
+&lt;span class="c1">//内核处理器生成执行上下文
+&lt;/span>&lt;span class="c1">&lt;/span> &lt;span class="n">ExecutionContext&lt;/span> &lt;span class="n">result&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">kernelProcessor&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">generateExecutionContext&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">logicSQL&lt;/span>&lt;span class="o">,&lt;/span> &lt;span class="n">metaDataContexts&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">getDefaultMetaData&lt;/span>&lt;span class="o">(),&lt;/span> &lt;span class="n">metaDataContexts&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">getProps&lt;/span>&lt;span class="o">());&lt;/span>
+&lt;span class="n">findGeneratedKey&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">result&lt;/span>&lt;span class="o">).&lt;/span>&lt;span class="na">ifPresent&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">generatedKey&lt;/span> &lt;span class="o">-&amp;gt;&lt;/span> &lt;span class="n">generatedValues&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">addAll&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">generatedKey&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">getGeneratedValues&lt;/span>&lt;span class="o">()));&lt;/span>
+&lt;span class="k">return&lt;/span> &lt;span class="n">result&lt;/span>&lt;span class="o">;&lt;/span>
+&lt;span class="o">}&lt;/span>
+&lt;span class="c1">// 创建逻辑SQL
+&lt;/span>&lt;span class="c1">&lt;/span> &lt;span class="kd">private&lt;/span> &lt;span class="n">LogicSQL&lt;/span> &lt;span class="nf">createLogicSQL&lt;/span>&lt;span class="o">()&lt;/span> &lt;span class="o">{&lt;/span>
+&lt;span class="n">List&lt;/span>&lt;span class="o">&amp;lt;&lt;/span>&lt;span class="n">Object&lt;/span>&lt;span class="o">&amp;gt;&lt;/span> &lt;span class="n">parameters&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="k">new&lt;/span> &lt;span class="n">ArrayList&lt;/span>&lt;span class="o">&amp;lt;&amp;gt;(&lt;/span>&lt;span class="n">getParameters&lt;/span>&lt;span class="o">());&lt;/span>
+&lt;span class="n">ShardingSphereSchema&lt;/span> &lt;span class="n">schema&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">metaDataContexts&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">getDefaultMetaData&lt;/span>&lt;span class="o">().&lt;/span>&lt;span class="na">getSchema&lt;/span>&lt;span class="o">();&lt;/span>
+&lt;span class="n">SQLStatementContext&lt;/span>&lt;span class="o">&amp;lt;?&amp;gt;&lt;/span> &lt;span class="n">sqlStatementContext&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">SQLStatementContextFactory&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">newInstance&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">schema&lt;/span>&lt;span class="o">,&lt;/span> &lt;span class="n">parameters&lt;/span>&lt;span class="o">,&lt;/span> &lt;span class="n">sqlStatement&lt;/span>&lt;span class="o">);&lt;/span>
+&lt;span class="k">return&lt;/span> &lt;span class="k">new&lt;/span> &lt;span class="n">LogicSQL&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">sqlStatementContext&lt;/span>&lt;span class="o">,&lt;/span> &lt;span class="n">sql&lt;/span>&lt;span class="o">,&lt;/span> &lt;span class="n">parameters&lt;/span>&lt;span class="o">);&lt;/span>
+&lt;span class="o">}&lt;/span>
+&lt;span class="o">...&lt;/span>
+&lt;span class="o">}&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>再看内核处理器如何生成执行上下文&lt;/p>
+&lt;p>org.apache.shardingsphere.infra.context.kernel.KernelProcessor&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-JAVA" data-lang="JAVA">&lt;span class="cm">/**
+&lt;/span>&lt;span class="cm"> * Kernel processor. 内核处理器
+&lt;/span>&lt;span class="cm"> */&lt;/span>
+&lt;span class="kd">public&lt;/span> &lt;span class="kd">final&lt;/span> &lt;span class="kd">class&lt;/span> &lt;span class="nc">KernelProcessor&lt;/span> &lt;span class="o">{&lt;/span>
+&lt;span class="cm">/**
+&lt;/span>&lt;span class="cm"> * Generate execution context.
+&lt;/span>&lt;span class="cm"> * 创建执行上下文
+&lt;/span>&lt;span class="cm"> * @param logicSQL logic SQL
+&lt;/span>&lt;span class="cm"> * @param metaData ShardingSphere meta data
+&lt;/span>&lt;span class="cm"> * @param props configuration properties
+&lt;/span>&lt;span class="cm"> * @return execution context
+&lt;/span>&lt;span class="cm"> */&lt;/span>
+&lt;span class="kd">public&lt;/span> &lt;span class="n">ExecutionContext&lt;/span> &lt;span class="nf">generateExecutionContext&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="kd">final&lt;/span> &lt;span class="n">LogicSQL&lt;/span> &lt;span class="n">logicSQL&lt;/span>&lt;span class="o">,&lt;/span> &lt;span class="kd">final&lt;/span> &lt;span class="n">ShardingSphereMetaData&lt;/span> &lt;span class="n">metaData&lt;/span>&lt;span class="o">,&lt;/span> &lt;span class="kd">final&lt;/span> &lt;span class="n">ConfigurationProperties&lt;/span> &lt;span class="n">props&lt;/span>&lt;span class="o">)&lt;/span> &lt;span class="o">{&lt;/span>
+&lt;span class="c1">//2 使用路由引擎创建路由
+&lt;/span>&lt;span class="c1">&lt;/span> &lt;span class="n">RouteContext&lt;/span> &lt;span class="n">routeContext&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">route&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">logicSQL&lt;/span>&lt;span class="o">,&lt;/span> &lt;span class="n">metaData&lt;/span>&lt;span class="o">,&lt;/span> &lt;span class="n">props&lt;/span>&lt;span class="o">);&lt;/span>
+&lt;span class="c1">//3 使用改写引擎改写出真实执行的sql
+&lt;/span>&lt;span class="c1">&lt;/span> &lt;span class="n">SQLRewriteResult&lt;/span> &lt;span class="n">rewriteResult&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">rewrite&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">logicSQL&lt;/span>&lt;span class="o">,&lt;/span> &lt;span class="n">metaData&lt;/span>&lt;span class="o">,&lt;/span> &lt;span class="n">props&lt;/span>&lt;span class="o">,&lt;/span> &lt;span class="n">routeContext&lt;/span>&lt;span class="o">);&lt;/span>
+&lt;span class="c1">//4 创建执行上下文
+&lt;/span>&lt;span class="c1">&lt;/span> &lt;span class="n">ExecutionContext&lt;/span> &lt;span class="n">result&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">createExecutionContext&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">logicSQL&lt;/span>&lt;span class="o">,&lt;/span> &lt;span class="n">metaData&lt;/span>&lt;span class="o">,&lt;/span> &lt;span class="n">routeContext&lt;/span>&lt;span class="o">,&lt;/span> &lt;span class="n">rewriteResult&lt;/span>&lt;span class="o">);&lt;/span>
+&lt;span class="c1">// 日志
+&lt;/span>&lt;span class="c1">&lt;/span> &lt;span class="n">logSQL&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">logicSQL&lt;/span>&lt;span class="o">,&lt;/span> &lt;span class="n">props&lt;/span>&lt;span class="o">,&lt;/span> &lt;span class="n">result&lt;/span>&lt;span class="o">);&lt;/span>
+&lt;span class="k">return&lt;/span> &lt;span class="n">result&lt;/span>&lt;span class="o">;&lt;/span>
+&lt;span class="o">}&lt;/span>
+&lt;span class="c1">// 使用路由引擎创建路由 SQLRouteEngine(...).route(..)
+&lt;/span>&lt;span class="c1">&lt;/span> &lt;span class="kd">private&lt;/span> &lt;span class="n">RouteContext&lt;/span> &lt;span class="nf">route&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="kd">final&lt;/span> &lt;span class="n">LogicSQL&lt;/span> &lt;span class="n">logicSQL&lt;/span>&lt;span class="o">,&lt;/span> &lt;span class="kd">final&lt;/span> &lt;span class="n">ShardingSphereMetaData&lt;/span> &lt;span class="n">metaData&lt;/span>&lt;span class="o">,&lt;/span> &lt;span class="kd">final&lt;/span> &lt;span class="n">ConfigurationProperties&lt;/span> &lt;span class="n">props&lt;/span>&lt;span class="o">)&lt;/span> &lt;span class="o">{&lt;/span>
+&lt;span class="k">return&lt;/span> &lt;span class="k">new&lt;/span> &lt;span class="n">SQLRouteEngine&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">metaData&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">getRuleMetaData&lt;/span>&lt;span class="o">().&lt;/span>&lt;span class="na">getRules&lt;/span>&lt;span class="o">(),&lt;/span> &lt;span class="n">props&lt;/span>&lt;span class="o">).&lt;/span>&lt;span class="na">route&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">logicSQL&lt;/span>&lt;span class="o">,&lt;/span> &lt;span class="n">metaData&lt;/span>&lt;span class="o">);&lt;/span>
+&lt;span class="o">}&lt;/span>
+&lt;span class="c1">// SQLRewriteEntry改写引擎
+&lt;/span>&lt;span class="c1">&lt;/span> &lt;span class="kd">private&lt;/span> &lt;span class="n">SQLRewriteResult&lt;/span> &lt;span class="nf">rewrite&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="kd">final&lt;/span> &lt;span class="n">LogicSQL&lt;/span> &lt;span class="n">logicSQL&lt;/span>&lt;span class="o">,&lt;/span> &lt;span class="kd">final&lt;/span> &lt;span class="n">ShardingSphereMetaData&lt;/span> &lt;span class="n">metaData&lt;/span>&lt;span class="o">,&lt;/span> &lt;span class="kd">final&lt;/span> &lt;span class="n">ConfigurationProperties&lt;/span> &lt;span class="n">props&lt;/span>&lt;span class="o">,&lt;/span> &lt;span class="kd">final&lt;/span> &lt;span class="n">RouteContext&lt;/span> &lt;span class="n">routeContext&lt;/span>&lt;span class="o">)&lt;/span> &lt;span class="o">{&lt;/span>
+&lt;span class="k">return&lt;/span> &lt;span class="k">new&lt;/span> &lt;span class="n">SQLRewriteEntry&lt;/span>&lt;span class="o">(&lt;/span>
+&lt;span class="n">metaData&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">getSchema&lt;/span>&lt;span class="o">(),&lt;/span> &lt;span class="n">props&lt;/span>&lt;span class="o">,&lt;/span> &lt;span class="n">metaData&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">getRuleMetaData&lt;/span>&lt;span class="o">().&lt;/span>&lt;span class="na">getRules&lt;/span>&lt;span class="o">()).&lt;/span>&lt;span class="na">rewrite&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">logicSQL&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">getSql&lt;/span>&lt;span class="o">(),&lt;/span> &lt;span class="n">logicSQL&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">getParameters&lt;/span>&lt;span class="o">(),&lt;/span> &lt;span class="n">logicSQL&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">getSqlStatementContext&lt;/span>&lt;span class="o">(),&lt;/span> &lt;span class="n">routeContext&lt;/span>&lt;span class="o">);&lt;/span>
+&lt;span class="o">}&lt;/span>
+&lt;span class="c1">// 创建执行上下文
+&lt;/span>&lt;span class="c1">&lt;/span> &lt;span class="kd">private&lt;/span> &lt;span class="n">ExecutionContext&lt;/span> &lt;span class="nf">createExecutionContext&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="kd">final&lt;/span> &lt;span class="n">LogicSQL&lt;/span> &lt;span class="n">logicSQL&lt;/span>&lt;span class="o">,&lt;/span> &lt;span class="kd">final&lt;/span> &lt;span class="n">ShardingSphereMetaData&lt;/span> &lt;span class="n">metaData&lt;/span>&lt;span class="o">,&lt;/span> &lt;span class="kd">final&lt;/span> &lt;span class="n">RouteContext&lt;/span> &lt;span class="n">routeContext&lt;/span>&lt;span class="o">,&lt;/span> &lt;span class="kd">final&lt;/span> &lt;span class="n">SQLRewriteResult&lt;/span> &lt;span class="n">rewriteResult&lt;/span>&lt;span class="o">)&lt;/span> &lt;span class="o">{&lt;/span>
+&lt;span class="k">return&lt;/span> &lt;span class="k">new&lt;/span> &lt;span class="n">ExecutionContext&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">logicSQL&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">getSqlStatementContext&lt;/span>&lt;span class="o">(),&lt;/span> &lt;span class="n">ExecutionContextBuilder&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">build&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">metaData&lt;/span>&lt;span class="o">,&lt;/span> &lt;span class="n">rewriteResult&lt;/span>&lt;span class="o">,&lt;/span> &lt;span class="n">logicSQL&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">getSqlStatementContext&lt;/span>&lt;span class="o">()),&lt;/span> &lt;span class="n">routeContext&lt;/span>&lt;span class="o">);&lt;/span>
+&lt;span class="o">}&lt;/span>
+&lt;span class="kd">private&lt;/span> &lt;span class="kt">void&lt;/span> &lt;span class="nf">logSQL&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="kd">final&lt;/span> &lt;span class="n">LogicSQL&lt;/span> &lt;span class="n">logicSQL&lt;/span>&lt;span class="o">,&lt;/span> &lt;span class="kd">final&lt;/span> &lt;span class="n">ConfigurationProperties&lt;/span> &lt;span class="n">props&lt;/span>&lt;span class="o">,&lt;/span> &lt;span class="kd">final&lt;/span> &lt;span class="n">ExecutionContext&lt;/span> &lt;span class="n">executionContext&lt;/span>&lt;span class="o">)&lt;/span> &lt;span class="o">{&lt;/span>
+&lt;span class="k">if&lt;/span> &lt;span class="o">(&lt;/span>&lt;span class="n">props&lt;/span>&lt;span class="o">.&amp;lt;&lt;/span>&lt;span class="n">Boolean&lt;/span>&lt;span class="o">&amp;gt;&lt;/span>&lt;span class="n">getValue&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">ConfigurationPropertyKey&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">SQL_SHOW&lt;/span>&lt;span class="o">))&lt;/span> &lt;span class="o">{&lt;/span>
+&lt;span class="n">SQLLogger&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">logSQL&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">logicSQL&lt;/span>&lt;span class="o">,&lt;/span> &lt;span class="n">props&lt;/span>&lt;span class="o">.&amp;lt;&lt;/span>&lt;span class="n">Boolean&lt;/span>&lt;span class="o">&amp;gt;&lt;/span>&lt;span class="n">getValue&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">ConfigurationPropertyKey&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">SQL_SIMPLE&lt;/span>&lt;span class="o">),&lt;/span> &lt;span class="n">executionContext&lt;/span>&lt;span class="o">);&lt;/span>
+&lt;span class="o">}&lt;/span>
+&lt;span class="o">}&lt;/span>
+&lt;span class="o">}&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;h5 id="路由引擎">路由引擎&lt;/h5>
+&lt;pre>&lt;code>@RequiredArgsConstructor
+public final class SQLRouteEngine {
+private final Collection&amp;lt;ShardingSphereRule&amp;gt; rules;
+private final ConfigurationProperties props;
+/**
+* Route SQL.
+*
+* @param logicSQL logic SQL
+* @param metaData ShardingSphere meta data
+* @return route context
+*/
+public RouteContext route(final LogicSQL logicSQL, final ShardingSphereMetaData metaData) {
+SQLRouteExecutor executor = isNeedAllSchemas(logicSQL.getSqlStatementContext().getSqlStatement()) ? new AllSQLRouteExecutor() : new PartialSQLRouteExecutor(rules, props);
+// 进行路由计算，生成路由结果上下文RouteContext
+return executor.route(logicSQL, metaData);
+}
+// TODO use dynamic config to judge UnconfiguredSchema
+private boolean isNeedAllSchemas(final SQLStatement sqlStatement) {
+return sqlStatement instanceof MySQLShowTablesStatement;
+}
+}
+&lt;/code>&lt;/pre>&lt;h5 id="sql改写">SQL改写&lt;/h5>
+&lt;p>&lt;img src="https://shardingsphere.apache.org/document/current/img/sharding/rewrite_architecture_cn.png" alt="X" />&lt;/p>
+&lt;blockquote>
+&lt;p>加密的SQL改写&lt;/p>
+&lt;p>影子库SQL改写&lt;/p>
+&lt;p>分片的SQL改写&lt;/p>
+&lt;/blockquote>
+&lt;p>&lt;img src="https://gitee.com/fengzhenbing/picgo/raw/master/image-20210910002416276.png" alt="image-20210910002416276" />&lt;/p>
+&lt;h5 id="执行引擎">执行引擎&lt;/h5>
+&lt;blockquote>
+&lt;p>将路由和改写完成之后的真实 SQL 安全且高效发送到底层数据源执行。&lt;/p>
+&lt;/blockquote>
+&lt;pre>&lt;code> public final class DriverJDBCExecutor {
+...
+/**
+* Execute update.
+*
+* @param executionGroupContext execution group context
+* @param sqlStatementContext SQL statement context
+* @param routeUnits route units
+* @param callback JDBC executor callback 回调
+* @return effected records count
+* @throws SQLException SQL exception
+*/
+public int executeUpdate(final ExecutionGroupContext&amp;lt;JDBCExecutionUnit&amp;gt; executionGroupContext,
+final SQLStatementContext&amp;lt;?&amp;gt; sqlStatementContext, final Collection&amp;lt;RouteUnit&amp;gt; routeUnits, final JDBCExecutorCallback&amp;lt;Integer&amp;gt; callback) throws SQLException {
+try {
+// 执行引擎初始化
+ExecuteProcessEngine.initialize(sqlStatementContext, executionGroupContext, metaDataContexts.getProps());
+List&amp;lt;Integer&amp;gt; results = jdbcLockEngine.execute(executionGroupContext, sqlStatementContext, routeUnits, callback);
+int result = isNeedAccumulate(metaDataContexts.getDefaultMetaData().getRuleMetaData().getRules(), sqlStatementContext) ? accumulate(results) : results.get(0);
+ExecuteProcessEngine.finish(executionGroupContext.getExecutionID());
+return result;
+} finally {
+ExecuteProcessEngine.clean();
+}
+}
+...
+}
+&lt;/code>&lt;/pre>&lt;h5 id="归并引擎">归并引擎&lt;/h5>
+&lt;p>对于查询类，有结果会使用归并引擎合并结果 &lt;code>MergeEngine(..).merge(..)&lt;/code>&lt;/p>
+&lt;blockquote>
+&lt;p>将从各个数据节点获取的多数据结果集，组合成为一个结果集并正确的返回至请求客户端，称为结果归并。&lt;/p>
+&lt;/blockquote>
+&lt;p>org.apache.shardingsphere.infra.merge.MergeEngine&lt;/p>
+&lt;pre>&lt;code>public final class MergeEngine {
+static {
+ShardingSphereServiceLoader.register(ResultProcessEngine.class);
+}
+private final DatabaseType databaseType;
+private final ShardingSphereSchema schema;
+private final ConfigurationProperties props;
+@SuppressWarnings(&amp;quot;rawtypes&amp;quot;)
+private final Map&amp;lt;ShardingSphereRule, ResultProcessEngine&amp;gt; engines;
+public MergeEngine(final DatabaseType databaseType, final ShardingSphereSchema schema, final ConfigurationProperties props, final Collection&amp;lt;ShardingSphereRule&amp;gt; rules) {
+this.databaseType = databaseType;
+this.schema = schema;
+this.props = props;
+engines = OrderedSPIRegistry.getRegisteredServices(rules, ResultProcessEngine.class);
+}
+/**
+* Merge.
+*
+* @param queryResults query results
+* @param sqlStatementContext SQL statement context
+* @return merged result
+* @throws SQLException SQL exception
+*/
+public MergedResult merge(final List&amp;lt;QueryResult&amp;gt; queryResults, final SQLStatementContext&amp;lt;?&amp;gt; sqlStatementContext) throws SQLException {
+//生成合并结果集
+Optional&amp;lt;MergedResult&amp;gt; mergedResult = executeMerge(queryResults, sqlStatementContext);
+//对合并结果集装饰处理
+Optional&amp;lt;MergedResult&amp;gt; result = mergedResult.isPresent() ? Optional.of(decorate(mergedResult.get(), sqlStatementContext)) : decorate(queryResults.get(0), sqlStatementContext);
+return result.orElseGet(() -&amp;gt; new TransparentMergedResult(queryResults.get(0)));
+}
+@SuppressWarnings({&amp;quot;unchecked&amp;quot;, &amp;quot;rawtypes&amp;quot;})
+private Optional&amp;lt;MergedResult&amp;gt; executeMerge(final List&amp;lt;QueryResult&amp;gt; queryResults, final SQLStatementContext&amp;lt;?&amp;gt; sqlStatementContext) throws SQLException {
+for (Entry&amp;lt;ShardingSphereRule, ResultProcessEngine&amp;gt; entry : engines.entrySet()) {
+if (entry.getValue() instanceof ResultMergerEngine) {
+ResultMerger resultMerger = ((ResultMergerEngine) entry.getValue()).newInstance(databaseType, entry.getKey(), props, sqlStatementContext);
+// ResultMerger进行合并
+return Optional.of(resultMerger.merge(queryResults, sqlStatementContext, schema));
+}
+}
+return Optional.empty();
+}
+@SuppressWarnings({&amp;quot;unchecked&amp;quot;, &amp;quot;rawtypes&amp;quot;})
+private MergedResult decorate(final MergedResult mergedResult, final SQLStatementContext&amp;lt;?&amp;gt; sqlStatementContext) throws SQLException {
+MergedResult result = null;
+for (Entry&amp;lt;ShardingSphereRule, ResultProcessEngine&amp;gt; entry : engines.entrySet()) {
+if (entry.getValue() instanceof ResultDecoratorEngine) {
+ResultDecorator resultDecorator = ((ResultDecoratorEngine) entry.getValue()).newInstance(databaseType, schema, entry.getKey(), props, sqlStatementContext);
+result = null == result ? resultDecorator.decorate(mergedResult, sqlStatementContext, entry.getKey()) : resultDecorator.decorate(result, sqlStatementContext, entry.getKey());
+}
+}
+return null == result ? mergedResult : result;
+}
+@SuppressWarnings({&amp;quot;unchecked&amp;quot;, &amp;quot;rawtypes&amp;quot;})
+private Optional&amp;lt;MergedResult&amp;gt; decorate(final QueryResult queryResult, final SQLStatementContext&amp;lt;?&amp;gt; sqlStatementContext) throws SQLException {
+MergedResult result = null;
+for (Entry&amp;lt;ShardingSphereRule, ResultProcessEngine&amp;gt; entry : engines.entrySet()) {
+if (entry.getValue() instanceof ResultDecoratorEngine) {
+ResultDecorator resultDecorator = ((ResultDecoratorEngine) entry.getValue()).newInstance(databaseType, schema, entry.getKey(), props, sqlStatementContext);
+result = null == result ? resultDecorator.decorate(queryResult, sqlStatementContext, entry.getKey()) : resultDecorator.decorate(result, sqlStatementContext, entry.getKey());
+}
+}
+return Optional.ofNullable(result);
+}
+}
+&lt;/code>&lt;/pre>&lt;p>ResultMerger&lt;/p>
+&lt;p>&lt;img src="https://gitee.com/fengzhenbing/picgo/raw/master/image-20210910010533225.png" alt="image-20210910010533225" />&lt;/p>
+&lt;ul>
+&lt;li>以上对整个流程中各个关键节点进行简单分析，后续对每个节点做详细学习&lt;/li>
+&lt;/ul></description></item><item><title>分布式任务调度Hodor</title><link>https://fengzhenbing.github.io/p/%E5%88%86%E5%B8%83%E5%BC%8F%E4%BB%BB%E5%8A%A1%E8%B0%83%E5%BA%A6hodor/</link><pubDate>Wed, 01 Sep 2021 00:00:00 +0000</pubDate><guid>https://fengzhenbing.github.io/p/%E5%88%86%E5%B8%83%E5%BC%8F%E4%BB%BB%E5%8A%A1%E8%B0%83%E5%BA%A6hodor/</guid><description>&lt;h2 id="分布式任务调度hodor源码分析整体结构">分布式任务调度Hodor源码分析（整体结构）&lt;/h2>
 &lt;h3 id="简介">简介&lt;/h3>
 &lt;p>Hodor是一个高性能的分布式任务调度框架。&lt;/p>
 &lt;p>github地址(&lt;a href="https://github.com/tincopper/hodor">https://github.com/tincopper/hodor&lt;/a>)&lt;/p>
@@ -2668,4 +3093,4 @@ tail -f test.sink.txt
 &lt;p>实现方式： 对事务所有读、写的数据全都加上读锁、写锁和范围锁；实际还是很复杂的，要分成 Expanding 和 Shrinking 两阶段去处理读锁、写锁与数据间的关系，称为&lt;a class="link" href="https://en.wikipedia.org/wiki/Two-phase_locking" target="_blank" rel="noopener"
 >Two-Phase Lock&lt;/a>，2PL&lt;/p>
 &lt;h2 id="4-多版本并发控制">4 多版本并发控制&lt;/h2>
-&lt;p>参考 （https://icyfenix.cn/architect-perspective/general-architecture/transaction/local.html）&lt;/p></description></item></channel></rss>
+&lt;p>参考 （https://icyfenix.cn/architect-perspective/general-architecture/transaction/local.html）&lt;/p></description></item><item><title/><link>https://fengzhenbing.github.io/p/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://fengzhenbing.github.io/p/</guid><description/></item><item><title/><link>https://fengzhenbing.github.io/p/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://fengzhenbing.github.io/p/</guid><description/></item><item><title/><link>https://fengzhenbing.github.io/p/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://fengzhenbing.github.io/p/</guid><description/></item><item><title/><link>https://fengzhenbing.github.io/p/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://fengzhenbing.github.io/p/</guid><description/></item><item><title/><link>https://fengzhenbing.github.io/p/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://fengzhenbing.github.io/p/</guid><description/></item><item><title/><link>https://fengzhenbing.github.io/p/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://fengzhenbing.github.io/p/</guid><description/></item><item><title/><link>https://fengzhenbing.github.io/p/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://fengzhenbing.github.io/p/</guid><description/></item></channel></rss>
