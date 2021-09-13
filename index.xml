@@ -1,4 +1,198 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Feng Zhenbing's Blog</title><link>https://fengzhenbing.github.io/</link><description>Recent content on Feng Zhenbing's Blog</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Thu, 02 Sep 2021 00:00:00 +0000</lastBuildDate><atom:link href="https://fengzhenbing.github.io/index.xml" rel="self" type="application/rss+xml"/><item><title>shardingsphere（5.0.0.beta）源码总览</title><link>https://fengzhenbing.github.io/p/shardingsphere5.0.0.beta%E6%BA%90%E7%A0%81%E6%80%BB%E8%A7%88/</link><pubDate>Thu, 02 Sep 2021 00:00:00 +0000</pubDate><guid>https://fengzhenbing.github.io/p/shardingsphere5.0.0.beta%E6%BA%90%E7%A0%81%E6%80%BB%E8%A7%88/</guid><description>&lt;h2 id="shardingsphere500beta源码学习-总览">Shardingsphere（5.0.0.beta）源码学习-总览&lt;/h2>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Feng Zhenbing's Blog</title><link>https://fengzhenbing.github.io/</link><description>Recent content on Feng Zhenbing's Blog</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Sun, 05 Sep 2021 00:00:00 +0000</lastBuildDate><atom:link href="https://fengzhenbing.github.io/index.xml" rel="self" type="application/rss+xml"/><item><title>shardingsphere（5.0.0.beta）元数据上下文</title><link>https://fengzhenbing.github.io/p/shardingsphere5.0.0.beta%E5%85%83%E6%95%B0%E6%8D%AE%E4%B8%8A%E4%B8%8B%E6%96%87/</link><pubDate>Sun, 05 Sep 2021 00:00:00 +0000</pubDate><guid>https://fengzhenbing.github.io/p/shardingsphere5.0.0.beta%E5%85%83%E6%95%B0%E6%8D%AE%E4%B8%8A%E4%B8%8B%E6%96%87/</guid><description>&lt;h1 id="shardingsphere500beta源码学习-元数据上下文">Shardingsphere（5.0.0.beta）源码学习-元数据上下文&lt;/h1>
+&lt;h2 id="上下文对象">上下文对象&lt;/h2>
+&lt;p>上下文对象作为读取并解析配置, 承载数据的核心；&lt;/p>
+&lt;p>spring有ApplicationContext,netty有HandlerContext&lt;/p>
+&lt;p>向其他中间件一样，在ShardingSphere也十分重要; 后续几乎所有功能比如数据分片、数据加密、SQL 改写，各类扩展都依赖上下文对象存储的数据&lt;/p>
+&lt;p>&lt;img src="https://fengzhenbing.github.io/C:%5cUsers%5cMloong%5cAppData%5cRoaming%5cTypora%5ctypora-user-images%5cimage-20210913215827140.png" alt="image-20210913215827140" />&lt;/p>
+&lt;h3 id="标准元数据上下文---standardmetadatacontexts">标准元数据上下文 StandardMetaDataContexts&lt;/h3>
+&lt;p>核心存储了ShardingSphereMetaData元数据集合，作为重点后面分析&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-java" data-lang="java">&lt;span class="nd">@Getter&lt;/span>
+&lt;span class="kd">public&lt;/span> &lt;span class="kd">final&lt;/span> &lt;span class="kd">class&lt;/span> &lt;span class="nc">StandardMetaDataContexts&lt;/span> &lt;span class="kd">implements&lt;/span> &lt;span class="n">MetaDataContexts&lt;/span> &lt;span class="o">{&lt;/span>
+&lt;span class="c1">// 元数据集合
+&lt;/span>&lt;span class="c1">&lt;/span> &lt;span class="kd">private&lt;/span> &lt;span class="kd">final&lt;/span> &lt;span class="n">Map&lt;/span>&lt;span class="o">&amp;lt;&lt;/span>&lt;span class="n">String&lt;/span>&lt;span class="o">,&lt;/span> &lt;span class="n">ShardingSphereMetaData&lt;/span>&lt;span class="o">&amp;gt;&lt;/span> &lt;span class="n">metaDataMap&lt;/span>&lt;span class="o">;&lt;/span>
+&lt;span class="kd">private&lt;/span> &lt;span class="kd">final&lt;/span> &lt;span class="n">ShardingSphereRuleMetaData&lt;/span> &lt;span class="n">globalRuleMetaData&lt;/span>&lt;span class="o">;&lt;/span>
+&lt;span class="c1">// 执行引擎
+&lt;/span>&lt;span class="c1">&lt;/span> &lt;span class="kd">private&lt;/span> &lt;span class="kd">final&lt;/span> &lt;span class="n">ExecutorEngine&lt;/span> &lt;span class="n">executorEngine&lt;/span>&lt;span class="o">;&lt;/span>
+&lt;span class="c1">//优化引擎上下文工厂
+&lt;/span>&lt;span class="c1">&lt;/span> &lt;span class="kd">private&lt;/span> &lt;span class="kd">final&lt;/span> &lt;span class="n">OptimizeContextFactory&lt;/span> &lt;span class="n">optimizeContextFactory&lt;/span>&lt;span class="o">;&lt;/span>
+&lt;span class="kd">private&lt;/span> &lt;span class="kd">final&lt;/span> &lt;span class="n">ConfigurationProperties&lt;/span> &lt;span class="n">props&lt;/span>&lt;span class="o">;&lt;/span>
+&lt;span class="c1">// 状态上下文
+&lt;/span>&lt;span class="c1">&lt;/span> &lt;span class="kd">private&lt;/span> &lt;span class="kd">final&lt;/span> &lt;span class="n">StateContext&lt;/span> &lt;span class="n">stateContext&lt;/span>&lt;span class="o">;&lt;/span>
+&lt;span class="o">...&lt;/span>
+&lt;span class="o">}&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="治理元数据上下文---standardmetadatacontexts">治理元数据上下文 StandardMetaDataContexts&lt;/h3>
+&lt;p>其实也是用的标准的StandardMetaDataContexts，治理模块shardingsphere-governance使用该上下文，通过配置中心读取规则配置，&lt;/p>
+&lt;p>注入到StandardMetaDataContexts中，GovernanceFacade是配置中心的门面模式，目前支持了zookeeper和etcd,其实还可以通过&lt;code>RegistryCenterRepository&lt;/code>的spi实现其他的配置中心，比如nacos, apollo,consul等。&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-java" data-lang="java">&lt;span class="kd">public&lt;/span> &lt;span class="kd">final&lt;/span> &lt;span class="kd">class&lt;/span> &lt;span class="nc">GovernanceMetaDataContexts&lt;/span> &lt;span class="kd">implements&lt;/span> &lt;span class="n">MetaDataContexts&lt;/span> &lt;span class="o">{&lt;/span>
+&lt;span class="c1">//治理： 配置中心的门面模式
+&lt;/span>&lt;span class="c1">&lt;/span> &lt;span class="kd">private&lt;/span> &lt;span class="kd">final&lt;/span> &lt;span class="n">GovernanceFacade&lt;/span> &lt;span class="n">governanceFacade&lt;/span>&lt;span class="o">;&lt;/span>
+&lt;span class="c1">//还是使用StandardMetaDataContexts 装饰器模式
+&lt;/span>&lt;span class="c1">&lt;/span> &lt;span class="kd">private&lt;/span> &lt;span class="kd">volatile&lt;/span> &lt;span class="n">StandardMetaDataContexts&lt;/span> &lt;span class="n">metaDataContexts&lt;/span>&lt;span class="o">;&lt;/span>
+&lt;span class="kd">private&lt;/span> &lt;span class="kd">final&lt;/span> &lt;span class="n">ShardingSphereLock&lt;/span> &lt;span class="n">lock&lt;/span>&lt;span class="o">;&lt;/span>
+&lt;span class="o">...&lt;/span>
+&lt;span class="o">}&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="初始化上下文对象">初始化上下文对象&lt;/h2>
+&lt;p>ShardingSphere中通过&lt;/p>
+&lt;p>&lt;code>org.apache.shardingsphere.infra.context.metadata.MetaDataContextsBuilder&lt;/code>构造器模式，构造&lt;/p>
+&lt;p>&lt;code>org.apache.shardingsphere.infra.context.metadata.MetaDataContexts&lt;/code>&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-java" data-lang="java">&lt;span class="kd">public&lt;/span> &lt;span class="nf">ShardingSphereDataSource&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="kd">final&lt;/span> &lt;span class="n">Map&lt;/span>&lt;span class="o">&amp;lt;&lt;/span>&lt;span class="n">String&lt;/span>&lt;span class="o">,&lt;/span> &lt;span class="n">DataSource&lt;/span>&lt;span class="o">&amp;gt;&lt;/span> &lt;span class="n">dataSourceMap&lt;/span>&lt;span class="o">,&lt;/span> &lt;span class="kd">final&lt;/span> &lt;span class="n">Collection&lt;/span>&lt;span class="o">&amp;lt;&lt;/span>&lt;span class="n">RuleConfiguration&lt;/span>&lt;span class="o">&amp;gt;&lt;/span> &lt;span class="n">configurations&lt;/span>&lt;span class="o">,&lt;/span> &lt;span class="kd">final&lt;/span> &lt;span class="n">Properties&lt;/span> &lt;span class="n">props&lt;/span>&lt;span class="o">)&lt;/span> &lt;span class="kd">throws&lt;/span> &lt;span class="n">SQLException&lt;/span> &lt;span class="o">{&lt;/span>
+&lt;span class="c1">// 构建器构造 元数据上下文
+&lt;/span>&lt;span class="c1">&lt;/span> &lt;span class="n">metaDataContexts&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="k">new&lt;/span> &lt;span class="n">MetaDataContextsBuilder&lt;/span>&lt;span class="o">(&lt;/span>
+&lt;span class="n">Collections&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">singletonMap&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">DefaultSchema&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">LOGIC_NAME&lt;/span>&lt;span class="o">,&lt;/span> &lt;span class="n">dataSourceMap&lt;/span>&lt;span class="o">),&lt;/span> &lt;span class="n">Collections&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">singletonMap&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">DefaultSchema&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">LOGIC_NAME&lt;/span>&lt;span class="o">,&lt;/span> &lt;span class="n">configurations&lt;/span>&lt;span class="o">),&lt;/span> &lt;span class="n">props&lt;/span>&lt;span class="o">).&lt;/span>&lt;span class="na">build&lt;/span>&lt;span class="o">();&lt;/span>
+&lt;span class="c1">// xa事务类型
+&lt;/span>&lt;span class="c1">&lt;/span> &lt;span class="n">String&lt;/span> &lt;span class="n">xaTransactionMangerType&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">metaDataContexts&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">getProps&lt;/span>&lt;span class="o">().&lt;/span>&lt;span class="na">getValue&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">ConfigurationPropertyKey&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">XA_TRANSACTION_MANAGER_TYPE&lt;/span>&lt;span class="o">);&lt;/span>
+&lt;span class="c1">// 创建事务上下文TransactionContexts//后面学习中细讲，本文不涉及
+&lt;/span>&lt;span class="c1">&lt;/span> &lt;span class="n">transactionContexts&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">createTransactionContexts&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">metaDataContexts&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">getDefaultMetaData&lt;/span>&lt;span class="o">().&lt;/span>&lt;span class="na">getResource&lt;/span>&lt;span class="o">().&lt;/span>&lt;span class="na">getDatabaseType&lt;/span>&lt;span class="o">(),&lt;/span> &lt;span class="n">dataSourceMap&lt;/span>&lt;span class="o">,&lt;/span> &lt;span class="n">xaTransactionMangerType&lt;/span>&lt;span class="o">);&lt;/span>
+&lt;span class="o">}&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="metadatacontextsbuilderbuild构建metadatacontexts">MetaDataContextsBuilder.build()构建MetaDataContexts&lt;/h3>
+&lt;p>org.apache.shardingsphere.infra.context.metadata.MetaDataContextsBuilder.build方法&lt;/p>
+&lt;pre>&lt;code> /**
+* Build meta data contexts.
+*
+* @exception SQLException SQL exception
+* @return meta data contexts
+*/
+public StandardMetaDataContexts build() throws SQLException {
+Map&amp;lt;String, ShardingSphereMetaData&amp;gt; mataDataMap = new HashMap&amp;lt;&amp;gt;(schemaRuleConfigs.size(), 1);
+for (String each : schemaRuleConfigs.keySet()) {
+// buildMetaData构造核心的元数据对象ShardingSphereMetaData，加入到集合中
+mataDataMap.put(each, buildMetaData(each));
+}
+// 返回标准元数据上下文
+return new StandardMetaDataContexts(mataDataMap, buildGlobalSchemaMetaData(mataDataMap), executorEngine, props);
+}
+&lt;/code>&lt;/pre>&lt;h3 id="shardingsphere元数据">ShardingSphere元数据&lt;/h3>
+&lt;p>ShardingSphere元数据存储以下数据：&lt;/p>
+&lt;blockquote>
+&lt;p>1数据源： 元数据资源，&lt;/p>
+&lt;p>2 规则配置&lt;/p>
+&lt;p>3 数据库元数据信息，表，字段，索引&lt;/p>
+&lt;/blockquote>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-java" data-lang="java">&lt;span class="c1">//
+&lt;/span>&lt;span class="c1">&lt;/span>&lt;span class="nd">@RequiredArgsConstructor&lt;/span>
+&lt;span class="nd">@Getter&lt;/span>
+&lt;span class="kd">public&lt;/span> &lt;span class="kd">final&lt;/span> &lt;span class="kd">class&lt;/span> &lt;span class="nc">ShardingSphereMetaData&lt;/span> &lt;span class="o">{&lt;/span>
+&lt;span class="kd">private&lt;/span> &lt;span class="kd">final&lt;/span> &lt;span class="n">String&lt;/span> &lt;span class="n">name&lt;/span>&lt;span class="o">;&lt;/span>
+&lt;span class="c1">// 数据源 元数据资源
+&lt;/span>&lt;span class="c1">&lt;/span> &lt;span class="kd">private&lt;/span> &lt;span class="kd">final&lt;/span> &lt;span class="n">ShardingSphereResource&lt;/span> &lt;span class="n">resource&lt;/span>&lt;span class="o">;&lt;/span>
+&lt;span class="c1">// 配置规则元数据： 原始配置RuleConfiguration集合 =》 配置解析后的ShardingSphereRule集合
+&lt;/span>&lt;span class="c1">&lt;/span> &lt;span class="kd">private&lt;/span> &lt;span class="kd">final&lt;/span> &lt;span class="n">ShardingSphereRuleMetaData&lt;/span> &lt;span class="n">ruleMetaData&lt;/span>&lt;span class="o">;&lt;/span>
+&lt;span class="c1">// 数据库表元数据： 字段元数据及索引元数据
+&lt;/span>&lt;span class="c1">&lt;/span> &lt;span class="kd">private&lt;/span> &lt;span class="kd">final&lt;/span> &lt;span class="n">ShardingSphereSchema&lt;/span> &lt;span class="n">schema&lt;/span>&lt;span class="o">;&lt;/span>
+&lt;span class="cm">/**
+&lt;/span>&lt;span class="cm"> * Judge whether is completed.
+&lt;/span>&lt;span class="cm"> *
+&lt;/span>&lt;span class="cm"> * @return is completed or not
+&lt;/span>&lt;span class="cm"> */&lt;/span>
+&lt;span class="kd">public&lt;/span> &lt;span class="kt">boolean&lt;/span> &lt;span class="nf">isComplete&lt;/span>&lt;span class="o">()&lt;/span> &lt;span class="o">{&lt;/span>
+&lt;span class="k">return&lt;/span> &lt;span class="o">!&lt;/span>&lt;span class="n">ruleMetaData&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">getRules&lt;/span>&lt;span class="o">().&lt;/span>&lt;span class="na">isEmpty&lt;/span>&lt;span class="o">()&lt;/span> &lt;span class="o">&amp;amp;&amp;amp;&lt;/span> &lt;span class="o">!&lt;/span>&lt;span class="n">resource&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">getDataSources&lt;/span>&lt;span class="o">().&lt;/span>&lt;span class="na">isEmpty&lt;/span>&lt;span class="o">();&lt;/span>
+&lt;span class="o">}&lt;/span>
+&lt;span class="o">}&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="再看如何构建shardingsphere元数据buildmetadata方法">再看如何构建ShardingSphere元数据，buildMetaData方法&lt;/h3>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-java" data-lang="java"> &lt;span class="kd">private&lt;/span> &lt;span class="n">ShardingSphereMetaData&lt;/span> &lt;span class="nf">buildMetaData&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="kd">final&lt;/span> &lt;span class="n">String&lt;/span> &lt;span class="n">schemaName&lt;/span>&lt;span class="o">)&lt;/span> &lt;span class="kd">throws&lt;/span> &lt;span class="n">SQLException&lt;/span> &lt;span class="o">{&lt;/span>
+&lt;span class="n">Map&lt;/span>&lt;span class="o">&amp;lt;&lt;/span>&lt;span class="n">String&lt;/span>&lt;span class="o">,&lt;/span> &lt;span class="n">DataSource&lt;/span>&lt;span class="o">&amp;gt;&lt;/span> &lt;span class="n">dataSourceMap&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">dataSources&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">get&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">schemaName&lt;/span>&lt;span class="o">);&lt;/span>
+&lt;span class="n">Collection&lt;/span>&lt;span class="o">&amp;lt;&lt;/span>&lt;span class="n">RuleConfiguration&lt;/span>&lt;span class="o">&amp;gt;&lt;/span> &lt;span class="n">ruleConfigs&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">schemaRuleConfigs&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">get&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">schemaName&lt;/span>&lt;span class="o">);&lt;/span>
+&lt;span class="c1">//确定数据库类型
+&lt;/span>&lt;span class="c1">&lt;/span> &lt;span class="n">DatabaseType&lt;/span> &lt;span class="n">databaseType&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">DatabaseTypeRecognizer&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">getDatabaseType&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">dataSourceMap&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">values&lt;/span>&lt;span class="o">());&lt;/span>
+&lt;span class="c1">//a) 通过用户配置的RuleConfiguration 解析出 ShardingSphereRule
+&lt;/span>&lt;span class="c1">&lt;/span> &lt;span class="n">Collection&lt;/span>&lt;span class="o">&amp;lt;&lt;/span>&lt;span class="n">ShardingSphereRule&lt;/span>&lt;span class="o">&amp;gt;&lt;/span> &lt;span class="n">rules&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">ShardingSphereRulesBuilder&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">buildSchemaRules&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">schemaName&lt;/span>&lt;span class="o">,&lt;/span> &lt;span class="n">ruleConfigs&lt;/span>&lt;span class="o">,&lt;/span> &lt;span class="n">databaseType&lt;/span>&lt;span class="o">,&lt;/span> &lt;span class="n">dataSourceMap&lt;/span>&lt;span class="o">);&lt;/span>
+&lt;span class="c1">// 构造规则元数据对象ShardingSphereRuleMetaData
+&lt;/span>&lt;span class="c1">&lt;/span> &lt;span class="n">ShardingSphereRuleMetaData&lt;/span> &lt;span class="n">ruleMetaData&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="k">new&lt;/span> &lt;span class="n">ShardingSphereRuleMetaData&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">ruleConfigs&lt;/span>&lt;span class="o">,&lt;/span> &lt;span class="n">rules&lt;/span>&lt;span class="o">);&lt;/span>
+&lt;span class="c1">//构造ShardingSphere元数据对象ShardingSphereMetaData
+&lt;/span>&lt;span class="c1">&lt;/span> &lt;span class="c1">//b) 构建数据源的元数据对象 c) 构建数据库的元数据
+&lt;/span>&lt;span class="c1">&lt;/span> &lt;span class="k">return&lt;/span> &lt;span class="k">new&lt;/span> &lt;span class="n">ShardingSphereMetaData&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">schemaName&lt;/span>&lt;span class="o">,&lt;/span> &lt;span class="n">buildResource&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">databaseType&lt;/span>&lt;span class="o">,&lt;/span> &lt;span class="n">dataSourceMap&lt;/span>&lt;span class="o">),&lt;/span> &lt;span class="n">ruleMetaData&lt;/span>&lt;span class="o">,&lt;/span> &lt;span class="n">buildSchema&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">databaseType&lt;/span>&lt;span class="o">,&lt;/span> &lt;span class="n">dataSourceMap&lt;/span>&lt;span class="o">,&lt;/span> &lt;span class="n">rules&lt;/span>&lt;span class="o">));&lt;/span>
+&lt;span class="o">}&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;h4 id="a-shardingsphere规则元数据">a) ShardingSphere规则元数据&lt;/h4>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-java" data-lang="java">&lt;span class="nd">@RequiredArgsConstructor&lt;/span>
+&lt;span class="nd">@Getter&lt;/span>
+&lt;span class="kd">public&lt;/span> &lt;span class="kd">final&lt;/span> &lt;span class="kd">class&lt;/span> &lt;span class="nc">ShardingSphereRuleMetaData&lt;/span> &lt;span class="o">{&lt;/span>
+&lt;span class="c1">// 用户配置的规则对象集合
+&lt;/span>&lt;span class="c1">&lt;/span> &lt;span class="kd">private&lt;/span> &lt;span class="kd">final&lt;/span> &lt;span class="n">Collection&lt;/span>&lt;span class="o">&amp;lt;&lt;/span>&lt;span class="n">RuleConfiguration&lt;/span>&lt;span class="o">&amp;gt;&lt;/span> &lt;span class="n">configurations&lt;/span>&lt;span class="o">;&lt;/span>
+&lt;span class="c1">// 解析后的规则集合
+&lt;/span>&lt;span class="c1">&lt;/span> &lt;span class="kd">private&lt;/span> &lt;span class="kd">final&lt;/span> &lt;span class="n">Collection&lt;/span>&lt;span class="o">&amp;lt;&lt;/span>&lt;span class="n">ShardingSphereRule&lt;/span>&lt;span class="o">&amp;gt;&lt;/span> &lt;span class="n">rules&lt;/span>&lt;span class="o">;&lt;/span>
+&lt;span class="o">}&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>RuleConfiguration直接对应了用户的yaml, properties等配置&lt;/p>
+&lt;p>&lt;img src="https://fengzhenbing.github.io/C:%5cUsers%5cMloong%5cAppData%5cRoaming%5cTypora%5ctypora-user-images%5cimage-20210913214107105.png" alt="image-20210913214107105" />&lt;/p>
+&lt;p>ShardingSphereRule&lt;/p>
+&lt;p>&lt;img src="https://fengzhenbing.github.io/C:%5cUsers%5cMloong%5cAppData%5cRoaming%5cTypora%5ctypora-user-images%5cimage-20210913222453670.png" alt="image-20210913222453670" />&lt;/p>
+&lt;p>buildSchemaRules()&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-java" data-lang="java"> &lt;span class="kd">public&lt;/span> &lt;span class="kd">static&lt;/span> &lt;span class="n">Collection&lt;/span>&lt;span class="o">&amp;lt;&lt;/span>&lt;span class="n">ShardingSphereRule&lt;/span>&lt;span class="o">&amp;gt;&lt;/span> &lt;span class="nf">buildSchemaRules&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="kd">final&lt;/span> &lt;span class="n">String&lt;/span> &lt;span class="n">schemaName&lt;/span>&lt;span class="o">,&lt;/span> &lt;span class="kd">final&lt;/span> &lt;span class="n">Collection&lt;/span>&lt;span class="o">&amp;lt;&lt;/span>&lt;span class="n">RuleConfiguration&lt;/span>&lt;span class="o">&amp;gt;&lt;/span> &lt;span class="n">schemaRuleConfigurations&lt;/span>&lt;span class="o">,&lt;/span>
+&lt;span class="kd">final&lt;/span> &lt;span class="n">DatabaseType&lt;/span> &lt;span class="n">databaseType&lt;/span>&lt;span class="o">,&lt;/span> &lt;span class="kd">final&lt;/span> &lt;span class="n">Map&lt;/span>&lt;span class="o">&amp;lt;&lt;/span>&lt;span class="n">String&lt;/span>&lt;span class="o">,&lt;/span> &lt;span class="n">DataSource&lt;/span>&lt;span class="o">&amp;gt;&lt;/span> &lt;span class="n">dataSourceMap&lt;/span>&lt;span class="o">)&lt;/span> &lt;span class="o">{&lt;/span>
+&lt;span class="n">Map&lt;/span>&lt;span class="o">&amp;lt;&lt;/span>&lt;span class="n">RuleConfiguration&lt;/span>&lt;span class="o">,&lt;/span> &lt;span class="n">SchemaRuleBuilder&lt;/span>&lt;span class="o">&amp;gt;&lt;/span> &lt;span class="n">builders&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">OrderedSPIRegistry&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">getRegisteredServices&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">schemaRuleConfigurations&lt;/span>&lt;span class="o">,&lt;/span> &lt;span class="n">SchemaRuleBuilder&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">class&lt;/span>&lt;span class="o">);&lt;/span>
+&lt;span class="n">appendDefaultKernelSchemaRuleConfigurationBuilder&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">builders&lt;/span>&lt;span class="o">);&lt;/span>
+&lt;span class="c1">// SchemaRuleBuilder. build() 构建ShardingSphereRule
+&lt;/span>&lt;span class="c1">&lt;/span> &lt;span class="k">return&lt;/span> &lt;span class="n">builders&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">entrySet&lt;/span>&lt;span class="o">().&lt;/span>&lt;span class="na">stream&lt;/span>&lt;span class="o">().&lt;/span>&lt;span class="na">map&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">entry&lt;/span> &lt;span class="o">-&amp;gt;&lt;/span> &lt;span class="n">entry&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">getValue&lt;/span>&lt;span class="o">().&lt;/span>&lt;span class="na">build&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">schemaName&lt;/span>&lt;span class="o">,&lt;/span> &lt;span class="n">dataSourceMap&lt;/span>&lt;span class="o">,&lt;/span> &lt;span class="n">databaseType&lt;/span>&lt;span class="o">,&lt;/span> &lt;span class="n">entry&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">getKey&lt;/span>&lt;span class="o">())).&lt;/span>&lt;span class="na">collect&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">Collectors&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">toList&lt;/span>&lt;span class="o">());&lt;/span>
+&lt;span class="o">}&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>SchemaRuleBuilder作为一个规则解析扩展点&lt;/p>
+&lt;p>&lt;img src="https://fengzhenbing.github.io/C:%5cUsers%5cMloong%5cAppData%5cRoaming%5cTypora%5ctypora-user-images%5cimage-20210914013607189.png" alt="image-20210914013607189" />&lt;/p>
+&lt;h4 id="b-再看buildresource即构建数据源的元数据对象">b) 再看buildResource，即构建数据源的元数据对象&lt;/h4>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-java" data-lang="java">&lt;span class="kd">private&lt;/span> &lt;span class="n">ShardingSphereResource&lt;/span> &lt;span class="nf">buildResource&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="kd">final&lt;/span> &lt;span class="n">DatabaseType&lt;/span> &lt;span class="n">databaseType&lt;/span>&lt;span class="o">,&lt;/span> &lt;span class="kd">final&lt;/span> &lt;span class="n">Map&lt;/span>&lt;span class="o">&amp;lt;&lt;/span>&lt;span class="n">String&lt;/span>&lt;span class="o">,&lt;/span> &lt;span class="n">DataSource&lt;/span>&lt;span class="o">&amp;gt;&lt;/span> &lt;span class="n">dataSourceMap&lt;/span>&lt;span class="o">)&lt;/span> &lt;span class="kd">throws&lt;/span> &lt;span class="n">SQLException&lt;/span> &lt;span class="o">{&lt;/span>
+&lt;span class="c1">//构建数据源的元数据对象
+&lt;/span>&lt;span class="c1">&lt;/span> &lt;span class="n">DataSourcesMetaData&lt;/span> &lt;span class="n">dataSourceMetas&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="k">new&lt;/span> &lt;span class="n">DataSourcesMetaData&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">databaseType&lt;/span>&lt;span class="o">,&lt;/span> &lt;span class="n">getDatabaseAccessConfigurationMap&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">dataSourceMap&lt;/span>&lt;span class="o">));&lt;/span>
+&lt;span class="c1">//缓存下数据源的各类属性 链接，用户名，驱动，各类版本等等的原始信息
+&lt;/span>&lt;span class="c1">&lt;/span> &lt;span class="n">CachedDatabaseMetaData&lt;/span> &lt;span class="n">cachedDatabaseMetaData&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">createCachedDatabaseMetaData&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">dataSourceMap&lt;/span>&lt;span class="o">).&lt;/span>&lt;span class="na">orElse&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="kc">null&lt;/span>&lt;span class="o">);&lt;/span>
+&lt;span class="k">return&lt;/span> &lt;span class="k">new&lt;/span> &lt;span class="n">ShardingSphereResource&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">dataSourceMap&lt;/span>&lt;span class="o">,&lt;/span> &lt;span class="n">dataSourceMetas&lt;/span>&lt;span class="o">,&lt;/span> &lt;span class="n">cachedDatabaseMetaData&lt;/span>&lt;span class="o">,&lt;/span> &lt;span class="n">databaseType&lt;/span>&lt;span class="o">);&lt;/span>
+&lt;span class="o">}&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;h4 id="c-再看如何构建数据库元数据-buildschema方法">c) 再看如何构建数据库元数据, buildSchema()方法&lt;/h4>
+&lt;p>加载数据库的元数据，但是各个方言版本的元数据不太一样，例如mysql的在information_schema中，针对对不同方言，可以通过DialectTableMetaDataLoader的spi扩展定制各类方言版本的数据库元数据加载。&lt;/p>
+&lt;p>&lt;img src="https://fengzhenbing.github.io/C:%5cUsers%5cMloong%5cAppData%5cRoaming%5cTypora%5ctypora-user-images%5cimage-20210914014024075.png" alt="image-20210914014024075" />&lt;/p>
+&lt;ul>
+&lt;li>数据库元数据&lt;/li>
+&lt;/ul>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-java" data-lang="java">&lt;span class="kd">public&lt;/span> &lt;span class="kd">final&lt;/span> &lt;span class="kd">class&lt;/span> &lt;span class="nc">ShardingSphereSchema&lt;/span> &lt;span class="o">{&lt;/span>
+&lt;span class="c1">// 表元数据
+&lt;/span>&lt;span class="c1">&lt;/span> &lt;span class="kd">private&lt;/span> &lt;span class="kd">final&lt;/span> &lt;span class="n">Map&lt;/span>&lt;span class="o">&amp;lt;&lt;/span>&lt;span class="n">String&lt;/span>&lt;span class="o">,&lt;/span> &lt;span class="n">TableMetaData&lt;/span>&lt;span class="o">&amp;gt;&lt;/span> &lt;span class="n">tables&lt;/span>&lt;span class="o">;&lt;/span>
+&lt;span class="o">...&lt;/span>
+&lt;span class="o">}&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;ul>
+&lt;li>数据库表元数据&lt;/li>
+&lt;/ul>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-java" data-lang="java"> &lt;span class="c1">// 表元数据
+&lt;/span>&lt;span class="c1">&lt;/span>&lt;span class="kd">public&lt;/span> &lt;span class="kd">final&lt;/span> &lt;span class="kd">class&lt;/span> &lt;span class="nc">TableMetaData&lt;/span> &lt;span class="o">{&lt;/span>
+&lt;span class="c1">// 组合 列元数据
+&lt;/span>&lt;span class="c1">&lt;/span> &lt;span class="kd">private&lt;/span> &lt;span class="kd">final&lt;/span> &lt;span class="n">Map&lt;/span>&lt;span class="o">&amp;lt;&lt;/span>&lt;span class="n">String&lt;/span>&lt;span class="o">,&lt;/span> &lt;span class="n">ColumnMetaData&lt;/span>&lt;span class="o">&amp;gt;&lt;/span> &lt;span class="n">columns&lt;/span>&lt;span class="o">;&lt;/span>
+&lt;span class="c1">// 组合 索引元数据
+&lt;/span>&lt;span class="c1">&lt;/span> &lt;span class="kd">private&lt;/span> &lt;span class="kd">final&lt;/span> &lt;span class="n">Map&lt;/span>&lt;span class="o">&amp;lt;&lt;/span>&lt;span class="n">String&lt;/span>&lt;span class="o">,&lt;/span> &lt;span class="n">IndexMetaData&lt;/span>&lt;span class="o">&amp;gt;&lt;/span> &lt;span class="n">indexes&lt;/span>&lt;span class="o">;&lt;/span>
+&lt;span class="o">...&lt;/span>
+&lt;span class="o">}&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>列元数据&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-java" data-lang="java">&lt;span class="nd">@RequiredArgsConstructor&lt;/span>
+&lt;span class="nd">@Getter&lt;/span>
+&lt;span class="nd">@EqualsAndHashCode&lt;/span>
+&lt;span class="nd">@ToString&lt;/span>
+&lt;span class="kd">public&lt;/span> &lt;span class="kd">final&lt;/span> &lt;span class="kd">class&lt;/span> &lt;span class="nc">ColumnMetaData&lt;/span> &lt;span class="o">{&lt;/span>
+&lt;span class="c1">// 列名
+&lt;/span>&lt;span class="c1">&lt;/span> &lt;span class="kd">private&lt;/span> &lt;span class="kd">final&lt;/span> &lt;span class="n">String&lt;/span> &lt;span class="n">name&lt;/span>&lt;span class="o">;&lt;/span>
+&lt;span class="c1">// 数据类型
+&lt;/span>&lt;span class="c1">&lt;/span> &lt;span class="kd">private&lt;/span> &lt;span class="kd">final&lt;/span> &lt;span class="kt">int&lt;/span> &lt;span class="n">dataType&lt;/span>&lt;span class="o">;&lt;/span>
+&lt;span class="c1">// 是否主键
+&lt;/span>&lt;span class="c1">&lt;/span> &lt;span class="kd">private&lt;/span> &lt;span class="kd">final&lt;/span> &lt;span class="kt">boolean&lt;/span> &lt;span class="n">primaryKey&lt;/span>&lt;span class="o">;&lt;/span>
+&lt;span class="c1">// 是否自动生成
+&lt;/span>&lt;span class="c1">&lt;/span> &lt;span class="kd">private&lt;/span> &lt;span class="kd">final&lt;/span> &lt;span class="kt">boolean&lt;/span> &lt;span class="n">generated&lt;/span>&lt;span class="o">;&lt;/span>
+&lt;span class="c1">// 是否大小敏感
+&lt;/span>&lt;span class="c1">&lt;/span> &lt;span class="kd">private&lt;/span> &lt;span class="kd">final&lt;/span> &lt;span class="kt">boolean&lt;/span> &lt;span class="n">caseSensitive&lt;/span>&lt;span class="o">;&lt;/span>
+&lt;span class="o">}&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-java" data-lang="java">&lt;span class="kd">public&lt;/span> &lt;span class="kd">final&lt;/span> &lt;span class="kd">class&lt;/span> &lt;span class="nc">IndexMetaData&lt;/span> &lt;span class="o">{&lt;/span>
+&lt;span class="c1">// 索引字段名
+&lt;/span>&lt;span class="c1">&lt;/span> &lt;span class="kd">private&lt;/span> &lt;span class="kd">final&lt;/span> &lt;span class="n">String&lt;/span> &lt;span class="n">name&lt;/span>&lt;span class="o">;&lt;/span>
+&lt;span class="o">}&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>buildSchema()方法&lt;/p>
+&lt;pre>&lt;code> private ShardingSphereSchema buildSchema(final DatabaseType databaseType, final Map&amp;lt;String, DataSource&amp;gt; dataSourceMap, final Collection&amp;lt;ShardingSphereRule&amp;gt; rules) throws SQLException {
+return SchemaBuilder.build(new SchemaBuilderMaterials(databaseType, dataSourceMap, rules, props));
+}
+&lt;/code>&lt;/pre>&lt;pre>&lt;code>public static ShardingSphereSchema build(final SchemaBuilderMaterials materials) throws SQLException {
+ShardingSphereSchema result = new ShardingSphereSchema();
+// 有规则配置的表的处理 可以通过 RuleBasedTableMetaDataBuilder 的spi扩展解析
+addRuleConfiguredTables(materials, result);
+// 通过找对对应方言数据库的加载器DialectTableMetaDataLoader加载
+appendRemainTables(materials, result);
+return result;
+}
+&lt;/code>&lt;/pre>&lt;h2 id="总结">总结&lt;/h2>
+&lt;p>整个加载过程中使用不少设计模式，构造器模式，工厂模式，装饰器，组合等等，spi扩展点也预留不少，仔细研读收获颇丰。&lt;/p>
+&lt;p>目前的解读只是从大的主线来理解，当然中间还有很多细节需要后续补充。&lt;/p>
+&lt;p>debug过程中容易走丢，实时记录下路线是个不错的方式：&lt;/p>
+&lt;p>&lt;img src="https://fengzhenbing.github.io/C:%5cUsers%5cMloong%5cAppData%5cRoaming%5cTypora%5ctypora-user-images%5cimage-20210914001438627.png" alt="image-20210914001438627" />&lt;/p></description></item><item><title>shardingsphere（5.0.0.beta）源码总览</title><link>https://fengzhenbing.github.io/p/shardingsphere5.0.0.beta%E6%BA%90%E7%A0%81%E6%80%BB%E8%A7%88/</link><pubDate>Thu, 02 Sep 2021 00:00:00 +0000</pubDate><guid>https://fengzhenbing.github.io/p/shardingsphere5.0.0.beta%E6%BA%90%E7%A0%81%E6%80%BB%E8%A7%88/</guid><description>&lt;h2 id="shardingsphere500beta源码学习-总览">Shardingsphere（5.0.0.beta）源码学习-总览&lt;/h2>
 &lt;p>shardingsphere作为极为优秀的开源分布式数据库解决方案，通过阅读源码可以学到很多软件设计与开发的知识。&lt;/p>
 &lt;p>本次我继续按照之前读源码的方式&lt;code>从整体到细节，带着问题读源码的方式&lt;/code>记录这次深入学习 shardingsphere的过程。&lt;/p>
 &lt;h3 id="源码版本">源码版本&lt;/h3>
@@ -3095,4 +3289,4 @@ tail -f test.sink.txt
 &lt;p>实现方式： 对事务所有读、写的数据全都加上读锁、写锁和范围锁；实际还是很复杂的，要分成 Expanding 和 Shrinking 两阶段去处理读锁、写锁与数据间的关系，称为&lt;a class="link" href="https://en.wikipedia.org/wiki/Two-phase_locking" target="_blank" rel="noopener"
 >Two-Phase Lock&lt;/a>，2PL&lt;/p>
 &lt;h2 id="4-多版本并发控制">4 多版本并发控制&lt;/h2>
-&lt;p>参考 （https://icyfenix.cn/architect-perspective/general-architecture/transaction/local.html）&lt;/p></description></item><item><title/><link>https://fengzhenbing.github.io/p/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://fengzhenbing.github.io/p/</guid><description/></item><item><title/><link>https://fengzhenbing.github.io/p/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://fengzhenbing.github.io/p/</guid><description/></item><item><title/><link>https://fengzhenbing.github.io/p/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://fengzhenbing.github.io/p/</guid><description/></item><item><title/><link>https://fengzhenbing.github.io/p/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://fengzhenbing.github.io/p/</guid><description/></item><item><title/><link>https://fengzhenbing.github.io/p/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://fengzhenbing.github.io/p/</guid><description/></item><item><title/><link>https://fengzhenbing.github.io/p/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://fengzhenbing.github.io/p/</guid><description/></item><item><title/><link>https://fengzhenbing.github.io/p/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://fengzhenbing.github.io/p/</guid><description/></item></channel></rss>
+&lt;p>参考 （https://icyfenix.cn/architect-perspective/general-architecture/transaction/local.html）&lt;/p></description></item><item><title/><link>https://fengzhenbing.github.io/p/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://fengzhenbing.github.io/p/</guid><description/></item><item><title/><link>https://fengzhenbing.github.io/p/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://fengzhenbing.github.io/p/</guid><description/></item><item><title/><link>https://fengzhenbing.github.io/p/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://fengzhenbing.github.io/p/</guid><description/></item><item><title/><link>https://fengzhenbing.github.io/p/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://fengzhenbing.github.io/p/</guid><description/></item><item><title/><link>https://fengzhenbing.github.io/p/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://fengzhenbing.github.io/p/</guid><description/></item><item><title/><link>https://fengzhenbing.github.io/p/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://fengzhenbing.github.io/p/</guid><description/></item></channel></rss>
