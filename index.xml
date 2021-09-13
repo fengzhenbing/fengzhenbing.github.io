@@ -46,22 +46,22 @@
 &lt;span class="o">}&lt;/span>
 &lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="metadatacontextsbuilderbuild构建metadatacontexts">MetaDataContextsBuilder.build()构建MetaDataContexts&lt;/h3>
 &lt;p>org.apache.shardingsphere.infra.context.metadata.MetaDataContextsBuilder.build方法&lt;/p>
-&lt;pre>&lt;code> /**
-* Build meta data contexts.
-*
-* @exception SQLException SQL exception
-* @return meta data contexts
-*/
-public StandardMetaDataContexts build() throws SQLException {
-Map&amp;lt;String, ShardingSphereMetaData&amp;gt; mataDataMap = new HashMap&amp;lt;&amp;gt;(schemaRuleConfigs.size(), 1);
-for (String each : schemaRuleConfigs.keySet()) {
-// buildMetaData构造核心的元数据对象ShardingSphereMetaData，加入到集合中
-mataDataMap.put(each, buildMetaData(each));
-}
-// 返回标准元数据上下文
-return new StandardMetaDataContexts(mataDataMap, buildGlobalSchemaMetaData(mataDataMap), executorEngine, props);
-}
-&lt;/code>&lt;/pre>&lt;h3 id="shardingsphere元数据">ShardingSphere元数据&lt;/h3>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-java" data-lang="java"> &lt;span class="cm">/**
+&lt;/span>&lt;span class="cm"> * Build meta data contexts.
+&lt;/span>&lt;span class="cm"> *
+&lt;/span>&lt;span class="cm"> * @exception SQLException SQL exception
+&lt;/span>&lt;span class="cm"> * @return meta data contexts
+&lt;/span>&lt;span class="cm"> */&lt;/span>
+&lt;span class="kd">public&lt;/span> &lt;span class="n">StandardMetaDataContexts&lt;/span> &lt;span class="nf">build&lt;/span>&lt;span class="o">()&lt;/span> &lt;span class="kd">throws&lt;/span> &lt;span class="n">SQLException&lt;/span> &lt;span class="o">{&lt;/span>
+&lt;span class="n">Map&lt;/span>&lt;span class="o">&amp;lt;&lt;/span>&lt;span class="n">String&lt;/span>&lt;span class="o">,&lt;/span> &lt;span class="n">ShardingSphereMetaData&lt;/span>&lt;span class="o">&amp;gt;&lt;/span> &lt;span class="n">mataDataMap&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="k">new&lt;/span> &lt;span class="n">HashMap&lt;/span>&lt;span class="o">&amp;lt;&amp;gt;(&lt;/span>&lt;span class="n">schemaRuleConfigs&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">size&lt;/span>&lt;span class="o">(),&lt;/span> &lt;span class="n">1&lt;/span>&lt;span class="o">);&lt;/span>
+&lt;span class="k">for&lt;/span> &lt;span class="o">(&lt;/span>&lt;span class="n">String&lt;/span> &lt;span class="n">each&lt;/span> &lt;span class="o">:&lt;/span> &lt;span class="n">schemaRuleConfigs&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">keySet&lt;/span>&lt;span class="o">())&lt;/span> &lt;span class="o">{&lt;/span>
+&lt;span class="c1">// buildMetaData构造核心的元数据对象ShardingSphereMetaData，加入到集合中
+&lt;/span>&lt;span class="c1">&lt;/span> &lt;span class="n">mataDataMap&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">put&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">each&lt;/span>&lt;span class="o">,&lt;/span> &lt;span class="n">buildMetaData&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">each&lt;/span>&lt;span class="o">));&lt;/span>
+&lt;span class="o">}&lt;/span>
+&lt;span class="c1">// 返回标准元数据上下文
+&lt;/span>&lt;span class="c1">&lt;/span> &lt;span class="k">return&lt;/span> &lt;span class="k">new&lt;/span> &lt;span class="n">StandardMetaDataContexts&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">mataDataMap&lt;/span>&lt;span class="o">,&lt;/span> &lt;span class="n">buildGlobalSchemaMetaData&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">mataDataMap&lt;/span>&lt;span class="o">),&lt;/span> &lt;span class="n">executorEngine&lt;/span>&lt;span class="o">,&lt;/span> &lt;span class="n">props&lt;/span>&lt;span class="o">);&lt;/span>
+&lt;span class="o">}&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="shardingsphere元数据">ShardingSphere元数据&lt;/h3>
 &lt;p>ShardingSphere元数据存储以下数据：&lt;/p>
 &lt;blockquote>
 &lt;p>1数据源： 元数据资源，&lt;/p>
@@ -177,18 +177,18 @@ return new StandardMetaDataContexts(mataDataMap, buildGlobalSchemaMetaData(mataD
 &lt;/span>&lt;span class="c1">&lt;/span> &lt;span class="kd">private&lt;/span> &lt;span class="kd">final&lt;/span> &lt;span class="n">String&lt;/span> &lt;span class="n">name&lt;/span>&lt;span class="o">;&lt;/span>
 &lt;span class="o">}&lt;/span>
 &lt;/code>&lt;/pre>&lt;/div>&lt;p>buildSchema()方法&lt;/p>
-&lt;pre>&lt;code> private ShardingSphereSchema buildSchema(final DatabaseType databaseType, final Map&amp;lt;String, DataSource&amp;gt; dataSourceMap, final Collection&amp;lt;ShardingSphereRule&amp;gt; rules) throws SQLException {
-return SchemaBuilder.build(new SchemaBuilderMaterials(databaseType, dataSourceMap, rules, props));
-}
-&lt;/code>&lt;/pre>&lt;pre>&lt;code>public static ShardingSphereSchema build(final SchemaBuilderMaterials materials) throws SQLException {
-ShardingSphereSchema result = new ShardingSphereSchema();
-// 有规则配置的表的处理 可以通过 RuleBasedTableMetaDataBuilder 的spi扩展解析
-addRuleConfiguredTables(materials, result);
-// 通过找对对应方言数据库的加载器DialectTableMetaDataLoader加载
-appendRemainTables(materials, result);
-return result;
-}
-&lt;/code>&lt;/pre>&lt;h2 id="总结">总结&lt;/h2>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-JAVA" data-lang="JAVA"> &lt;span class="kd">private&lt;/span> &lt;span class="n">ShardingSphereSchema&lt;/span> &lt;span class="nf">buildSchema&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="kd">final&lt;/span> &lt;span class="n">DatabaseType&lt;/span> &lt;span class="n">databaseType&lt;/span>&lt;span class="o">,&lt;/span> &lt;span class="kd">final&lt;/span> &lt;span class="n">Map&lt;/span>&lt;span class="o">&amp;lt;&lt;/span>&lt;span class="n">String&lt;/span>&lt;span class="o">,&lt;/span> &lt;span class="n">DataSource&lt;/span>&lt;span class="o">&amp;gt;&lt;/span> &lt;span class="n">dataSourceMap&lt;/span>&lt;span class="o">,&lt;/span> &lt;span class="kd">final&lt;/span> &lt;span class="n">Collection&lt;/span>&lt;span class="o">&amp;lt;&lt;/span>&lt;span class="n">ShardingSphereRule&lt;/span>&lt;span class="o">&amp;gt;&lt;/span> &lt;span class="n">rules&lt;/span>&lt;span class="o">)&lt;/span> &lt;span class="kd">throws&lt;/span> &lt;span class="n">SQLException&lt;/span> &lt;span class="o">{&lt;/span>
+&lt;span class="k">return&lt;/span> &lt;span class="n">SchemaBuilder&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">build&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="k">new&lt;/span> &lt;span class="n">SchemaBuilderMaterials&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">databaseType&lt;/span>&lt;span class="o">,&lt;/span> &lt;span class="n">dataSourceMap&lt;/span>&lt;span class="o">,&lt;/span> &lt;span class="n">rules&lt;/span>&lt;span class="o">,&lt;/span> &lt;span class="n">props&lt;/span>&lt;span class="o">));&lt;/span>
+&lt;span class="o">}&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-java" data-lang="java">&lt;span class="kd">public&lt;/span> &lt;span class="kd">static&lt;/span> &lt;span class="n">ShardingSphereSchema&lt;/span> &lt;span class="nf">build&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="kd">final&lt;/span> &lt;span class="n">SchemaBuilderMaterials&lt;/span> &lt;span class="n">materials&lt;/span>&lt;span class="o">)&lt;/span> &lt;span class="kd">throws&lt;/span> &lt;span class="n">SQLException&lt;/span> &lt;span class="o">{&lt;/span>
+&lt;span class="n">ShardingSphereSchema&lt;/span> &lt;span class="n">result&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="k">new&lt;/span> &lt;span class="n">ShardingSphereSchema&lt;/span>&lt;span class="o">();&lt;/span>
+&lt;span class="c1">// 有规则配置的表的处理 可以通过 RuleBasedTableMetaDataBuilder 的spi扩展解析
+&lt;/span>&lt;span class="c1">&lt;/span> &lt;span class="n">addRuleConfiguredTables&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">materials&lt;/span>&lt;span class="o">,&lt;/span> &lt;span class="n">result&lt;/span>&lt;span class="o">);&lt;/span>
+&lt;span class="c1">// 通过找对对应方言数据库的加载器DialectTableMetaDataLoader加载
+&lt;/span>&lt;span class="c1">&lt;/span> &lt;span class="n">appendRemainTables&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">materials&lt;/span>&lt;span class="o">,&lt;/span> &lt;span class="n">result&lt;/span>&lt;span class="o">);&lt;/span>
+&lt;span class="k">return&lt;/span> &lt;span class="n">result&lt;/span>&lt;span class="o">;&lt;/span>
+&lt;span class="o">}&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="总结">总结&lt;/h2>
 &lt;p>整个加载过程中使用不少设计模式，构造器模式，工厂模式，装饰器，组合等等，spi扩展点也预留不少，仔细研读收获颇丰。&lt;/p>
 &lt;p>目前的解读只是从大的主线来理解，当然中间还有很多细节需要后续补充。&lt;/p>
 &lt;p>debug过程中容易走丢，实时记录下路线是个不错的方式：&lt;/p>
