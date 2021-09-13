@@ -3,7 +3,7 @@
 &lt;p>上下文对象作为读取并解析配置, 承载数据的核心；&lt;/p>
 &lt;p>spring有ApplicationContext,netty有HandlerContext&lt;/p>
 &lt;p>向其他中间件一样，在ShardingSphere也十分重要; 后续几乎所有功能比如数据分片、数据加密、SQL 改写，各类扩展都依赖上下文对象存储的数据&lt;/p>
-&lt;p>&lt;img src="https://fengzhenbing.github.io/C:%5cUsers%5cMloong%5cAppData%5cRoaming%5cTypora%5ctypora-user-images%5cimage-20210913215827140.png" alt="image-20210913215827140" />&lt;/p>
+&lt;p>&lt;img src="https://gitee.com/fengzhenbing/picgo/raw/master/image-20210913215827140.png" alt="image-20210913215827140" />&lt;/p>
 &lt;h3 id="标准元数据上下文---standardmetadatacontexts">标准元数据上下文 StandardMetaDataContexts&lt;/h3>
 &lt;p>核心存储了ShardingSphereMetaData元数据集合，作为重点后面分析&lt;/p>
 &lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-java" data-lang="java">&lt;span class="nd">@Getter&lt;/span>
@@ -112,9 +112,9 @@ return new StandardMetaDataContexts(mataDataMap, buildGlobalSchemaMetaData(mataD
 &lt;/span>&lt;span class="c1">&lt;/span> &lt;span class="kd">private&lt;/span> &lt;span class="kd">final&lt;/span> &lt;span class="n">Collection&lt;/span>&lt;span class="o">&amp;lt;&lt;/span>&lt;span class="n">ShardingSphereRule&lt;/span>&lt;span class="o">&amp;gt;&lt;/span> &lt;span class="n">rules&lt;/span>&lt;span class="o">;&lt;/span>
 &lt;span class="o">}&lt;/span>
 &lt;/code>&lt;/pre>&lt;/div>&lt;p>RuleConfiguration直接对应了用户的yaml, properties等配置&lt;/p>
-&lt;p>&lt;img src="https://fengzhenbing.github.io/C:%5cUsers%5cMloong%5cAppData%5cRoaming%5cTypora%5ctypora-user-images%5cimage-20210913214107105.png" alt="image-20210913214107105" />&lt;/p>
+&lt;p>&lt;img src="https://gitee.com/fengzhenbing/picgo/raw/master/image-20210913214107105.png" alt="image-20210913214107105" />&lt;/p>
 &lt;p>ShardingSphereRule&lt;/p>
-&lt;p>&lt;img src="https://fengzhenbing.github.io/C:%5cUsers%5cMloong%5cAppData%5cRoaming%5cTypora%5ctypora-user-images%5cimage-20210913222453670.png" alt="image-20210913222453670" />&lt;/p>
+&lt;p>&lt;img src="https://gitee.com/fengzhenbing/picgo/raw/master/image-20210913222453670.png" alt="image-20210913222453670" />&lt;/p>
 &lt;p>buildSchemaRules()&lt;/p>
 &lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-java" data-lang="java"> &lt;span class="kd">public&lt;/span> &lt;span class="kd">static&lt;/span> &lt;span class="n">Collection&lt;/span>&lt;span class="o">&amp;lt;&lt;/span>&lt;span class="n">ShardingSphereRule&lt;/span>&lt;span class="o">&amp;gt;&lt;/span> &lt;span class="nf">buildSchemaRules&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="kd">final&lt;/span> &lt;span class="n">String&lt;/span> &lt;span class="n">schemaName&lt;/span>&lt;span class="o">,&lt;/span> &lt;span class="kd">final&lt;/span> &lt;span class="n">Collection&lt;/span>&lt;span class="o">&amp;lt;&lt;/span>&lt;span class="n">RuleConfiguration&lt;/span>&lt;span class="o">&amp;gt;&lt;/span> &lt;span class="n">schemaRuleConfigurations&lt;/span>&lt;span class="o">,&lt;/span>
 &lt;span class="kd">final&lt;/span> &lt;span class="n">DatabaseType&lt;/span> &lt;span class="n">databaseType&lt;/span>&lt;span class="o">,&lt;/span> &lt;span class="kd">final&lt;/span> &lt;span class="n">Map&lt;/span>&lt;span class="o">&amp;lt;&lt;/span>&lt;span class="n">String&lt;/span>&lt;span class="o">,&lt;/span> &lt;span class="n">DataSource&lt;/span>&lt;span class="o">&amp;gt;&lt;/span> &lt;span class="n">dataSourceMap&lt;/span>&lt;span class="o">)&lt;/span> &lt;span class="o">{&lt;/span>
@@ -124,7 +124,7 @@ return new StandardMetaDataContexts(mataDataMap, buildGlobalSchemaMetaData(mataD
 &lt;/span>&lt;span class="c1">&lt;/span> &lt;span class="k">return&lt;/span> &lt;span class="n">builders&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">entrySet&lt;/span>&lt;span class="o">().&lt;/span>&lt;span class="na">stream&lt;/span>&lt;span class="o">().&lt;/span>&lt;span class="na">map&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">entry&lt;/span> &lt;span class="o">-&amp;gt;&lt;/span> &lt;span class="n">entry&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">getValue&lt;/span>&lt;span class="o">().&lt;/span>&lt;span class="na">build&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">schemaName&lt;/span>&lt;span class="o">,&lt;/span> &lt;span class="n">dataSourceMap&lt;/span>&lt;span class="o">,&lt;/span> &lt;span class="n">databaseType&lt;/span>&lt;span class="o">,&lt;/span> &lt;span class="n">entry&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">getKey&lt;/span>&lt;span class="o">())).&lt;/span>&lt;span class="na">collect&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">Collectors&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">toList&lt;/span>&lt;span class="o">());&lt;/span>
 &lt;span class="o">}&lt;/span>
 &lt;/code>&lt;/pre>&lt;/div>&lt;p>SchemaRuleBuilder作为一个规则解析扩展点&lt;/p>
-&lt;p>&lt;img src="https://fengzhenbing.github.io/C:%5cUsers%5cMloong%5cAppData%5cRoaming%5cTypora%5ctypora-user-images%5cimage-20210914013607189.png" alt="image-20210914013607189" />&lt;/p>
+&lt;p>&lt;img src="https://gitee.com/fengzhenbing/picgo/raw/master/image-20210914013607189.png" alt="image-20210914013607189" />&lt;/p>
 &lt;h4 id="b-再看buildresource即构建数据源的元数据对象">b) 再看buildResource，即构建数据源的元数据对象&lt;/h4>
 &lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-java" data-lang="java">&lt;span class="kd">private&lt;/span> &lt;span class="n">ShardingSphereResource&lt;/span> &lt;span class="nf">buildResource&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="kd">final&lt;/span> &lt;span class="n">DatabaseType&lt;/span> &lt;span class="n">databaseType&lt;/span>&lt;span class="o">,&lt;/span> &lt;span class="kd">final&lt;/span> &lt;span class="n">Map&lt;/span>&lt;span class="o">&amp;lt;&lt;/span>&lt;span class="n">String&lt;/span>&lt;span class="o">,&lt;/span> &lt;span class="n">DataSource&lt;/span>&lt;span class="o">&amp;gt;&lt;/span> &lt;span class="n">dataSourceMap&lt;/span>&lt;span class="o">)&lt;/span> &lt;span class="kd">throws&lt;/span> &lt;span class="n">SQLException&lt;/span> &lt;span class="o">{&lt;/span>
 &lt;span class="c1">//构建数据源的元数据对象
@@ -135,7 +135,7 @@ return new StandardMetaDataContexts(mataDataMap, buildGlobalSchemaMetaData(mataD
 &lt;span class="o">}&lt;/span>
 &lt;/code>&lt;/pre>&lt;/div>&lt;h4 id="c-再看如何构建数据库元数据-buildschema方法">c) 再看如何构建数据库元数据, buildSchema()方法&lt;/h4>
 &lt;p>加载数据库的元数据，但是各个方言版本的元数据不太一样，例如mysql的在information_schema中，针对对不同方言，可以通过DialectTableMetaDataLoader的spi扩展定制各类方言版本的数据库元数据加载。&lt;/p>
-&lt;p>&lt;img src="https://fengzhenbing.github.io/C:%5cUsers%5cMloong%5cAppData%5cRoaming%5cTypora%5ctypora-user-images%5cimage-20210914014024075.png" alt="image-20210914014024075" />&lt;/p>
+&lt;p>&lt;img src="https://gitee.com/fengzhenbing/picgo/raw/master/image-20210914014024075.png" alt="image-20210914014024075" />&lt;/p>
 &lt;ul>
 &lt;li>数据库元数据&lt;/li>
 &lt;/ul>
@@ -192,7 +192,7 @@ return result;
 &lt;p>整个加载过程中使用不少设计模式，构造器模式，工厂模式，装饰器，组合等等，spi扩展点也预留不少，仔细研读收获颇丰。&lt;/p>
 &lt;p>目前的解读只是从大的主线来理解，当然中间还有很多细节需要后续补充。&lt;/p>
 &lt;p>debug过程中容易走丢，实时记录下路线是个不错的方式：&lt;/p>
-&lt;p>&lt;img src="https://fengzhenbing.github.io/C:%5cUsers%5cMloong%5cAppData%5cRoaming%5cTypora%5ctypora-user-images%5cimage-20210914001438627.png" alt="image-20210914001438627" />&lt;/p></description></item><item><title>shardingsphere（5.0.0.beta）源码总览</title><link>https://fengzhenbing.github.io/p/shardingsphere5.0.0.beta%E6%BA%90%E7%A0%81%E6%80%BB%E8%A7%88/</link><pubDate>Thu, 02 Sep 2021 00:00:00 +0000</pubDate><guid>https://fengzhenbing.github.io/p/shardingsphere5.0.0.beta%E6%BA%90%E7%A0%81%E6%80%BB%E8%A7%88/</guid><description>&lt;h2 id="shardingsphere500beta源码学习-总览">Shardingsphere（5.0.0.beta）源码学习-总览&lt;/h2>
+&lt;p>&lt;img src="https://gitee.com/fengzhenbing/picgo/raw/master/image-20210914001438627.png" alt="image-20210914001438627" />&lt;/p></description></item><item><title>shardingsphere（5.0.0.beta）源码总览</title><link>https://fengzhenbing.github.io/p/shardingsphere5.0.0.beta%E6%BA%90%E7%A0%81%E6%80%BB%E8%A7%88/</link><pubDate>Thu, 02 Sep 2021 00:00:00 +0000</pubDate><guid>https://fengzhenbing.github.io/p/shardingsphere5.0.0.beta%E6%BA%90%E7%A0%81%E6%80%BB%E8%A7%88/</guid><description>&lt;h2 id="shardingsphere500beta源码学习-总览">Shardingsphere（5.0.0.beta）源码学习-总览&lt;/h2>
 &lt;p>shardingsphere作为极为优秀的开源分布式数据库解决方案，通过阅读源码可以学到很多软件设计与开发的知识。&lt;/p>
 &lt;p>本次我继续按照之前读源码的方式&lt;code>从整体到细节，带着问题读源码的方式&lt;/code>记录这次深入学习 shardingsphere的过程。&lt;/p>
 &lt;h3 id="源码版本">源码版本&lt;/h3>
