@@ -52,7 +52,7 @@ params:
 
     comments:
         enabled: true
-        provider: disqus
+        provider: utterances
 
         disqusjs:
             shortname:
@@ -62,9 +62,9 @@ params:
             adminLabel:
 
         utterances:
-            repo:
+            repo: fengzhenbing/fengzhenbing.github.io
             issueTerm: pathname
-            label:
+            label: Comment
 
         remark42:
             host:
