@@ -1405,15 +1405,25 @@ kubeadm join 192.168.3.13:6443 --token qxu02l.g995k2yhkxjh3k80 &lt;span class="s
 &lt;span class="o">}&lt;/span>
 &lt;span class="o">}&lt;/span>
 &lt;/code>&lt;/pre>&lt;/div></description></item><item><title>jvm垃圾回收</title><link>https://fengzhenbing.github.io/p/jvm%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6/</link><pubDate>Sun, 14 Mar 2021 00:00:00 +0000</pubDate><guid>https://fengzhenbing.github.io/p/jvm%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6/</guid><description>&lt;h2 id="jvm垃圾回收">jvm垃圾回收&lt;/h2>
+&lt;h3 id="对象存活判断算法">对象存活判断算法&lt;/h3>
+&lt;h4 id="引用计数算法">引用计数算法&lt;/h4>
+&lt;p>问题： 可能存在两个对象相互引用，导致无法回收，内存泄漏&lt;/p>
+&lt;h4 id="根可达算法">根可达算法&lt;/h4>
+&lt;p>维护引用的链表； 如果某个对象无法到达根节点，说明可以被回收&lt;/p>
 &lt;h3 id="垃圾回收算法">垃圾回收算法&lt;/h3>
-&lt;p>针对 堆内存回收；&lt;/p>
-&lt;p>方法区：&lt;/p>
+&lt;blockquote>
+&lt;p>对&lt;code>停顿时间(延时)&lt;/code>和&lt;code>吞吐量&lt;/code>的权衡，没有最好，只有最适合当前业务场景的回收方式&lt;/p>
+&lt;/blockquote>
 &lt;ul>
 &lt;li>
-&lt;p>java 8 前 永久区（也参与垃圾回收，一样的算法，省事了，但是有默认最大内存限制，容易oom）&lt;/p>
+&lt;p>针对 堆内存回收；&lt;/p>
 &lt;/li>
 &lt;li>
-&lt;p>java 8 彻底抛弃了 永久区，叫元数据区，使用本地内存&lt;/p>
+&lt;p>方法区&lt;/p>
+&lt;ul>
+&lt;li>java 8 前 永久区（也参与垃圾回收，一样的算法，省事了，但是有默认最大内存限制，容易oom）&lt;/li>
+&lt;li>java 8 彻底抛弃了 永久区，叫元数据区，使用本地内存&lt;/li>
+&lt;/ul>
 &lt;/li>
 &lt;/ul>
 &lt;h4 id="分代收集理论">分代收集理论&lt;/h4>
@@ -1422,10 +1432,10 @@ kubeadm join 192.168.3.13:6443 --token qxu02l.g995k2yhkxjh3k80 &lt;span class="s
 &lt;p>跨代引用： Remember set&lt;/p>
 &lt;h4 id="标记清除">标记清除&lt;/h4>
 &lt;p>产生内存碎片，内存分配复杂了。 可能需要类似硬盘的 “分区空闲分配链表” 等复杂方式解决&lt;/p>
-&lt;p>Cms搜集器在old 区回收时采用， 但是内存碎片达到一定量，会采取一次标记清理。（和稀泥的做法，结合两者，）&lt;/p>
+&lt;p>Cms搜集器在old 区回收时采用， 但是内存碎片达到一定量，会采取一次标记整理。（和稀泥的做法，结合两者，）&lt;/p>
 &lt;h4 id="标记复制">标记复制&lt;/h4>
 &lt;p>一般用于新生代回收: Serial ParNew 的新生代采用该算法&lt;/p>
-&lt;p>Ēden scurvivor scurvivor 8:1:1&lt;/p>
+&lt;p>scurvivorRadio Ēden survivor survivor 8:1:1&lt;/p>
 &lt;p>对象存活率较高时，需要更多的复制操作，效率会降低&lt;/p>
 &lt;h4 id="标记整理">标记整理&lt;/h4>
 &lt;p>用于old区：&lt;/p>
@@ -1438,7 +1448,128 @@ kubeadm join 192.168.3.13:6443 --token qxu02l.g995k2yhkxjh3k80 &lt;span class="s
 &lt;p>不移动：降低了延迟，但内存碎片，内存分配复杂， 吞吐量有所下降。&lt;/p>
 &lt;/li>
 &lt;/ul>
-&lt;h3 id="垃圾回收器">垃圾回收器&lt;/h3></description></item><item><title>pulsar</title><link>https://fengzhenbing.github.io/p/pulsar/</link><pubDate>Tue, 23 Feb 2021 00:00:00 +0000</pubDate><guid>https://fengzhenbing.github.io/p/pulsar/</guid><description>&lt;h2 id="相关概念">相关概念&lt;/h2>
+&lt;h3 id="垃圾回收器">垃圾回收器&lt;/h3>
+&lt;ul>
+&lt;li>
+&lt;p>对于新生代一般时使用标记复制算法&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>对于老年代一般使用标记整理算法 （CMS除外）&lt;/p>
+&lt;/li>
+&lt;/ul>
+&lt;p>&lt;img src="https://gitee.com/fengzhenbing/picgo/raw/master/image-20210916161350325.png" alt="image-20210916161350325" />&lt;/p>
+&lt;h4 id="serial收集器">Serial收集器&lt;/h4>
+&lt;ul>
+&lt;li>串行&lt;/li>
+&lt;/ul>
+&lt;h4 id="parnew收集器">ParNew收集器&lt;/h4>
+&lt;ul>
+&lt;li>并行&lt;/li>
+&lt;/ul>
+&lt;h4 id="parallel-scavenge收集器">Parallel Scavenge收集器&lt;/h4>
+&lt;p>-XX:+UseParallelGC
+-XX:+UseParallelOldGC&lt;/p>
+&lt;ul>
+&lt;li>
+&lt;p>调整方式&lt;/p>
+&lt;blockquote>
+&lt;p>1.手动调整
+-Xmn
+-Xms
+-XX:NewRatio=N
+手动指定堆内存大小和代空间比例，一般要多次试验
+2.自动参数调整
+-XX:MaxGCPauseMillis=N 可接受最大停顿时间
+-XX:GCTimeRatio=N 可接受GC时间占比（目标吞吐量） 吞吐量=1-1/(1+N)&lt;/p>
+&lt;/blockquote>
+&lt;/li>
+&lt;li>
+&lt;p>并行&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>尽可能可以控制吞吐量 也叫 吞吐量优先收集器&lt;/p>
+&lt;/li>
+&lt;/ul>
+&lt;p>-XX:+UseAdaptiveSizePolicy 默认开启的&lt;/p>
+&lt;h4 id="serial-old收集器">Serial Old收集器&lt;/h4>
+&lt;p>用于old区：串行&lt;/p>
+&lt;h4 id="parallel-old收集器">Parallel Old收集器&lt;/h4>
+&lt;p>用于old区：并行&lt;/p>
+&lt;h4 id="cms收集器">CMS收集器&lt;/h4>
+&lt;p>-XX:+UseParNewGC
+-XX:+UseConcMarkSweepGC&lt;/p>
+&lt;ul>
+&lt;li>
+&lt;p>尽可能缩短垃圾回收时，用户线程的停顿时间&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>和ParNew收集器配合：&lt;/p>
+&lt;/li>
+&lt;/ul>
+&lt;h4 id="garbage-first-g1收集器">Garbage First (G1)收集器&lt;/h4>
+&lt;h3 id="内存分配与回收策略">内存分配与回收策略&lt;/h3>
+&lt;ol>
+&lt;li>
+&lt;p>对象优先在Edem区分配&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>大对象直接进入老年代&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>长期存活的对象进入老年代&lt;/p>
+&lt;blockquote>
+&lt;ul>
+&lt;li>
+&lt;p>每个对象有个&lt;code>年龄计数器&lt;/code> MinorGC一次，加1&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>-XX:MaxTenuringThreshold=X X默认是15， 15次后进入老年代&lt;/p>
+&lt;/li>
+&lt;/ul>
+&lt;/blockquote>
+&lt;/li>
+&lt;li>
+&lt;p>动态对象年龄判断&lt;/p>
+&lt;p>-XX:TargetSurvivorRatio 目标存活率，默认为50%&lt;/p>
+&lt;p>survivor中相同年龄的对象大小之和大于TargetSurvivorRatio后，大于等于该年龄的都晋升到老年代。&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>空间分配担保&lt;/p>
+&lt;/li>
+&lt;/ol>
+&lt;h3 id="相关应用">相关应用&lt;/h3>
+&lt;h4 id="查看当前java版本使用的gc">查看当前java版本使用的GC&lt;/h4>
+&lt;p>&lt;code>java -XX:+PrintCommandLineFlags -version&lt;/code>&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-shell" data-lang="shell">&lt;span class="o">[&lt;/span>root@sd01 ~&lt;span class="o">]&lt;/span>&lt;span class="c1"># java -XX:+PrintCommandLineFlags -version&lt;/span>
+-XX:InitialHeapSize&lt;span class="o">=&lt;/span>&lt;span class="m">128167296&lt;/span> -XX:MaxHeapSize&lt;span class="o">=&lt;/span>&lt;span class="m">2050676736&lt;/span> -XX:+PrintCommandLineFlags -XX:+UseCompressedClassPointers -XX:+UseCompressedOops -XX:+UseParallelGC
+java version &lt;span class="s2">&amp;#34;1.8.0_131&amp;#34;&lt;/span>
+Java&lt;span class="o">(&lt;/span>TM&lt;span class="o">)&lt;/span> SE Runtime Environment &lt;span class="o">(&lt;/span>build 1.8.0_131-b11&lt;span class="o">)&lt;/span>
+Java HotSpot&lt;span class="o">(&lt;/span>TM&lt;span class="o">)&lt;/span> 64-Bit Server VM &lt;span class="o">(&lt;/span>build 25.131-b11, mixed mode&lt;span class="o">)&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>&lt;img src="https://gitee.com/fengzhenbing/picgo/raw/master/519126-20180623154635076-953076776.png" alt="img" />&lt;/p>
+&lt;blockquote>
+&lt;p>UseParallelGC 按道理时使用 Parallel Scavenge + SerialOld，但后来P araller old出现后，&lt;strong>实际默认时用的&lt;code>Parallel Scavenge + Parallel Old&lt;/code>&lt;/strong>&lt;/p>
+&lt;/blockquote>
+&lt;h3 id="heading">&lt;/h3>
+&lt;h4 id="默认堆大小">默认堆大小&lt;/h4>
+&lt;p>什么是jdk1.8默认堆大小？ （MaxHeapSize）&lt;/p>
+&lt;p>就是使用java -jar 并且没有手动指定-Xmx参数的启动的进程使用的堆的大小，就是用的默认jdk堆的大小。&lt;/p>
+&lt;p>这个默认的堆大小是取决你服务器的物理内存，假如服务器内存大于1GB，则使用1/4的服务器物理内存作为jvm的堆内存大小。&lt;/p>
+&lt;p>eg：服务器内存4GB 则默认堆大小为1GB&lt;/p>
+&lt;h4 id="配置试例">&lt;strong>配置试例&lt;/strong>&lt;/h4>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-shell" data-lang="shell"> java -Xms1600m -Xmx1600m -Xmn800m -Xloggc:/xxx/logs/xxx_gc.log -verbose:gc -XX:+PrintGCDetails -XX:+PrintGCDateStamps -XX:+PrintGCTimeStamps -XX:+UseGCLogFileRotation -XX:NumberOfGCLogFiles&lt;span class="o">=&lt;/span>&lt;span class="m">20&lt;/span> -XX:GCLogFileSize&lt;span class="o">=&lt;/span>100M -Dprofile&lt;span class="o">=&lt;/span>prod -jar /xxx/xxx-1.0.0-SNAPSHOT.jar
+&lt;/code>&lt;/pre>&lt;/div>&lt;blockquote>
+&lt;p>-Xms: //堆内存初始化大小
+-Xmx: //堆最大可用内存
+-Xmn: //新生代堆最大可用内存
+-XX:UseParallelGC //使用gc的类型&lt;/p>
+&lt;p>-XX:SurvivorRadio//设置新生代中：Eden空间、SurvivorRadio From空间、SurvivorRadio To空间的占比
+-XX:NewRatio //设置新生代空间和老年代空间的占比
+-XX:+PrintGC //每次触发GC的时候打印相关日志
+-XX:+PrintGCDetails //打印详细Gc日志&lt;/p>
+&lt;p>-XX:+UseGCLogFileRotation&lt;/p>
+&lt;p>-XX:NumberOfGCLogFiles&lt;/p>
+&lt;p>-XX:GCLogFileSize&lt;/p>
+&lt;/blockquote></description></item><item><title>pulsar</title><link>https://fengzhenbing.github.io/p/pulsar/</link><pubDate>Tue, 23 Feb 2021 00:00:00 +0000</pubDate><guid>https://fengzhenbing.github.io/p/pulsar/</guid><description>&lt;h2 id="相关概念">相关概念&lt;/h2>
 &lt;ul>
 &lt;li>计算存储分离&lt;/li>
 &lt;li>&lt;img src="https://gitee.com/fengzhenbing/picgo/raw/master/image-20210406220312072.png" alt="image-20210406220312072" />&lt;/li>
