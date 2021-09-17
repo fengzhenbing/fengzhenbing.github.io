@@ -1,4 +1,15 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>算法 on Feng Zhenbing's Blog</title><link>https://fengzhenbing.github.io/categories/%E7%AE%97%E6%B3%95/</link><description>Recent content in 算法 on Feng Zhenbing's Blog</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Sun, 14 Mar 2021 00:00:00 +0000</lastBuildDate><atom:link href="https://fengzhenbing.github.io/categories/%E7%AE%97%E6%B3%95/index.xml" rel="self" type="application/rss+xml"/><item><title>jvm垃圾回收</title><link>https://fengzhenbing.github.io/p/jvm%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6/</link><pubDate>Sun, 14 Mar 2021 00:00:00 +0000</pubDate><guid>https://fengzhenbing.github.io/p/jvm%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6/</guid><description>jvm垃圾回收 对象存活判断算法 引用计数算法 问题： 可能存在两个对象相互引用，导致无法回收，内存泄漏
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>算法 on Feng Zhenbing's Blog</title><link>https://fengzhenbing.github.io/categories/%E7%AE%97%E6%B3%95/</link><description>Recent content in 算法 on Feng Zhenbing's Blog</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Mon, 21 Jun 2021 00:00:00 +0000</lastBuildDate><atom:link href="https://fengzhenbing.github.io/categories/%E7%AE%97%E6%B3%95/index.xml" rel="self" type="application/rss+xml"/><item><title>加密算法</title><link>https://fengzhenbing.github.io/p/%E5%8A%A0%E5%AF%86%E7%AE%97%E6%B3%95/</link><pubDate>Mon, 21 Jun 2021 00:00:00 +0000</pubDate><guid>https://fengzhenbing.github.io/p/%E5%8A%A0%E5%AF%86%E7%AE%97%E6%B3%95/</guid><description>哈希摘要算法 好的哈希摘要算法需要具备
+一是易变性，这是指算法的输入端发生了任何一点细微变动，都会引发雪崩效应,使得输出端的结果产生极大的变化
+常常被用来校验数据是否被篡改
+二是不可逆性，摘要的过程是单向的，不可能从摘要的结果中逆向还原出输入值来
+对称加密和非对称加密 对称加密 对称加密指的就是加密和解密使用同一个秘钥，所以叫做对称加密。对称加密只有一个秘钥，作为私钥。 常见的对称加密算法：DES，3DES，AES等等。
+非对称加密 非对称加密指的是：加密和解密使用不同的秘钥，一把作为公开的公钥，另一把作为私钥。公钥加密的信息，只有私钥才能解密。私钥加密的信息，只有公钥才能解密。 常见的非对称加密算法：RSA，ECC
+区别 对称加密算法相比非对称加密算法来说，加解密的效率要高得多。但是缺陷在于对于秘钥的管理上，以及在非安全信道中通讯时，密钥交换的安全性不能保障。所以在实际的网络环境中，会将两者混合使用.
+对称加密传输大量数据
+非对称加密永远对称加密的密钥协商，传输。
+例如针对C/S模型，
+服务端计算出一对秘钥pub/pri。将私钥保密，将公钥公开。 客户端请求服务端时，拿到服务端的公钥pub。 客户端通过AES计算出一个对称加密的秘钥X。 然后使用pub将X进行加密。 客户端将加密后的密文发送给服务端。服务端通过pri解密获得X。 然后两边的通讯内容就通过对称密钥X以对称加密算法来加解密。
+三种密码学算法的对比 类型 特点 常见实现 主要用途 主要局限 哈希摘要 不可逆，即不能解密，所以并不是加密算法，只是一些场景把它当作加密算法使用。 易变性，输入发生 1 Bit 变动，就可能导致输出结果 50%的内容发生改变。 无论输入长度多少，输出长度固定（2 的 N 次幂）。 MD2/4/5/6、SHA0/1/256/512 摘要 无法解密 对称加密 加密是指加密和解密是一样的密钥。 设计难度相对较小，执行速度相对较块。 加密明文长度不受限制。 DES、AES、RC4、IDEA 加密 要解决如何把密钥安全地传递给解密者。 非对称加密 加密和解密使用的是不同的密钥。 明文长度不能超过公钥长度。 RSA、BCDSA、ElGamal 签名、传递密钥 性能与加密明文长度受限。 数字证书 解决公钥被劫持篡改的问题。由权威机构颁发保证</description></item><item><title>jvm垃圾回收</title><link>https://fengzhenbing.github.io/p/jvm%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6/</link><pubDate>Sun, 14 Mar 2021 00:00:00 +0000</pubDate><guid>https://fengzhenbing.github.io/p/jvm%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6/</guid><description>jvm垃圾回收 对象存活判断算法 引用计数算法 问题： 可能存在两个对象相互引用，导致无法回收，内存泄漏
 根可达算法 维护引用的链表； 如果某个对象无法到达根节点，说明可以被回收
 垃圾回收算法 对停顿时间(延时)和吞吐量的权衡，没有最好，只有最适合当前业务场景的回收方式
 针对 堆内存回收；

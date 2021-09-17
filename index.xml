@@ -779,7 +779,20 @@ yarn run docusaurus docs:version 2.4.0
 &lt;p>插画使用: &lt;a href="https://www.iconfont.cn/illustrations/detail?spm=a313x.7781069.1998910419.d9df05512&amp;amp;cid=24712">https://www.iconfont.cn/illustrations/detail?spm=a313x.7781069.1998910419.d9df05512&amp;amp;cid=24712&lt;/a>&lt;/p>
 &lt;p>&lt;a href="https://www.iconfont.cn/collections/detail?spm=a313x.7781069.1998910419.d9df05512&amp;amp;cid=34403">https://www.iconfont.cn/collections/detail?spm=a313x.7781069.1998910419.d9df05512&amp;amp;cid=34403&lt;/a>&lt;/p>
 &lt;h3 id="参考">参考&lt;/h3>
-&lt;p>&lt;a href="https://docusaurus.io/zh-CN/docs">https://docusaurus.io/zh-CN/docs&lt;/a>&lt;/p></description></item><item><title>Prometheus监控JVM</title><link>https://fengzhenbing.github.io/p/prometheus%E7%9B%91%E6%8E%A7jvm/</link><pubDate>Sun, 15 Aug 2021 14:16:25 +0600</pubDate><guid>https://fengzhenbing.github.io/p/prometheus%E7%9B%91%E6%8E%A7jvm/</guid><description>&lt;h2 id="1-jmx_exporter">1. jmx_exporter&lt;/h2>
+&lt;p>&lt;a href="https://docusaurus.io/zh-CN/docs">https://docusaurus.io/zh-CN/docs&lt;/a>&lt;/p></description></item><item><title>开放平台appKey，appSecret设计</title><link>https://fengzhenbing.github.io/p/%E5%BC%80%E6%94%BE%E5%B9%B3%E5%8F%B0appkeyappsecret%E8%AE%BE%E8%AE%A1/</link><pubDate>Thu, 19 Aug 2021 00:00:00 +0000</pubDate><guid>https://fengzhenbing.github.io/p/%E5%BC%80%E6%94%BE%E5%B9%B3%E5%8F%B0appkeyappsecret%E8%AE%BE%E8%AE%A1/</guid><description>&lt;h3 id="开放平台appkey-appsecret设计">开放平台appKey appSecret设计&lt;/h3>
+&lt;h4 id="1手动注册客户端服务端返回appkey-appsecret--客户端和服务端都保存ak-as">1，手动注册客户端，服务端返回appKey appSecret 客户端和服务端都保存ak as&lt;/h4>
+&lt;h4 id="2-客户端第一次请求-通过appkey请求token">2, 客户端第一次请求 通过appKey请求token&lt;/h4>
+&lt;p>服务端通过appKey，appSecret，时间戳，用户的必要信息生成token，可以使用JWTToken.&lt;/p>
+&lt;p>​ token具有有效期：&lt;strong>Token是客户端访问服务端的凭证。&lt;/strong>&lt;/p>
+&lt;h4 id="3客户端后续请求">3，客户端后续请求&lt;/h4>
+&lt;p>参数为： Token + 当前时间戳 + 参数 +签名sign1&lt;/p>
+&lt;p>签名sign1为 &lt;code>Token + 当前时间戳 + 参数+appSecret&lt;/code> 按照一定签名算法比如 SHA256生成的签名字符串，&lt;strong>为了保证请求中参数不被流量劫持篡改&lt;/strong>&lt;/p>
+&lt;h4 id="4服务端收到请求进行校验">4，服务端收到请求进行校验&lt;/h4>
+&lt;ul>
+&lt;li>时间戳校验：请求时间和当前服务端时间大于一定范围，比如5分钟，拒绝执行&lt;/li>
+&lt;li>Token解析：token过期拒绝执行&lt;/li>
+&lt;li>签名校验： 通过token解析获取到appKey，再获取到appSecret， 使用与客户端相同的签名算法SHA256得到签名sign2, 如果sign1不等于sign2，拒绝执行&lt;/li>
+&lt;/ul></description></item><item><title>Prometheus监控JVM</title><link>https://fengzhenbing.github.io/p/prometheus%E7%9B%91%E6%8E%A7jvm/</link><pubDate>Sun, 15 Aug 2021 14:16:25 +0600</pubDate><guid>https://fengzhenbing.github.io/p/prometheus%E7%9B%91%E6%8E%A7jvm/</guid><description>&lt;h2 id="1-jmx_exporter">1. jmx_exporter&lt;/h2>
 &lt;h3 id="下载jmx_exporter">下载jmx_exporter&lt;/h3>
 &lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-shell" data-lang="shell">ubuntu:/# mkdir -p /usr/local/prometheus/jmx_exporter
 ubuntu:/# &lt;span class="nb">cd&lt;/span> /usr/local/prometheus/jmx_exporter
@@ -898,7 +911,85 @@ sudo n xx.xx
 &lt;/ul>
 &lt;/li>
 &lt;/ul>
-&lt;p>&lt;a href="http://www.dockone.io/article/9116">http://www.dockone.io/article/9116&lt;/a>&lt;/p></description></item><item><title>图解shenyu</title><link>https://fengzhenbing.github.io/p/%E5%9B%BE%E8%A7%A3shenyu/</link><pubDate>Sat, 19 Jun 2021 00:00:00 +0000</pubDate><guid>https://fengzhenbing.github.io/p/%E5%9B%BE%E8%A7%A3shenyu/</guid><description>&lt;h3 id="spi">spi&lt;/h3>
+&lt;p>&lt;a href="http://www.dockone.io/article/9116">http://www.dockone.io/article/9116&lt;/a>&lt;/p></description></item><item><title>加密算法</title><link>https://fengzhenbing.github.io/p/%E5%8A%A0%E5%AF%86%E7%AE%97%E6%B3%95/</link><pubDate>Mon, 21 Jun 2021 00:00:00 +0000</pubDate><guid>https://fengzhenbing.github.io/p/%E5%8A%A0%E5%AF%86%E7%AE%97%E6%B3%95/</guid><description>&lt;h3 id="哈希摘要算法">哈希摘要算法&lt;/h3>
+&lt;p>好的哈希摘要算法需要具备&lt;/p>
+&lt;ol>
+&lt;li>
+&lt;p>一是&lt;strong>易变性&lt;/strong>，这是指算法的输入端发生了任何一点细微变动，都会引发雪崩效应,使得输出端的结果产生极大的变化&lt;/p>
+&lt;p>常常被用来校验数据是否被篡改&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>二是&lt;strong>不可逆性&lt;/strong>，摘要的过程是单向的，不可能从摘要的结果中逆向还原出输入值来&lt;/p>
+&lt;/li>
+&lt;/ol>
+&lt;h3 id="对称加密和非对称加密">对称加密和非对称加密&lt;/h3>
+&lt;ol>
+&lt;li>
+&lt;p>对称加密
+对称加密指的就是加密和解密使用&lt;strong>同一个&lt;/strong>秘钥，所以叫做对称加密。对称加密只有一个秘钥，作为私钥。
+常见的对称加密算法：DES，3DES，AES等等。&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>非对称加密
+非对称加密指的是：加密和解密使用&lt;strong>不同&lt;/strong>的秘钥，一把作为公开的公钥，另一把作为私钥。&lt;strong>公钥加密的信息，只有私钥才能解密。私钥加密的信息，只有公钥才能解密。&lt;/strong>
+常见的非对称加密算法：RSA，ECC&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>区别
+对称加密算法相比非对称加密算法来说，加解密的效率要高得多。但是缺陷在于对于秘钥的管理上，以及在非安全信道中通讯时，密钥交换的安全性不能保障。所以在实际的网络环境中，会将两者混合使用.&lt;/p>
+&lt;/li>
+&lt;/ol>
+&lt;p>对称加密传输大量数据&lt;/p>
+&lt;p>非对称加密永远对称加密的密钥协商，传输。&lt;/p>
+&lt;blockquote>
+&lt;p>例如针对C/S模型，&lt;/p>
+&lt;p>服务端计算出一对秘钥pub/pri。将私钥保密，将公钥公开。
+客户端请求服务端时，拿到服务端的公钥pub。
+客户端通过AES计算出一个对称加密的秘钥X。 然后使用pub将X进行加密。
+客户端将加密后的密文发送给服务端。服务端通过pri解密获得X。
+然后两边的通讯内容就通过对称密钥X以对称加密算法来加解密。&lt;/p>
+&lt;/blockquote>
+&lt;h3 id="三种密码学算法的对比">三种密码学算法的对比&lt;/h3>
+&lt;table>
+&lt;thead>
+&lt;tr>
+&lt;th>类型&lt;/th>
+&lt;th>特点&lt;/th>
+&lt;th>常见实现&lt;/th>
+&lt;th>主要用途&lt;/th>
+&lt;th>主要局限&lt;/th>
+&lt;/tr>
+&lt;/thead>
+&lt;tbody>
+&lt;tr>
+&lt;td>哈希摘要&lt;/td>
+&lt;td>不可逆，即不能解密，所以并不是加密算法，只是一些场景把它当作加密算法使用。 易变性，输入发生 1 Bit 变动，就可能导致输出结果 50%的内容发生改变。 无论输入长度多少，输出长度固定（2 的 N 次幂）。&lt;/td>
+&lt;td>MD2/4/5/6、SHA0/1/256/512&lt;/td>
+&lt;td>摘要&lt;/td>
+&lt;td>无法解密&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>对称加密&lt;/td>
+&lt;td>加密是指加密和解密是一样的密钥。 设计难度相对较小，执行速度相对较块。 加密明文长度不受限制。&lt;/td>
+&lt;td>DES、AES、RC4、IDEA&lt;/td>
+&lt;td>加密&lt;/td>
+&lt;td>要解决如何把密钥安全地传递给解密者。&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>非对称加密&lt;/td>
+&lt;td>加密和解密使用的是不同的密钥。 明文长度不能超过公钥长度。&lt;/td>
+&lt;td>RSA、BCDSA、ElGamal&lt;/td>
+&lt;td>签名、传递密钥&lt;/td>
+&lt;td>性能与加密明文长度受限。&lt;/td>
+&lt;/tr>
+&lt;/tbody>
+&lt;/table>
+&lt;h3 id="数字证书">数字证书&lt;/h3>
+&lt;p>解决公钥被劫持篡改的问题。由权威机构颁发保证&lt;/p>
+&lt;h3 id="https--http-over-ssltls">HTTPS: HTTP over SSL/TLS&lt;/h3>
+&lt;p>TLS处于会话层&lt;/p>
+&lt;p>客户端和服务端均通过握手过程协商出了许多信息，譬如一个只有双方才知道的随机产生的密钥(非对称加密算法比如RSA进行密钥协商)、传输过程中要采用的对称加密算法（比如AES128）、压缩算法等，此后该连接的通信将使用此密钥和加密算法进行加密、解密和压缩。&lt;/p>
+&lt;p>保障所有信息都是第三方无法窃听（加密传输:对称加密算法）、无法篡改（一旦篡改通信算法会立刻发现）、无法冒充（证书验证身份）&lt;/p></description></item><item><title>图解shenyu</title><link>https://fengzhenbing.github.io/p/%E5%9B%BE%E8%A7%A3shenyu/</link><pubDate>Sat, 19 Jun 2021 00:00:00 +0000</pubDate><guid>https://fengzhenbing.github.io/p/%E5%9B%BE%E8%A7%A3shenyu/</guid><description>&lt;h3 id="spi">spi&lt;/h3>
 &lt;p>&lt;img src="https://gitee.com/fengzhenbing/picgo/raw/master/image-20210822220553452.png" alt="image-20210822220553452" />&lt;/p>
 &lt;h3 id="数据同步">数据同步&lt;/h3>
 &lt;p>&lt;img src="https://gitee.com/fengzhenbing/picgo/raw/master/image-20210822220755858.png" alt="image-20210822220755858" />&lt;/p>
@@ -1555,7 +1646,8 @@ Java HotSpot&lt;span class="o">(&lt;/span>TM&lt;span class="o">)&lt;/span> 64-Bi
 &lt;p>就是使用java -jar 并且没有手动指定-Xmx参数的启动的进程使用的堆的大小，就是用的默认jdk堆的大小。&lt;/p>
 &lt;p>这个默认的堆大小是取决你服务器的物理内存，假如服务器内存大于1GB，则使用1/4的服务器物理内存作为jvm的堆内存大小。&lt;/p>
 &lt;p>eg：服务器内存4GB 则默认堆大小为1GB&lt;/p>
-&lt;h4 id="配置试例">&lt;strong>配置试例&lt;/strong>&lt;/h4>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-shell" data-lang="shell">java -XX:+PrintFlagsInitial
+&lt;/code>&lt;/pre>&lt;/div>&lt;h4 id="配置试例">&lt;strong>配置试例&lt;/strong>&lt;/h4>
 &lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-shell" data-lang="shell"> java -Xms1600m -Xmx1600m -Xmn800m -Xloggc:/xxx/logs/xxx_gc.log -verbose:gc -XX:+PrintGCDetails -XX:+PrintGCDateStamps -XX:+PrintGCTimeStamps -XX:+UseGCLogFileRotation -XX:NumberOfGCLogFiles&lt;span class="o">=&lt;/span>&lt;span class="m">20&lt;/span> -XX:GCLogFileSize&lt;span class="o">=&lt;/span>100M -Dprofile&lt;span class="o">=&lt;/span>prod -jar /xxx/xxx-1.0.0-SNAPSHOT.jar
 &lt;/code>&lt;/pre>&lt;/div>&lt;blockquote>
 &lt;p>-Xms: //堆内存初始化大小
@@ -1895,6 +1987,9 @@ OK
 &lt;h3 id="3geo">3.GEO&lt;/h3>
 &lt;pre>&lt;code>geoadd/geohash/geopos/geodist/georadius/georadiusbymember
 &lt;/code>&lt;/pre>&lt;p>Redis的GEO特性在 Redis3.2版本中推出，这个功能可以将用户给定的地理位置(经 度和纬度)信息储存起来，并对这些信息进行操作。&lt;/p>
+&lt;h3 id="4redis-中的布隆过滤器">4.Redis 中的布隆过滤器&lt;/h3>
+&lt;p>Redis v4.0 之后有了 &lt;a class="link" href="https://redis.io/modules" target="_blank" rel="noopener"
+>Module&lt;/a>（模块/插件）,RedisBloom 作为 Redis 布隆过滤器的 Module，地址：https://github.com/RedisBloom/RedisBloom&lt;/p>
 &lt;h2 id="redis-lua">Redis Lua&lt;/h2>
 &lt;ul>
 &lt;li>
