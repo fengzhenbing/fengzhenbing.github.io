@@ -186,6 +186,14 @@ geoadd/geohash/geopos/geodist/georadius/georadiusbymember
 
 Redis的GEO特性在 Redis3.2版本中推出，这个功能可以将用户给定的地理位置(经 度和纬度)信息储存起来，并对这些信息进行操作。
 
+
+
+### 4.Redis 中的布隆过滤器
+
+Redis v4.0 之后有了 [Module](https://redis.io/modules)（模块/插件）,RedisBloom 作为 Redis 布隆过滤器的 Module，地址：https://github.com/RedisBloom/RedisBloom 
+
+
+
 ## Redis Lua
 
 * 类比openrestry = nginx + lua jit 
