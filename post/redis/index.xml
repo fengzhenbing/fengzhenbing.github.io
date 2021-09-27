@@ -13,4 +13,15 @@ redis6：io处理多线程，采用nio模型 =&amp;gt; 主要的性能提升点
 内存处理线程
 单线程 =&amp;gt;高性能核心，不用考虑线程调度 压测redis-benchmark 环境mac 4核8g mokernetdeMac-mini:redis-6.0.9 mokernet$ ./bin/redis-benchmark -n 100000 -c 32 -t SET,GET,INCR,HSET,LPUSH,MSET -q SET: 121065.38 requests per second GET: 118764.84 requests per second INCR: 117508.81 requests per second LPUSH: 123001.23 requests per second HSET: 123915.74 requests per second MSET (10 keys): 96711.80 requests per second redis的5种基本数据结构 https://redis.</description></item><item><title>安装redis</title><link>https://fengzhenbing.github.io/p/%E5%AE%89%E8%A3%85redis/</link><pubDate>Thu, 10 Dec 2020 08:06:25 +0600</pubDate><guid>https://fengzhenbing.github.io/p/%E5%AE%89%E8%A3%85redis/</guid><description>下载 https://redis.io/download
 编译 wget https://download.redis.io/releases/redis-6.0.10.tar.gz tar xzf redis-6.0.10.tar.gz cd redis-6.0.10 sudo make 运行 #复制配置文件及命令 mkdir ./bin mkdir ./conf sudo cp ./src/mkreleasehdr.sh ./bin sudo cp ./src/redis-benchmark ./bin sudo cp ./src/redis-check-rdb ./bin sudo cp ./src/redis-cli ./bin sudo cp ./src/redis-server ./bin sudo cp ./redis.conf ./conf #运行 ./bin/redis-server ./conf/redis.conf 配置 redis.conf
-#修改为守护模式 daemonize yes #设置进程锁文件 pidfile /usr/local/redis-4.0.11/redis.pid #端口 port 6379 #客户端超时时间 timeout 300 #日志级别 loglevel debug #日志文件位置 logfile /usr/local/redis-4.0.11/log-redis.log #设置数据库的数量，默认数据库为0，可以使用SELECT &amp;lt;dbid&amp;gt;命令在连接上指定数据库id databases 16 ##指定在多长时间内，有多少次更新操作，就将数据同步到数据文件，可以多个条件配合 #save &amp;lt;seconds&amp;gt; &amp;lt;changes&amp;gt; #Redis默认配置文件中提供了三个条件： save 900 1 save 300 10 save 60 10000 #指定存储至本地数据库时是否压缩数据，默认为yes，Redis采用LZF压缩，如果为了节省CPU时间， #可以关闭该#选项，但会导致数据库文件变的巨大 rdbcompression yes #指定本地数据库文件名 dbfilename dump.</description></item></channel></rss>
+#修改为守护模式 daemonize yes #设置进程锁文件 pidfile /usr/local/redis-4.0.11/redis.pid #端口 port 6379 #客户端超时时间 timeout 300 #日志级别 loglevel debug #日志文件位置 logfile /usr/local/redis-4.0.11/log-redis.log #设置数据库的数量，默认数据库为0，可以使用SELECT &amp;lt;dbid&amp;gt;命令在连接上指定数据库id databases 16 ##指定在多长时间内，有多少次更新操作，就将数据同步到数据文件，可以多个条件配合 #save &amp;lt;seconds&amp;gt; &amp;lt;changes&amp;gt; #Redis默认配置文件中提供了三个条件： save 900 1 save 300 10 save 60 10000 #指定存储至本地数据库时是否压缩数据，默认为yes，Redis采用LZF压缩，如果为了节省CPU时间， #可以关闭该#选项，但会导致数据库文件变的巨大 rdbcompression yes #指定本地数据库文件名 dbfilename dump.</description></item><item><title/><link>https://fengzhenbing.github.io/p/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://fengzhenbing.github.io/p/</guid><description>概念：
+　Jedis：是Redis的Java实现客户端，提供了比较全面的Redis命令的支持，
+　Redisson：实现了分布式和可扩展的Java数据结构。
+　Lettuce：高级Redis客户端，用于线程安全同步，异步和响应使用，支持集群，Sentinel，管道和编码器。
+优点：
+　Jedis：比较全面的提供了Redis的操作特性
+　Redisson：促使使用者对Redis的关注分离，提供很多分布式相关操作服务，例如，分布式锁，分布式集合，可通过Redis支持延迟队列
+　Lettuce：主要在一些分布式缓存框架上使用比较多
+可伸缩：
+Jedis：使用阻塞的I/O，且其方法调用都是同步的，程序流需要等到sockets处理完I/O才能执行，不支持异步。Jedis客户端实例不是线程安全的，所以需要通过连接池来使用Jedis。
+Redisson：基于Netty框架的事件驱动的通信层，其方法调用是异步的。Redisson的API是线程安全的，所以可以操作单个Redisson连接来完成各种操作
+Lettuce：基于Netty框架的事件驱动的通信层，其方法调用是异步的。Lettuce的API是线程安全的，所以可以操作单个Lettuce连接来完成各种操作</description></item></channel></rss>
