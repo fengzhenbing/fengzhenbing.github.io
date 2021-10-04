@@ -169,7 +169,14 @@ Spring Cloud Bus Spring Cloud Bus 使用轻量级的消息代理来连接微服�
 目前 Spring Cloud Bus 支持两种消息代理：RabbitMQ 和 Kafka。
 参考
 https://blog.csdn.net/woshilijiuyi/article/details/88293782
-https://www.cnblogs.com/babycomeon/p/11141160.html</description></item><item><title>kafka基础</title><link>https://fengzhenbing.github.io/p/kafka%E5%9F%BA%E7%A1%80/</link><pubDate>Tue, 20 Oct 2020 14:06:25 +0600</pubDate><guid>https://fengzhenbing.github.io/p/kafka%E5%9F%BA%E7%A1%80/</guid><description>kafka相关概念 二代mq, scala开发
+https://www.cnblogs.com/babycomeon/p/11141160.html</description></item><item><title>小程序框架</title><link>https://fengzhenbing.github.io/p/%E5%B0%8F%E7%A8%8B%E5%BA%8F%E6%A1%86%E6%9E%B6/</link><pubDate>Mon, 23 Nov 2020 00:00:00 +0000</pubDate><guid>https://fengzhenbing.github.io/p/%E5%B0%8F%E7%A8%8B%E5%BA%8F%E6%A1%86%E6%9E%B6/</guid><description>小程序原理 使用两个线程：保证平台安全性，不能让开发者控制 render 线程，控制 render 线程将会造成小程序平台方管控困难 worker线程： 用户控制 响应 render 线程的事件，并执行小程序业务逻辑。 准备好数据，通过 setData 传到 page 中，由 page 进行渲染。 render线程：接收数据渲染到页面 TARO 官网
+https://taro-ui.jd.com/
+特点
+编译时转换
+React vue &amp;hellip;
+一套组件可以在 微信小程序，支付宝小程序，百度小程序，H5 多端适配运行
+创建项目
+# 使用 npm 安装 CLI $ npm install -g @tarojs/cli # OR 使用 yarn 安装 CLI $ yarn global add @tarojs/cli # OR 安装了 cnpm，使用 cnpm 安装 CLI $ cnpm install -g @tarojs/cli Remax 官网</description></item><item><title>kafka基础</title><link>https://fengzhenbing.github.io/p/kafka%E5%9F%BA%E7%A1%80/</link><pubDate>Tue, 20 Oct 2020 14:06:25 +0600</pubDate><guid>https://fengzhenbing.github.io/p/kafka%E5%9F%BA%E7%A1%80/</guid><description>kafka相关概念 二代mq, scala开发
 broker topic patition producer customer Customer group leader follower rebalance 服务端partition数量扩大 消费者组中某个消费者down掉 Topic特性 通过partition增加可扩展性：线上改partion数，rebalance ，会照成性能抖动。 partition有序达到高吞吐 partition多副本增加容错性 kafka单机 安装 http://kafka.apache.org/downloads
 修改配置
 cd kafka_2.13-2.7.0 # 打开 listeners=PLAINTEXT://localhost:9092 vim config/server.properties # 启动zookeeper bin/zookeeper-server-start.sh config/zookeeper.properties # 启动kafaka bin/kafka-server-start.sh config/server.properties 命令测试
