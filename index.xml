@@ -2956,29 +2956,11 @@ git push
 &lt;/code>&lt;/pre>&lt;ul>
 &lt;li>
 &lt;p>github中setting中将部署分支设为gh-pages分支
-&lt;figure style="flex-grow: 138; flex-basis: 331px">
-&lt;a href="https://fengzhenbing.github.io/p/hugo%E6%90%AD%E5%BB%BA%E5%8D%9A%E5%AE%A2/img.png" data-size="1211x876">&lt;img src="https://fengzhenbing.github.io/p/hugo%E6%90%AD%E5%BB%BA%E5%8D%9A%E5%AE%A2/img.png"
-srcset="https://fengzhenbing.github.io/p/hugo%E6%90%AD%E5%BB%BA%E5%8D%9A%E5%AE%A2/img_hufde637fbf01d56811fb1bb56bcbb807d_81033_480x0_resize_box_2.png 480w, https://fengzhenbing.github.io/p/hugo%E6%90%AD%E5%BB%BA%E5%8D%9A%E5%AE%A2/img_hufde637fbf01d56811fb1bb56bcbb807d_81033_1024x0_resize_box_2.png 1024w"
-width="1211"
-height="876"
-loading="lazy"
-alt="img.png">
-&lt;/a>
-&lt;figcaption>img.png&lt;/figcaption>
-&lt;/figure>&lt;/p>
+&lt;img src="https://fengzhenbing.github.io/img.png" alt="img.png" />&lt;/p>
 &lt;/li>
 &lt;li>
 &lt;p>开启github actions
-&lt;figure style="flex-grow: 166; flex-basis: 399px">
-&lt;a href="https://fengzhenbing.github.io/p/hugo%E6%90%AD%E5%BB%BA%E5%8D%9A%E5%AE%A2/img_1.png" data-size="1008x605">&lt;img src="https://fengzhenbing.github.io/p/hugo%E6%90%AD%E5%BB%BA%E5%8D%9A%E5%AE%A2/img_1.png"
-srcset="https://fengzhenbing.github.io/p/hugo%E6%90%AD%E5%BB%BA%E5%8D%9A%E5%AE%A2/img_1_hu0fd027d176be4424c185f73e72a53646_66920_480x0_resize_box_2.png 480w, https://fengzhenbing.github.io/p/hugo%E6%90%AD%E5%BB%BA%E5%8D%9A%E5%AE%A2/img_1_hu0fd027d176be4424c185f73e72a53646_66920_1024x0_resize_box_2.png 1024w"
-width="1008"
-height="605"
-loading="lazy"
-alt="img_1.png">
-&lt;/a>
-&lt;figcaption>img_1.png&lt;/figcaption>
-&lt;/figure>&lt;/p>
+&lt;img src="https://fengzhenbing.github.io/img_1.png" alt="img_1.png" />&lt;/p>
 &lt;/li>
 &lt;li>
 &lt;p>编写github actions的部署文件&lt;/p>
@@ -3515,7 +3497,7 @@ tail -f test.sink.txt
 &lt;p>实现方式： 对事务所有读、写的数据全都加上读锁、写锁和范围锁；实际还是很复杂的，要分成 Expanding 和 Shrinking 两阶段去处理读锁、写锁与数据间的关系，称为&lt;a class="link" href="https://en.wikipedia.org/wiki/Two-phase_locking" target="_blank" rel="noopener"
 >Two-Phase Lock&lt;/a>，2PL&lt;/p>
 &lt;h2 id="4-多版本并发控制">4 多版本并发控制&lt;/h2>
-&lt;p>参考 （https://icyfenix.cn/architect-perspective/general-architecture/transaction/local.html）&lt;/p></description></item><item><title/><link>https://fengzhenbing.github.io/p/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://fengzhenbing.github.io/p/</guid><description>&lt;h3 id="限流算法">限流算法&lt;/h3>
+&lt;p>参考 （https://icyfenix.cn/architect-perspective/general-architecture/transaction/local.html）&lt;/p></description></item><item><title>高可用之限流</title><link>https://fengzhenbing.github.io/p/%E9%AB%98%E5%8F%AF%E7%94%A8%E4%B9%8B%E9%99%90%E6%B5%81/</link><pubDate>Sun, 21 Jun 2020 00:00:00 +0000</pubDate><guid>https://fengzhenbing.github.io/p/%E9%AB%98%E5%8F%AF%E7%94%A8%E4%B9%8B%E9%99%90%E6%B5%81/</guid><description>&lt;h3 id="限流算法">限流算法&lt;/h3>
 &lt;h4 id="固定窗口计数器">固定窗口计数器&lt;/h4>
 &lt;ul>
 &lt;li>将时间划分为多个窗口；&lt;/li>
@@ -3597,15 +3579,5 @@ tail -f test.sink.txt
 &lt;ol>
 &lt;li>&lt;strong>时间局部性&lt;/strong> ：如果程序中的某条指令一旦执行，不久以后该指令可能再次执行；如果某数据被访问过，不久以后该数据可能再次被访问。产生时间局部性的典型原因，是由于在程序中存在着大量的循环操作。&lt;/li>
 &lt;li>&lt;strong>空间局部性&lt;/strong> ：一旦程序访问了某个存储单元，在不久之后，其附近的存储单元也将被访问，即程序在一段时间内所访问的地址，可能集中在一定的范围之内，这是因为指令通常是顺序存放、顺序执行的，数据也一般是以向量、数组、表等形式簇聚存储的。&lt;/li>
-&lt;/ol></description></item><item><title/><link>https://fengzhenbing.github.io/p/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://fengzhenbing.github.io/p/</guid><description>&lt;p>概念：&lt;/p>
-&lt;p>　　Jedis：是Redis的Java实现客户端，提供了比较全面的Redis命令的支持，&lt;/p>
-&lt;p>　　Redisson：实现了分布式和可扩展的Java数据结构。&lt;/p>
-&lt;p>　　&lt;em>Lettuce：高级Redis客户端，用于线程安全同步，异步和响应使用，支持集群，Sentinel，管道和编码器。&lt;/em>&lt;/p>
-&lt;p>&lt;em>优点：&lt;/em>&lt;/p>
-&lt;p>　　&lt;em>Jedis：比较全面的提供了Redis的操作特性&lt;/em>&lt;/p>
-&lt;p>　　&lt;em>Redisson：促使使用者对Redis的关注分离，提供很多分布式相关操作服务，例如，分布式锁，分布式集合，可通过Redis支持延迟队列&lt;/em>&lt;/p>
-&lt;p>　　&lt;em>Lettuce：主要在一些分布式缓存框架上使用比较多&lt;/em>&lt;/p>
-&lt;p>&lt;em>可伸缩：&lt;/em>&lt;/p>
-&lt;p>Jedis：使用阻塞的I/O，且其方法调用都是同步的，程序流需要等到sockets处理完I/O才能执行，不支持异步。Jedis客户端实例不是线程安全的，所以需要通过连接池来使用Jedis。&lt;/p>
-&lt;p>Redisson：基于Netty框架的事件驱动的通信层，其方法调用是异步的。Redisson的API是线程安全的，所以可以操作单个Redisson连接来完成各种操作&lt;/p>
-&lt;p>&lt;em>Lettuce：基于Netty框架的事件驱动的通信层，其方法调用是异步的。Lettuce的API是线程安全的，所以可以操作单个Lettuce连接来完成各种操作&lt;/em>&lt;/p></description></item><item><title/><link>https://fengzhenbing.github.io/p/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://fengzhenbing.github.io/p/</guid><description/></item><item><title/><link>https://fengzhenbing.github.io/p/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://fengzhenbing.github.io/p/</guid><description/></item><item><title/><link>https://fengzhenbing.github.io/p/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://fengzhenbing.github.io/p/</guid><description/></item><item><title/><link>https://fengzhenbing.github.io/p/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://fengzhenbing.github.io/p/</guid><description/></item><item><title/><link>https://fengzhenbing.github.io/p/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://fengzhenbing.github.io/p/</guid><description/></item><item><title/><link>https://fengzhenbing.github.io/p/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://fengzhenbing.github.io/p/</guid><description/></item></channel></rss>
+&lt;/ol></description></item><item><title/><link>https://fengzhenbing.github.io/p/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://fengzhenbing.github.io/p/</guid><description>&lt;h3 id="什么事jmm">什么事JMM&lt;/h3>
+&lt;p>JMM 规范明确定义了不同的线程之 间，通过哪些方式，在什么时候可以 看见其他线程保存到共享变量中的 值;以及在必要时，如何对共享变量 的访问进行同步。这样的好处是屏蔽 各种硬件平台和操作系统之间的内存 访问差异，实现了 Java 并发程序真 正的跨平台。&lt;/p></description></item><item><title/><link>https://fengzhenbing.github.io/p/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://fengzhenbing.github.io/p/</guid><description/></item><item><title/><link>https://fengzhenbing.github.io/p/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://fengzhenbing.github.io/p/</guid><description/></item><item><title/><link>https://fengzhenbing.github.io/p/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://fengzhenbing.github.io/p/</guid><description/></item><item><title/><link>https://fengzhenbing.github.io/p/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://fengzhenbing.github.io/p/</guid><description/></item><item><title/><link>https://fengzhenbing.github.io/p/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://fengzhenbing.github.io/p/</guid><description/></item><item><title/><link>https://fengzhenbing.github.io/p/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://fengzhenbing.github.io/p/</guid><description/></item></channel></rss>

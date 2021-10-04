@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>miniProgram on Feng Zhenbing's Blog</title><link>https://fengzhenbing.github.io/post/08%E5%89%8D%E7%AB%AF/miniprogram/</link><description>Recent content in miniProgram on Feng Zhenbing's Blog</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Tue, 23 Feb 2021 09:06:25 +0600</lastBuildDate><atom:link href="https://fengzhenbing.github.io/post/08%E5%89%8D%E7%AB%AF/miniprogram/index.xml" rel="self" type="application/rss+xml"/><item><title>小程序框架</title><link>https://fengzhenbing.github.io/p/%E5%B0%8F%E7%A8%8B%E5%BA%8F%E6%A1%86%E6%9E%B6/</link><pubDate>Mon, 23 Nov 2020 00:00:00 +0000</pubDate><guid>https://fengzhenbing.github.io/p/%E5%B0%8F%E7%A8%8B%E5%BA%8F%E6%A1%86%E6%9E%B6/</guid><description>小程序原理 使用两个线程：保证平台安全性，不能让开发者控制 render 线程，控制 render 线程将会造成小程序平台方管控困难 worker线程： 用户控制 响应 render 线程的事件，并执行小程序业务逻辑。 准备好数据，通过 setData 传到 page 中，由 page 进行渲染。 render线程：接收数据渲染到页面 TARO 官网
+https://taro-ui.jd.com/
+特点
+编译时转换
+React vue &amp;hellip;
+一套组件可以在 微信小程序，支付宝小程序，百度小程序，H5 多端适配运行
+创建项目
+# 使用 npm 安装 CLI $ npm install -g @tarojs/cli # OR 使用 yarn 安装 CLI $ yarn global add @tarojs/cli # OR 安装了 cnpm，使用 cnpm 安装 CLI $ cnpm install -g @tarojs/cli Remax 官网</description></item></channel></rss>
