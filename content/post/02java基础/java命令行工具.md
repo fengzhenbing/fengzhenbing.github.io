@@ -23,7 +23,7 @@ categories:
 | **jcmd**           | 执行 JVM 相关分析命令(整合命令) |                                     |
 | **jrunscript/jjs** | 执行 js 命令                    |                                     |
 | **javap**          | Java 字节码分析工具             | Javap -c ..                         |
-| Jhat               | 分析dujmap -dump的文件          |                                     |
+| Jhat               | 分析 jmap -dump的文件           |                                     |
 
 #### jstat
 
