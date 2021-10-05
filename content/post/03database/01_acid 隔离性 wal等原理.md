@@ -1,13 +1,14 @@
 ---
-title: 本地事务
+title: 数据库原理
 date: 2020-08-12T14:16:25+06:00
-description: 数据库本地事务，日志
+description: 数据库原理
+draft: true
 categories:                                 
     - 数据库
 tags:
     - 数据库
-    - 日志
 ---
+
 
 
 ## 1 介绍
