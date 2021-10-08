@@ -1719,11 +1719,24 @@ sh bin/tools.sh org.apache.rocketmq.example.quickstart.Consumer
 &lt;li>Consumer&lt;/li>
 &lt;/ul>
 &lt;p>&lt;img src="https://fengzhenbing.github.io/images/blog/image-20210405203826959.png" alt="image-20210405203826959" />&lt;/p>
+&lt;p>&lt;strong>1. Exchange概念&lt;/strong>&lt;/p>
+&lt;ul>
+&lt;li>Exchange：接收消息，并根据路由键转发消息所绑定的队列。&lt;/li>
+&lt;/ul>
+&lt;p>&lt;img src="https://gitee.com/fengzhenbing/picgo/raw/master/1577453-20200519174721973-114601627.png" alt="img" />&lt;/p>
+&lt;p>蓝色框：客户端发送消息至交换机，通过路由键路由至指定的队列。
+黄色框：交换机和队列通过路由键有一个绑定的关系。
+绿色框：消费端通过监听队列来接收消息。&lt;/p>
 &lt;h3 id="docker方式安装运行">Docker方式安装运行&lt;/h3>
 &lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-shell" data-lang="shell">docker pull rabbitmq:management
 docker run -itd --name rabbitmq-test -e &lt;span class="nv">RABBITMQ_DEFAULT_USER&lt;/span>&lt;span class="o">=&lt;/span>admin -e &lt;span class="nv">RABBITMQ_DEFAULT_PASS&lt;/span>&lt;span class="o">=&lt;/span>admin -p 15672:15672 -p 5672:5672 rabbitmq:management
 docker &lt;span class="nb">exec&lt;/span> -it rabbitmq-test /bin/bash
-&lt;/code>&lt;/pre>&lt;/div></description></item><item><title>康威定律</title><link>https://fengzhenbing.github.io/p/%E5%BA%B7%E5%A8%81%E5%AE%9A%E5%BE%8B/</link><pubDate>Wed, 13 Jan 2021 00:00:00 +0000</pubDate><guid>https://fengzhenbing.github.io/p/%E5%BA%B7%E5%A8%81%E5%AE%9A%E5%BE%8B/</guid><description>&lt;h2 id="康威定律组织决定产品形态">康威定律：组织决定产品形态&lt;/h2>
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>高可用&lt;/p>
+&lt;h4 id="镜像集群模式高可用性">镜像集群模式（高可用性）&lt;/h4>
+&lt;p>这种模式，才是所谓的 RabbitMQ 的高可用模式。跟普通集群模式不一样的是，在镜像集群模式下，你创建的 queue，无论元数据还是 queue 里的消息都会&lt;strong>存在于多个实例上&lt;/strong>，就是说，每个 RabbitMQ 节点都有这个 queue 的一个&lt;strong>完整镜像&lt;/strong>，包含 queue 的全部数据的意思。然后每次你写消息到 queue 的时候，都会自动把&lt;strong>消息同步&lt;/strong>到多个实例的 queue 上。&lt;/p>
+&lt;p>&lt;img src="https://gitee.com/fengzhenbing/picgo/raw/master/mq-8.png" alt="mq-8" />&lt;/p>
+&lt;p>那么&lt;strong>如何开启这个镜像集群模式&lt;/strong>呢？其实很简单，RabbitMQ 有很好的管理控制台，就是在后台新增一个策略，这个策略是&lt;strong>镜像集群模式的策略&lt;/strong>，指定的时候是可以要求数据同步到所有节点的，也可以要求同步到指定数量的节点，再次创建 queue 的时候，应用这个策略，就会自动将数据同步到其他的节点上去了。&lt;/p>
+&lt;p>这样的话，好处在于，你任何一个机器宕机了，没事儿，其它机器（节点）还包含了这个 queue 的完整数据，别的 consumer 都可以到其它节点上去消费数据。坏处在于，第一，这个性能开销也太大了吧，消息需要同步到所有机器上，导致网络带宽压力和消耗很重！第二，这么玩儿，不是分布式的，就&lt;strong>没有扩展性可言&lt;/strong>了，如果某个 queue 负载很重，你加机器，新增的机器也包含了这个 queue 的所有数据，并&lt;strong>没有办法线性扩展&lt;/strong>你的 queue。你想，如果这个 queue 的数据量很大，大到这个机器上的容量无法容纳了，此时该怎么办呢？&lt;/p></description></item><item><title>康威定律</title><link>https://fengzhenbing.github.io/p/%E5%BA%B7%E5%A8%81%E5%AE%9A%E5%BE%8B/</link><pubDate>Wed, 13 Jan 2021 00:00:00 +0000</pubDate><guid>https://fengzhenbing.github.io/p/%E5%BA%B7%E5%A8%81%E5%AE%9A%E5%BE%8B/</guid><description>&lt;h2 id="康威定律组织决定产品形态">康威定律：组织决定产品形态&lt;/h2>
 &lt;h3 id="第一定律">第一定律&lt;/h3>
 &lt;p>&lt;strong>组织设计的产品/设计等价于这个组织的沟通结构。&lt;/strong>&lt;/p>
 &lt;h3 id="第二定律">第二定律&lt;/h3>
@@ -3155,21 +3168,61 @@ $ npm run dev # 监听并且编译项目
 >小程序多平台同构方案分析-kbone 与 remax&lt;/a>&lt;/p></description></item><item><title>kafka基础</title><link>https://fengzhenbing.github.io/p/kafka%E5%9F%BA%E7%A1%80/</link><pubDate>Tue, 20 Oct 2020 14:06:25 +0600</pubDate><guid>https://fengzhenbing.github.io/p/kafka%E5%9F%BA%E7%A1%80/</guid><description>&lt;h2 id="kafka相关概念">kafka相关概念&lt;/h2>
 &lt;p>二代mq, scala开发&lt;/p>
 &lt;ul>
-&lt;li>broker&lt;/li>
-&lt;li>topic&lt;/li>
-&lt;li>patition&lt;/li>
-&lt;li>producer&lt;/li>
-&lt;li>customer&lt;/li>
-&lt;li>Customer group&lt;/li>
-&lt;li>leader&lt;/li>
-&lt;li>follower&lt;/li>
-&lt;li>rebalance
+&lt;li>
+&lt;p>broker&lt;/p>
+&lt;p>Kafka 集群包含一个或多个服务器，这种服务器被称为 broker。&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>topic&lt;/p>
+&lt;p>每条发布到 Kafka 集群的消息都有一个类别，这个类别被称为 Topic。 (物理上不同 Topic 的消息分开存储，逻辑上一个 Topic 的消息虽然保存于一个或 多个 broker 上，但用户只需指定消息的 Topic 即可生产或消费数据而不必关心数 据存于何处)。&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>patition&lt;/p>
+&lt;p>Partition 是物理上的概念，每个 Topic 包含一个或多个 Partition。&lt;/p>
+&lt;p>消息会根据 &lt;strong>分区策略&lt;/strong> 追加到分区文件的末尾，属于&lt;strong>顺序写磁盘，因此效率非常高&lt;/strong>（经验证，顺序写磁盘效率比随机写内存还要高，这是Kafka高吞吐率的一个很重要的保证）。&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>producer&lt;/p>
+&lt;p>负责发布消息到 Kafka broker。&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>customer&lt;/p>
+&lt;p>消息消费者，向 Kafka broker 读取消息的客户端&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>Customer group&lt;/p>
+&lt;p>consumer group是kafka提供的可扩展且具有容错性的消费者机制。既然是一个组，那么组内必然可以有多个消费者或消费者实例(consumer instance)，它们共享一个公共的ID，即group ID。组内的所有消费者协调在一起来消费订阅主题(subscribed topics)的所有分区(partition)。当然，每个分区只能由同一个消费组内的一个consumer来消费。&lt;/p>
+&lt;p>特点：&lt;/p>
+&lt;ul>
+&lt;li>consumer group下可以有一个或多个consumer instance，consumer instance可以是一个进程，也可以是一个线程&lt;/li>
+&lt;li>group.id是一个字符串，唯一标识一个consumer group&lt;/li>
+&lt;li>consumer group下订阅的topic下的每个分区只能分配给某个group下的一个consumer(当然该分区还可以被分配给其他group)&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>
+&lt;p>leader&lt;/p>
+&lt;p>每个partition有多个副本，其中有且仅有一个作为leader，leader会负责所有的客户端读写操作。&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>follower&lt;/p>
+&lt;p>follower不对外提供服务，只与leader保持数据同步，如果leader失效，则选举一个follower来充当新的leader。当follower与leader挂掉、卡住或者同步太慢，leader会把这个follower从ISR列表中删除，重新创建一个follower。&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>rebalance&lt;/p>
 &lt;ul>
 &lt;li>服务端partition数量扩大&lt;/li>
 &lt;li>消费者组中某个消费者down掉&lt;/li>
+&lt;li>消费者组中加入新的消费者&lt;/li>
 &lt;/ul>
 &lt;/li>
 &lt;/ul>
+&lt;h2 id="kafka吞吐量为什么这么高">kafka吞吐量为什么这么高&lt;/h2>
+&lt;h3 id="顺序读写磁盘">顺序读写磁盘&lt;/h3>
+&lt;h3 id="page-cache">page cache&lt;/h3>
+&lt;p>Kafka利用了操作系统本身的Page Cache&lt;/p>
+&lt;h3 id="零拷贝">零拷贝&lt;/h3>
+&lt;p>零拷贝就是使用了一个名为sendfile()的系统调用方法，将数据从page cache直接发送到Socket缓冲区，避免了系统上下文的切换，消除了从内核空间到用户空间的来回复制。从下图可以看出，&amp;ldquo;零拷贝&amp;quot;并不是说整个过程完全不发生拷贝，而是站在内核的角度来说的，避免了内核空间到用户空间的来回拷贝。&lt;/p>
+&lt;p>&lt;img src="https://gitee.com/fengzhenbing/picgo/raw/master/image-20211007195405264.png" alt="image-20211007195405264" />&lt;/p>
 &lt;h2 id="topic特性">Topic特性&lt;/h2>
 &lt;ol>
 &lt;li>通过partition增加可扩展性：线上改partion数，rebalance ，会照成性能抖动。&lt;/li>
@@ -3274,7 +3327,7 @@ Topic: test42 Partition: &lt;span class="m">3&lt;/span> Leader: &lt;span class="
 bin/connect-standalone.sh config/connect-standalone.properties config/connect-file-source.properties config/connect-file-sink.properties
 &lt;span class="c1"># 查看输出文件， 可以看到不断地往 test.txt写入数据时，test.sink.txt 会持续产生数据&lt;/span>
 tail -f test.sink.txt
-&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="kafak-stream">kafak stream&lt;/h2>
+&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="kafka-stream">Kafka stream&lt;/h2>
 &lt;ul>
 &lt;li>
 &lt;ul>
@@ -3328,7 +3381,8 @@ tail -f test.sink.txt
 &lt;li>At most once&lt;/li>
 &lt;li>At least once&lt;/li>
 &lt;li>Exactly once&lt;/li>
-&lt;/ol></description></item><item><title>innodb概述及原理</title><link>https://fengzhenbing.github.io/p/innodb%E6%A6%82%E8%BF%B0%E5%8F%8A%E5%8E%9F%E7%90%86/</link><pubDate>Sat, 12 Sep 2020 14:16:25 +0600</pubDate><guid>https://fengzhenbing.github.io/p/innodb%E6%A6%82%E8%BF%B0%E5%8F%8A%E5%8E%9F%E7%90%86/</guid><description>&lt;h2 id="heading">&lt;/h2>
+&lt;/ol>
+&lt;h2 id="支持数据不丢失的ack机制">&lt;em>&lt;strong>*支持数据不丢失的ack机制*&lt;/strong>&lt;/em>&lt;/h2></description></item><item><title>innodb概述及原理</title><link>https://fengzhenbing.github.io/p/innodb%E6%A6%82%E8%BF%B0%E5%8F%8A%E5%8E%9F%E7%90%86/</link><pubDate>Sat, 12 Sep 2020 14:16:25 +0600</pubDate><guid>https://fengzhenbing.github.io/p/innodb%E6%A6%82%E8%BF%B0%E5%8F%8A%E5%8E%9F%E7%90%86/</guid><description>&lt;h2 id="heading">&lt;/h2>
 &lt;h3 id="innodb概述">Innodb概述&lt;/h3>
 &lt;p>该存储引擎是第一个完整支持ACID事 务的MySOL存储引擎，其特点是行锁设计、支持MVCC、支持外键、提供一致性非锁定读，同时被设计用来最有效地利用以及使用内存和CPU；&lt;/p>
 &lt;p>体系结构如下：&lt;/p>
@@ -3588,14 +3642,215 @@ tail -f test.sink.txt
 &lt;ol>
 &lt;li>&lt;strong>时间局部性&lt;/strong> ：如果程序中的某条指令一旦执行，不久以后该指令可能再次执行；如果某数据被访问过，不久以后该数据可能再次被访问。产生时间局部性的典型原因，是由于在程序中存在着大量的循环操作。&lt;/li>
 &lt;li>&lt;strong>空间局部性&lt;/strong> ：一旦程序访问了某个存储单元，在不久之后，其附近的存储单元也将被访问，即程序在一段时间内所访问的地址，可能集中在一定的范围之内，这是因为指令通常是顺序存放、顺序执行的，数据也一般是以向量、数组、表等形式簇聚存储的。&lt;/li>
-&lt;/ol></description></item><item><title/><link>https://fengzhenbing.github.io/p/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://fengzhenbing.github.io/p/</guid><description>&lt;h3 id="什么事jmm">什么事JMM&lt;/h3>
-&lt;p>JMM 规范明确定义了不同的线程之 间，通过哪些方式，在什么时候可以 看见其他线程保存到共享变量中的 值;以及在必要时，如何对共享变量 的访问进行同步。这样的好处是屏蔽 各种硬件平台和操作系统之间的内存 访问差异，实现了 Java 并发程序真 正的跨平台。&lt;/p></description></item><item><title/><link>https://fengzhenbing.github.io/p/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://fengzhenbing.github.io/p/</guid><description/></item><item><title/><link>https://fengzhenbing.github.io/p/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://fengzhenbing.github.io/p/</guid><description>&lt;p>nio reactor线程模型https://www.jianshu.com/p/e0e7cb085fb4&lt;/p>
+&lt;/ol></description></item><item><title/><link>https://fengzhenbing.github.io/p/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://fengzhenbing.github.io/p/</guid><description>&lt;p>java Unsafe 。 sun.misc.Unsafe&lt;/p>
+&lt;p>&lt;img src="https://gitee.com/fengzhenbing/picgo/raw/master/F556169D09144BED867ADFB7558A8E58.png" alt="" />&lt;/p></description></item><item><title/><link>https://fengzhenbing.github.io/p/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://fengzhenbing.github.io/p/</guid><description>&lt;h3 id="什么事jmm">什么事JMM&lt;/h3>
+&lt;p>JMM 规范明确定义了不同的线程之 间，通过哪些方式，在什么时候可以 看见其他线程保存到共享变量中的 值;以及在必要时，如何对共享变量 的访问进行同步。这样的好处是屏蔽 各种硬件平台和操作系统之间的内存 访问差异，实现了 Java 并发程序真 正的跨平台。&lt;/p></description></item><item><title/><link>https://fengzhenbing.github.io/p/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://fengzhenbing.github.io/p/</guid><description>&lt;p>&lt;img src="https://gitee.com/fengzhenbing/picgo/raw/master/image-20211007143642433.png" alt="image-20211007143642433" />&lt;/p>
+&lt;h5 id="强引用strongreference">强引用(StrongReference)&lt;/h5>
+&lt;p>强引用就是我们平时创建对象，创建数组时的引用。强引用在任何时候都不会被GC回收掉。内存不足，oom&lt;/p>
+&lt;h5 id="软引用softreference">软引用(SoftReference)&lt;/h5>
+&lt;p>软引用是在系统发生OOM之前才被JVM回收掉。软引用常被用来对于内存敏感的缓存。&lt;/p>
+&lt;h5 id="弱引用weakreference">弱引用(WeakReference)&lt;/h5>
+&lt;p>一旦JVM执行GC，弱引用就会被回收掉。&lt;/p>
+&lt;h5 id="虚引用phantomreference">(虚引用)PhantomReference&lt;/h5>
+&lt;p>虚引用主要作为其指向referent被回收时的一种通知机制。&lt;/p>
+&lt;h5 id="referencequeue引用队列">ReferenceQueue引用队列&lt;/h5>
+&lt;p>用于存放待回收的引用对象（GC 会把引用对象本身添加到这个队列中）&lt;/p>
+&lt;p>ReferenceQueue一般用来与SoftReference、WeakReference或者PhantomReference配合使用，将需要关注的引用对象注册到引用队列后，便可以通过监控该队列来判断关注的对象是否被回收，从而执行相应的方法。&lt;/p>
+&lt;p>主要使用场景：&lt;/p>
+&lt;p>1、使用引用队列进行数据监控，类似前面栗子的用法。&lt;/p>
+&lt;p>2、队列监控的反向操作&lt;/p>
+&lt;p>参考 &lt;a href="https://www.cnblogs.com/mfrank/p/10104586.html">https://www.cnblogs.com/mfrank/p/10104586.html&lt;/a>&lt;/p></description></item><item><title/><link>https://fengzhenbing.github.io/p/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://fengzhenbing.github.io/p/</guid><description>&lt;p>Jmstat&lt;/p></description></item><item><title/><link>https://fengzhenbing.github.io/p/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://fengzhenbing.github.io/p/</guid><description>&lt;p>参考https://zhuanlan.zhihu.com/p/138819184&lt;/p>
+&lt;p>用 volatile 修饰共享变量后，每个线程要操作变量时会从主内存中将变量拷贝到本地内存作为副本，当线程操作变量副本并写回主内存后，会通过 &lt;strong>CPU 总线嗅探机制&lt;/strong>告知其他线程该变量副本已经失效，需要重新从主内存中读取。&lt;/p>
+&lt;p>volatile 的主要作用有两点：&lt;/p>
+&lt;ul>
+&lt;li>
+&lt;p>保证变量的内存可见性&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>禁止指令重排序&lt;/p>
+&lt;/li>
+&lt;/ul></description></item><item><title/><link>https://fengzhenbing.github.io/p/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://fengzhenbing.github.io/p/</guid><description>&lt;h3 id="bio">bio&lt;/h3>
+&lt;p>阻塞io&lt;/p>
+&lt;p>TCP服务端&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-java" data-lang="java">&lt;span class="c1">// 启动
+&lt;/span>&lt;span class="c1">&lt;/span>&lt;span class="n">ServerSocket&lt;/span> &lt;span class="n">serverSocket&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="k">new&lt;/span> &lt;span class="n">ServerSocket&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">8080&lt;/span>&lt;span class="o">);&lt;/span>
+&lt;span class="k">while&lt;/span> &lt;span class="o">(!&lt;/span>&lt;span class="n">serverSocket&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">isClosed&lt;/span>&lt;span class="o">())&lt;/span> &lt;span class="o">{&lt;/span>
+&lt;span class="n">Socket&lt;/span> &lt;span class="n">request&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">serverSocket&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">accept&lt;/span>&lt;span class="o">();&lt;/span>
+&lt;span class="c1">//一次请求分配一个线程:
+&lt;/span>&lt;span class="c1">&lt;/span> &lt;span class="n">threadPool&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">execute&lt;/span>&lt;span class="o">(()&lt;/span> &lt;span class="o">-&amp;gt;&lt;/span> &lt;span class="o">{&lt;/span>
+&lt;span class="c1">// 处理接收到的内容inputStream
+&lt;/span>&lt;span class="c1">&lt;/span> &lt;span class="n">InputStream&lt;/span> &lt;span class="n">inputStream&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">request&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">getInputStream&lt;/span>&lt;span class="o">();&lt;/span>
+&lt;span class="n">inputStream&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">read&lt;/span>&lt;span class="o">(...)&lt;/span>
+&lt;span class="o">...&lt;/span>
+&lt;span class="c1">// 向客户端发送内容
+&lt;/span>&lt;span class="c1">&lt;/span> &lt;span class="n">OutputStream&lt;/span> &lt;span class="n">outputStream&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">request&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">getOutputStream&lt;/span>&lt;span class="o">();&lt;/span>
+&lt;span class="n">outputStream&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">write&lt;/span>&lt;span class="o">(...)&lt;/span>
+&lt;span class="o">...&lt;/span>
+&lt;span class="o">}&lt;/span>
+&lt;span class="o">...&lt;/span>
+&lt;span class="c1">// 关闭
+&lt;/span>&lt;span class="c1">&lt;/span> &lt;span class="n">serverSocket&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">close&lt;/span>&lt;span class="o">();&lt;/span>
+&lt;span class="o">}&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>TCP客户端&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-java" data-lang="java">&lt;span class="c1">// 启动连接
+&lt;/span>&lt;span class="c1">&lt;/span>&lt;span class="n">Socket&lt;/span> &lt;span class="n">s&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="k">new&lt;/span> &lt;span class="n">Socket&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="s">&amp;#34;localhost&amp;#34;&lt;/span>&lt;span class="o">,&lt;/span> &lt;span class="n">8080&lt;/span>&lt;span class="o">);&lt;/span>
+&lt;span class="c1">// 发送内容
+&lt;/span>&lt;span class="c1">&lt;/span>&lt;span class="n">OutputStream&lt;/span> &lt;span class="n">out&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">s&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">getOutputStream&lt;/span>&lt;span class="o">();&lt;/span>
+&lt;span class="n">outputStream&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">write&lt;/span>&lt;span class="o">(...)&lt;/span>
+&lt;span class="c1">// 处理接收的内容inputStream
+&lt;/span>&lt;span class="c1">&lt;/span>&lt;span class="n">InputStream&lt;/span> &lt;span class="n">inputStream&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">s&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">getInputStream&lt;/span>&lt;span class="o">();&lt;/span>
+&lt;span class="n">inputStream&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">read&lt;/span>&lt;span class="o">(...)&lt;/span>
+&lt;span class="o">...&lt;/span>
+&lt;span class="c1">// 关闭客户端
+&lt;/span>&lt;span class="c1">&lt;/span>&lt;span class="n">s&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">close&lt;/span>&lt;span class="o">();&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>Udp服务端&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-java" data-lang="java">&lt;span class="c1">//服务端在3000端口监听接收到的数据
+&lt;/span>&lt;span class="c1">&lt;/span>&lt;span class="n">DatagramSocket&lt;/span> &lt;span class="n">ds&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="k">new&lt;/span> &lt;span class="n">DatagramSocket&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">3000&lt;/span>&lt;span class="o">);&lt;/span>
+&lt;span class="n">接收数据&lt;/span>
+&lt;span class="n">DatagramPacket&lt;/span> &lt;span class="n">dp_receive&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="k">new&lt;/span> &lt;span class="n">DatagramPacket&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">buf&lt;/span>&lt;span class="o">,&lt;/span> &lt;span class="n">1024&lt;/span>&lt;span class="o">);&lt;/span>
+&lt;span class="n">ds&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">receive&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">dp_receive&lt;/span>&lt;span class="o">);&lt;/span>
+&lt;span class="n">发送数据&lt;/span>
+&lt;span class="n">DatagramPacket&lt;/span> &lt;span class="n">dp_send&lt;/span>&lt;span class="o">=&lt;/span> &lt;span class="k">new&lt;/span> &lt;span class="n">DatagramPacket&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">str_send&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">getBytes&lt;/span>&lt;span class="o">(),&lt;/span>&lt;span class="n">str_send&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">length&lt;/span>&lt;span class="o">(),&lt;/span>&lt;span class="n">InetAddress&lt;/span> &lt;span class="n">dp_receive&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">getAddress&lt;/span>&lt;span class="o">()&lt;/span> &lt;span class="o">,&lt;/span>&lt;span class="n">9000&lt;/span>&lt;span class="o">);&lt;/span>
+&lt;span class="n">ds&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">send&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">dp_send&lt;/span>&lt;span class="o">);&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>Udp客户端&lt;/p>
+&lt;p>和服务端等价，一样的写法&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-java" data-lang="java">&lt;span class="n">DatagramSocket&lt;/span> &lt;span class="n">ds&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="k">new&lt;/span> &lt;span class="n">DatagramSocket&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">9000&lt;/span>&lt;span class="o">);&lt;/span>
+&lt;span class="err">。。。&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="nio">Nio&lt;/h3>
+&lt;p>非阻塞io&lt;/p>
+&lt;p>服务端&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-java" data-lang="java"> &lt;span class="c1">// 1. 创建服务端的channel对象
+&lt;/span>&lt;span class="c1">&lt;/span>&lt;span class="n">ServerSocketChannel&lt;/span> &lt;span class="n">serverSocketChannel&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">ServerSocketChannel&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">open&lt;/span>&lt;span class="o">();&lt;/span>
+&lt;span class="n">serverSocketChannel&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">configureBlocking&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="kc">false&lt;/span>&lt;span class="o">);&lt;/span> &lt;span class="c1">// 设置为非阻塞模式
+&lt;/span>&lt;span class="c1">&lt;/span> &lt;span class="c1">// 2. 创建Selector
+&lt;/span>&lt;span class="c1">&lt;/span> &lt;span class="n">Selector&lt;/span> &lt;span class="n">selector&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">Selector&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">open&lt;/span>&lt;span class="o">();&lt;/span>
+&lt;span class="c1">// 3. 把服务端的channel注册到selector，注册accept事件
+&lt;/span>&lt;span class="c1">&lt;/span> &lt;span class="n">SelectionKey&lt;/span> &lt;span class="n">selectionKey&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">serverSocketChannel&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">register&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">selector&lt;/span>&lt;span class="o">,&lt;/span> &lt;span class="n">0&lt;/span>&lt;span class="o">);&lt;/span>
+&lt;span class="n">selectionKey&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">interestOps&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">SelectionKey&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">OP_ACCEPT&lt;/span>&lt;span class="o">);&lt;/span>
+&lt;span class="c1">// 4. 绑定端口，启动服务
+&lt;/span>&lt;span class="c1">&lt;/span> &lt;span class="n">serverSocketChannel&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">socket&lt;/span>&lt;span class="o">().&lt;/span>&lt;span class="na">bind&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="k">new&lt;/span> &lt;span class="n">InetSocketAddress&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">8080&lt;/span>&lt;span class="o">));&lt;/span> &lt;span class="c1">// 绑定端口
+&lt;/span>&lt;span class="c1">&lt;/span>
+&lt;span class="k">while&lt;/span> &lt;span class="o">(&lt;/span>&lt;span class="kc">true&lt;/span>&lt;span class="o">)&lt;/span> &lt;span class="o">{&lt;/span>
+&lt;span class="c1">// 5. 启动selector（管家）
+&lt;/span>&lt;span class="c1">&lt;/span> &lt;span class="n">selector&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">select&lt;/span>&lt;span class="o">();&lt;/span>&lt;span class="c1">// 阻塞，直到事件通知才会返回
+&lt;/span>&lt;span class="c1">&lt;/span>
+&lt;span class="c1">// 6，业务处理。 下面分配 subReactor线程处理
+&lt;/span>&lt;span class="c1">&lt;/span> &lt;span class="n">Set&lt;/span>&lt;span class="o">&amp;lt;&lt;/span>&lt;span class="n">SelectionKey&lt;/span>&lt;span class="o">&amp;gt;&lt;/span> &lt;span class="n">selectionKeys&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">selector&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">selectedKeys&lt;/span>&lt;span class="o">();&lt;/span>
+&lt;span class="n">Iterator&lt;/span>&lt;span class="o">&amp;lt;&lt;/span>&lt;span class="n">SelectionKey&lt;/span>&lt;span class="o">&amp;gt;&lt;/span> &lt;span class="n">iterator&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">selectionKeys&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">iterator&lt;/span>&lt;span class="o">();&lt;/span>
+&lt;span class="k">while&lt;/span> &lt;span class="o">(&lt;/span>&lt;span class="n">iterator&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">hasNext&lt;/span>&lt;span class="o">())&lt;/span> &lt;span class="o">{&lt;/span>
+&lt;span class="n">SelectionKey&lt;/span> &lt;span class="n">key&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">iterator&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">next&lt;/span>&lt;span class="o">();&lt;/span>
+&lt;span class="n">iterator&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">remove&lt;/span>&lt;span class="o">();&lt;/span>
+&lt;span class="k">if&lt;/span> &lt;span class="o">(&lt;/span>&lt;span class="n">key&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">isAcceptable&lt;/span>&lt;span class="o">())&lt;/span> &lt;span class="o">{&lt;/span>
+&lt;span class="n">SocketChannel&lt;/span> &lt;span class="n">socketChannel&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="o">((&lt;/span>&lt;span class="n">ServerSocketChannel&lt;/span>&lt;span class="o">)&lt;/span> &lt;span class="n">key&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">channel&lt;/span>&lt;span class="o">()).&lt;/span>&lt;span class="na">accept&lt;/span>&lt;span class="o">();&lt;/span>
+&lt;span class="n">socketChannel&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">configureBlocking&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="kc">false&lt;/span>&lt;span class="o">);&lt;/span>
+&lt;span class="n">socketChannel&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">register&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">selector&lt;/span>&lt;span class="o">,&lt;/span> &lt;span class="n">SelectionKey&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">OP_READ&lt;/span>&lt;span class="o">);&lt;/span>
+&lt;span class="n">System&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">out&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">println&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="s">&amp;#34;收到新连接：&amp;#34;&lt;/span> &lt;span class="o">+&lt;/span> &lt;span class="n">socketChannel&lt;/span>&lt;span class="o">);&lt;/span>
+&lt;span class="o">}&lt;/span> &lt;span class="k">else&lt;/span> &lt;span class="k">if&lt;/span> &lt;span class="o">(&lt;/span>&lt;span class="n">key&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">isReadable&lt;/span>&lt;span class="o">())&lt;/span> &lt;span class="o">{&lt;/span>&lt;span class="c1">// 客户端连接有数据可以读时触发
+&lt;/span>&lt;span class="c1">&lt;/span> &lt;span class="k">try&lt;/span> &lt;span class="o">{&lt;/span>
+&lt;span class="n">SocketChannel&lt;/span> &lt;span class="n">socketChannel&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="o">(&lt;/span>&lt;span class="n">SocketChannel&lt;/span>&lt;span class="o">)&lt;/span> &lt;span class="n">key&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">channel&lt;/span>&lt;span class="o">();&lt;/span>
+&lt;span class="n">ByteBuffer&lt;/span> &lt;span class="n">requestBuffer&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">ByteBuffer&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">allocate&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">1024&lt;/span>&lt;span class="o">);&lt;/span>
+&lt;span class="k">while&lt;/span> &lt;span class="o">(&lt;/span>&lt;span class="n">socketChannel&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">isOpen&lt;/span>&lt;span class="o">()&lt;/span> &lt;span class="o">&amp;amp;&amp;amp;&lt;/span> &lt;span class="n">socketChannel&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">read&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">requestBuffer&lt;/span>&lt;span class="o">)&lt;/span> &lt;span class="o">!=&lt;/span> &lt;span class="o">-&lt;/span>&lt;span class="n">1&lt;/span>&lt;span class="o">)&lt;/span> &lt;span class="o">{&lt;/span>
+&lt;span class="c1">// 长连接情况下,需要手动判断数据有没有读取结束 (此处做一个简单的判断: 超过0字节就认为请求结束了)
+&lt;/span>&lt;span class="c1">&lt;/span> &lt;span class="k">if&lt;/span> &lt;span class="o">(&lt;/span>&lt;span class="n">requestBuffer&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">position&lt;/span>&lt;span class="o">()&lt;/span> &lt;span class="o">&amp;gt;&lt;/span> &lt;span class="n">0&lt;/span>&lt;span class="o">)&lt;/span> &lt;span class="k">break&lt;/span>&lt;span class="o">;&lt;/span>
+&lt;span class="o">}&lt;/span>
+&lt;span class="k">if&lt;/span> &lt;span class="o">(&lt;/span>&lt;span class="n">requestBuffer&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">position&lt;/span>&lt;span class="o">()&lt;/span> &lt;span class="o">==&lt;/span> &lt;span class="n">0&lt;/span>&lt;span class="o">)&lt;/span> &lt;span class="k">continue&lt;/span>&lt;span class="o">;&lt;/span> &lt;span class="c1">// 如果没数据了, 则不继续后面的处理
+&lt;/span>&lt;span class="c1">&lt;/span> &lt;span class="n">requestBuffer&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">flip&lt;/span>&lt;span class="o">();&lt;/span>
+&lt;span class="kt">byte&lt;/span>&lt;span class="o">[]&lt;/span> &lt;span class="n">content&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="k">new&lt;/span> &lt;span class="kt">byte&lt;/span>&lt;span class="o">[&lt;/span>&lt;span class="n">requestBuffer&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">remaining&lt;/span>&lt;span class="o">()];&lt;/span>
+&lt;span class="n">requestBuffer&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">get&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">content&lt;/span>&lt;span class="o">);&lt;/span>
+&lt;span class="n">System&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">out&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">println&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="k">new&lt;/span> &lt;span class="n">String&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">content&lt;/span>&lt;span class="o">));&lt;/span>
+&lt;span class="n">System&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">out&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">println&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="s">&amp;#34;收到数据,来自：&amp;#34;&lt;/span> &lt;span class="o">+&lt;/span> &lt;span class="n">socketChannel&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">getRemoteAddress&lt;/span>&lt;span class="o">());&lt;/span>
+&lt;span class="c1">// TODO 业务操作 数据库 接口调用等等
+&lt;/span>&lt;span class="c1">&lt;/span>
+&lt;span class="c1">// 响应结果 200
+&lt;/span>&lt;span class="c1">&lt;/span> &lt;span class="n">String&lt;/span> &lt;span class="n">response&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="s">&amp;#34;HTTP/1.1 200 OK\r\n&amp;#34;&lt;/span> &lt;span class="o">+&lt;/span>
+&lt;span class="s">&amp;#34;Content-Length: 11\r\n\r\n&amp;#34;&lt;/span> &lt;span class="o">+&lt;/span>
+&lt;span class="s">&amp;#34;Hello World&amp;#34;&lt;/span>&lt;span class="o">;&lt;/span>
+&lt;span class="n">ByteBuffer&lt;/span> &lt;span class="n">buffer&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">ByteBuffer&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">wrap&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">response&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">getBytes&lt;/span>&lt;span class="o">());&lt;/span>
+&lt;span class="k">while&lt;/span> &lt;span class="o">(&lt;/span>&lt;span class="n">buffer&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">hasRemaining&lt;/span>&lt;span class="o">())&lt;/span> &lt;span class="o">{&lt;/span>
+&lt;span class="n">socketChannel&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">write&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">buffer&lt;/span>&lt;span class="o">);&lt;/span>
+&lt;span class="o">}&lt;/span>
+&lt;span class="o">}&lt;/span> &lt;span class="k">catch&lt;/span> &lt;span class="o">(&lt;/span>&lt;span class="n">Exception&lt;/span> &lt;span class="n">e&lt;/span>&lt;span class="o">)&lt;/span> &lt;span class="o">{&lt;/span>
+&lt;span class="n">e&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">printStackTrace&lt;/span>&lt;span class="o">();&lt;/span>
+&lt;span class="n">key&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">cancel&lt;/span>&lt;span class="o">();&lt;/span>
+&lt;span class="o">}&lt;/span>
+&lt;span class="o">}&lt;/span>
+&lt;span class="o">}&lt;/span>
+&lt;span class="o">}&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>客户端&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-java" data-lang="java"> &lt;span class="c1">// 1. 创建客户端channel对象
+&lt;/span>&lt;span class="c1">&lt;/span>&lt;span class="n">SocketChannel&lt;/span> &lt;span class="n">socketChannel&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">SocketChannel&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">open&lt;/span>&lt;span class="o">();&lt;/span>
+&lt;span class="n">socketChannel&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">configureBlocking&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="kc">false&lt;/span>&lt;span class="o">);&lt;/span>
+&lt;span class="c1">// 2. 创建Selector
+&lt;/span>&lt;span class="c1">&lt;/span>&lt;span class="n">Selector&lt;/span> &lt;span class="n">selector&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">Selector&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">open&lt;/span>&lt;span class="o">();&lt;/span>
+&lt;span class="n">socketChannel&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">register&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">selector&lt;/span>&lt;span class="o">,&lt;/span> &lt;span class="n">SelectionKey&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">OP_CONNECT&lt;/span>&lt;span class="o">);&lt;/span>
+&lt;span class="c1">//3 连接
+&lt;/span>&lt;span class="c1">&lt;/span>&lt;span class="n">socketChannel&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">connect&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="k">new&lt;/span> &lt;span class="n">InetSocketAddress&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="s">&amp;#34;localhost&amp;#34;&lt;/span>&lt;span class="o">,&lt;/span> &lt;span class="n">8080&lt;/span>&lt;span class="o">));&lt;/span>
+&lt;span class="k">while&lt;/span> &lt;span class="o">(&lt;/span>&lt;span class="kc">true&lt;/span>&lt;span class="o">)&lt;/span> &lt;span class="o">{&lt;/span>
+&lt;span class="c1">//4 selector接收事件，
+&lt;/span>&lt;span class="c1">&lt;/span> &lt;span class="n">selector&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">select&lt;/span>&lt;span class="o">();&lt;/span>
+&lt;span class="n">Set&lt;/span>&lt;span class="o">&amp;lt;&lt;/span>&lt;span class="n">SelectionKey&lt;/span>&lt;span class="o">&amp;gt;&lt;/span> &lt;span class="n">selectionKeys&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">selector&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">selectedKeys&lt;/span>&lt;span class="o">();&lt;/span>
+&lt;span class="n">Iterator&lt;/span>&lt;span class="o">&amp;lt;&lt;/span>&lt;span class="n">SelectionKey&lt;/span>&lt;span class="o">&amp;gt;&lt;/span> &lt;span class="n">iterator&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">selectionKeys&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">iterator&lt;/span>&lt;span class="o">();&lt;/span>
+&lt;span class="c1">// 5下面需要分配线程处理
+&lt;/span>&lt;span class="c1">&lt;/span> &lt;span class="k">while&lt;/span> &lt;span class="o">(&lt;/span>&lt;span class="n">iterator&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">hasNext&lt;/span>&lt;span class="o">())&lt;/span> &lt;span class="o">{&lt;/span>
+&lt;span class="n">SelectionKey&lt;/span> &lt;span class="n">selectionKey&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">iterator&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">next&lt;/span>&lt;span class="o">();&lt;/span>
+&lt;span class="n">iterator&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">remove&lt;/span>&lt;span class="o">();&lt;/span>
+&lt;span class="k">if&lt;/span> &lt;span class="o">(&lt;/span>&lt;span class="n">selectionKey&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">isConnectable&lt;/span>&lt;span class="o">())&lt;/span> &lt;span class="o">{&lt;/span> &lt;span class="c1">// 连接到远程服务器
+&lt;/span>&lt;span class="c1">&lt;/span> &lt;span class="k">try&lt;/span> &lt;span class="o">{&lt;/span>
+&lt;span class="k">if&lt;/span> &lt;span class="o">(&lt;/span>&lt;span class="n">socketChannel&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">finishConnect&lt;/span>&lt;span class="o">())&lt;/span> &lt;span class="o">{&lt;/span> &lt;span class="c1">// 完成连接
+&lt;/span>&lt;span class="c1">&lt;/span> &lt;span class="c1">// 连接成功
+&lt;/span>&lt;span class="c1">&lt;/span> &lt;span class="n">System&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">out&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">println&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="s">&amp;#34;连接成功-&amp;#34;&lt;/span> &lt;span class="o">+&lt;/span> &lt;span class="n">socketChannel&lt;/span>&lt;span class="o">);&lt;/span>
+&lt;span class="n">ByteBuffer&lt;/span> &lt;span class="n">buffer&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">ByteBuffer&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">allocateDirect&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">20480&lt;/span>&lt;span class="o">);&lt;/span>
+&lt;span class="c1">// 切换到感兴趣的事件
+&lt;/span>&lt;span class="c1">&lt;/span> &lt;span class="n">selectionKey&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">attach&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">buffer&lt;/span>&lt;span class="o">);&lt;/span>
+&lt;span class="n">selectionKey&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">interestOps&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">SelectionKey&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">OP_WRITE&lt;/span>&lt;span class="o">);&lt;/span>
+&lt;span class="o">}&lt;/span>
+&lt;span class="o">}&lt;/span> &lt;span class="k">catch&lt;/span> &lt;span class="o">(&lt;/span>&lt;span class="n">IOException&lt;/span> &lt;span class="n">e&lt;/span>&lt;span class="o">)&lt;/span> &lt;span class="o">{&lt;/span>
+&lt;span class="c1">// 连接失败
+&lt;/span>&lt;span class="c1">&lt;/span> &lt;span class="n">e&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">printStackTrace&lt;/span>&lt;span class="o">();&lt;/span>
+&lt;span class="k">return&lt;/span>&lt;span class="o">;&lt;/span>
+&lt;span class="o">}&lt;/span>
+&lt;span class="o">}&lt;/span> &lt;span class="k">else&lt;/span> &lt;span class="k">if&lt;/span> &lt;span class="o">(&lt;/span>&lt;span class="n">selectionKey&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">isWritable&lt;/span>&lt;span class="o">())&lt;/span> &lt;span class="o">{&lt;/span>&lt;span class="c1">// 可以开始写数据
+&lt;/span>&lt;span class="c1">&lt;/span> &lt;span class="n">ByteBuffer&lt;/span> &lt;span class="n">buf&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="o">(&lt;/span>&lt;span class="n">ByteBuffer&lt;/span>&lt;span class="o">)&lt;/span> &lt;span class="n">selectionKey&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">attachment&lt;/span>&lt;span class="o">();&lt;/span>
+&lt;span class="n">buf&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">clear&lt;/span>&lt;span class="o">();&lt;/span>
+&lt;span class="n">Scanner&lt;/span> &lt;span class="n">scanner&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="k">new&lt;/span> &lt;span class="n">Scanner&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">System&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">in&lt;/span>&lt;span class="o">);&lt;/span>
+&lt;span class="n">System&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">out&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">print&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="s">&amp;#34;请输入：&amp;#34;&lt;/span>&lt;span class="o">);&lt;/span>
+&lt;span class="c1">// 发送内容
+&lt;/span>&lt;span class="c1">&lt;/span> &lt;span class="n">String&lt;/span> &lt;span class="n">msg&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">scanner&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">nextLine&lt;/span>&lt;span class="o">();&lt;/span>
+&lt;span class="n">scanner&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">close&lt;/span>&lt;span class="o">();&lt;/span>
+&lt;span class="n">buf&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">put&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">msg&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">getBytes&lt;/span>&lt;span class="o">());&lt;/span>
+&lt;span class="n">buf&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">flip&lt;/span>&lt;span class="o">();&lt;/span>
+&lt;span class="k">while&lt;/span> &lt;span class="o">(&lt;/span>&lt;span class="n">buf&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">hasRemaining&lt;/span>&lt;span class="o">())&lt;/span> &lt;span class="o">{&lt;/span>
+&lt;span class="n">socketChannel&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">write&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">buf&lt;/span>&lt;span class="o">);&lt;/span>
+&lt;span class="o">}&lt;/span>
+&lt;span class="c1">// 切换到感兴趣的事件
+&lt;/span>&lt;span class="c1">&lt;/span> &lt;span class="n">selectionKey&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">interestOps&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">SelectionKey&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">OP_READ&lt;/span>&lt;span class="o">);&lt;/span>
+&lt;span class="o">}&lt;/span> &lt;span class="k">else&lt;/span> &lt;span class="k">if&lt;/span> &lt;span class="o">(&lt;/span>&lt;span class="n">selectionKey&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">isReadable&lt;/span>&lt;span class="o">())&lt;/span> &lt;span class="o">{&lt;/span>&lt;span class="c1">// 可以开始读数据
+&lt;/span>&lt;span class="c1">&lt;/span> &lt;span class="c1">// 读取响应
+&lt;/span>&lt;span class="c1">&lt;/span> &lt;span class="n">System&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">out&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">println&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="s">&amp;#34;收到服务端响应:&amp;#34;&lt;/span>&lt;span class="o">);&lt;/span>
+&lt;span class="n">ByteBuffer&lt;/span> &lt;span class="n">requestBuffer&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">ByteBuffer&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">allocate&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">1024&lt;/span>&lt;span class="o">);&lt;/span>
+&lt;span class="k">while&lt;/span> &lt;span class="o">(&lt;/span>&lt;span class="n">socketChannel&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">isOpen&lt;/span>&lt;span class="o">()&lt;/span> &lt;span class="o">&amp;amp;&amp;amp;&lt;/span> &lt;span class="n">socketChannel&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">read&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">requestBuffer&lt;/span>&lt;span class="o">)&lt;/span> &lt;span class="o">!=&lt;/span> &lt;span class="o">-&lt;/span>&lt;span class="n">1&lt;/span>&lt;span class="o">)&lt;/span> &lt;span class="o">{&lt;/span>
+&lt;span class="c1">// 长连接情况下,需要手动判断数据有没有读取结束 (此处做一个简单的判断: 超过0字节就认为请求结束了)
+&lt;/span>&lt;span class="c1">&lt;/span> &lt;span class="k">if&lt;/span> &lt;span class="o">(&lt;/span>&lt;span class="n">requestBuffer&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">position&lt;/span>&lt;span class="o">()&lt;/span> &lt;span class="o">&amp;gt;&lt;/span> &lt;span class="n">0&lt;/span>&lt;span class="o">)&lt;/span> &lt;span class="k">break&lt;/span>&lt;span class="o">;&lt;/span>
+&lt;span class="o">}&lt;/span>
+&lt;span class="n">requestBuffer&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">flip&lt;/span>&lt;span class="o">();&lt;/span>
+&lt;span class="kt">byte&lt;/span>&lt;span class="o">[]&lt;/span> &lt;span class="n">content&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="k">new&lt;/span> &lt;span class="kt">byte&lt;/span>&lt;span class="o">[&lt;/span>&lt;span class="n">requestBuffer&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">remaining&lt;/span>&lt;span class="o">()];&lt;/span>
+&lt;span class="n">requestBuffer&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">get&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">content&lt;/span>&lt;span class="o">);&lt;/span>
+&lt;span class="n">System&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">out&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">println&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="k">new&lt;/span> &lt;span class="n">String&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">content&lt;/span>&lt;span class="o">));&lt;/span>
+&lt;span class="c1">// selectionKey.interestOps(SelectionKey.OP_WRITE);
+&lt;/span>&lt;span class="c1">&lt;/span>
+&lt;span class="o">}&lt;/span>
+&lt;span class="o">}&lt;/span>
+&lt;span class="o">}&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div></description></item><item><title/><link>https://fengzhenbing.github.io/p/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://fengzhenbing.github.io/p/</guid><description>&lt;h3 id="线程模型">线程模型&lt;/h3>
+&lt;h4 id="nio-多reacto">nio 多reacto&lt;/h4>
+&lt;p>参考 &lt;a href="https://www.jianshu.com/p/e0e7cb085fb4">https://www.jianshu.com/p/e0e7cb085fb4&lt;/a>&lt;/p>
 &lt;p>&lt;img src="https://gitee.com/fengzhenbing/picgo/raw/master/F6A1AB8C69F049B5A0178FD00F132D6F.png" alt="" />&lt;/p>
-&lt;p>netty线程模型&lt;/p>
+&lt;h4 id="netty线程模型">netty线程模型&lt;/h4>
 &lt;p>&lt;img src="https://gitee.com/fengzhenbing/picgo/raw/master/BE156EF4454949CF9E6E49CEEC0A2B2D.png" alt="" />&lt;/p>
 &lt;p>eventloopgroup eventloop channel handler关系&lt;/p>
 &lt;p>&lt;img src="https://gitee.com/fengzhenbing/picgo/raw/master/A20B60869216424BA7678D0D5213BFB6.png" alt="" />&lt;/p>
 &lt;p>&lt;img src="https://gitee.com/fengzhenbing/picgo/raw/master/227DA0D6B04B41449E83B72ED7098F5A.png" alt="" />&lt;/p>
+&lt;h3 id="责任链模型channelpipeline">责任链模型ChannelPipeline&lt;/h3>
 &lt;p>&lt;img src="https://gitee.com/fengzhenbing/picgo/raw/master/2CE502957CF84D2C8429CD2A0E998D54.png" alt="" />&lt;/p>
 &lt;p>pipeline 持有context的双链表&lt;/p>
 &lt;p>&lt;img src="https://gitee.com/fengzhenbing/picgo/raw/master/914EBB37C6084D8A9EA6A105262A45A1.png" alt="" />&lt;/p>
@@ -3603,19 +3858,122 @@ tail -f test.sink.txt
 &lt;p>&lt;img src="https://gitee.com/fengzhenbing/picgo/raw/master/6F42E200304A47B095E78C10B5246039.png" alt="" />&lt;/p>
 &lt;p>handler 自己写的时候，继承适配器即可&lt;/p>
 &lt;p>&lt;img src="https://gitee.com/fengzhenbing/picgo/raw/master/B154DADDE045400881317E5E571A7AA8.png" alt="" />&lt;/p>
-&lt;h1 id="pipeline">Pipeline&lt;/h1>
+&lt;h3 id="整体结构">整体结构&lt;/h3>
 &lt;p>&lt;img src="https://gitee.com/fengzhenbing/picgo/raw/master/2E7F7EA909664C2989958271D27A09B4.png" alt="" />&lt;/p>
-&lt;h1 id="netty-内存管理--bytebuf--pool">netty 内存管理 bytebuf pool&lt;/h1>
+&lt;h3 id="netty-内存管理--bytebuf--pool">netty 内存管理 bytebuf pool&lt;/h3>
 &lt;p>&lt;a href="https://people.freebsd.org/~jasone/jemalloc/bsdcan2006/jemalloc.pdf">https://people.freebsd.org/~jasone/jemalloc/bsdcan2006/jemalloc.pdf&lt;/a>&lt;/p>
 &lt;p>&lt;img src="https://gitee.com/fengzhenbing/picgo/raw/master/07723506D21F497FBAE1196D73A7626A.png" alt="" />&lt;/p>
 &lt;p>引用计数。&lt;/p>
 &lt;p>&lt;img src="https://gitee.com/fengzhenbing/picgo/raw/master/5562B699C19A4BD69705BBCCE0C3DD93.png" alt="" />&lt;/p>
 &lt;p>&lt;img src="https://gitee.com/fengzhenbing/picgo/raw/master/E0F2FA0E08C248C6B3A76F770FFB0947.png" alt="" />&lt;/p>
-&lt;h2 id="对象回收复用栈">对象回收复用栈&lt;/h2>
+&lt;h3 id="对象回收复用栈">对象回收复用栈&lt;/h3>
 &lt;p>&lt;a href="https://www.jianshu.com/p/854b855bd198">https://www.jianshu.com/p/854b855bd198&lt;/a>&lt;/p>
-&lt;p>零拷贝&lt;/p>
+&lt;h3 id="零拷贝">零拷贝&lt;/h3>
 &lt;p>netty &lt;a href="https://www.jianshu.com/p/0ab705ae4f2d">https://www.jianshu.com/p/0ab705ae4f2d&lt;/a>&lt;/p>
 &lt;p>FileChannel.transferTo() 实现nio的零拷贝&lt;/p>
-&lt;p>Netty之ChannelOption参数&lt;/p>
-&lt;p>java Unsafe 。 sun.misc.Unsafe&lt;/p>
-&lt;p>&lt;img src="https://gitee.com/fengzhenbing/picgo/raw/master/F556169D09144BED867ADFB7558A8E58.png" alt="" />&lt;/p></description></item><item><title/><link>https://fengzhenbing.github.io/p/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://fengzhenbing.github.io/p/</guid><description/></item><item><title/><link>https://fengzhenbing.github.io/p/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://fengzhenbing.github.io/p/</guid><description/></item><item><title/><link>https://fengzhenbing.github.io/p/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://fengzhenbing.github.io/p/</guid><description/></item><item><title/><link>https://fengzhenbing.github.io/p/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://fengzhenbing.github.io/p/</guid><description/></item><item><title/><link>https://fengzhenbing.github.io/p/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://fengzhenbing.github.io/p/</guid><description/></item><item><title/><link>https://fengzhenbing.github.io/p/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://fengzhenbing.github.io/p/</guid><description/></item><item><title/><link>https://fengzhenbing.github.io/p/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://fengzhenbing.github.io/p/</guid><description/></item><item><title/><link>https://fengzhenbing.github.io/p/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://fengzhenbing.github.io/p/</guid><description/></item><item><title/><link>https://fengzhenbing.github.io/p/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://fengzhenbing.github.io/p/</guid><description/></item></channel></rss>
+&lt;p>Netty之ChannelOption参数&lt;/p></description></item><item><title/><link>https://fengzhenbing.github.io/p/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://fengzhenbing.github.io/p/</guid><description/></item><item><title/><link>https://fengzhenbing.github.io/p/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://fengzhenbing.github.io/p/</guid><description/></item><item><title/><link>https://fengzhenbing.github.io/p/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://fengzhenbing.github.io/p/</guid><description/></item><item><title/><link>https://fengzhenbing.github.io/p/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://fengzhenbing.github.io/p/</guid><description/></item><item><title/><link>https://fengzhenbing.github.io/p/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://fengzhenbing.github.io/p/</guid><description/></item><item><title/><link>https://fengzhenbing.github.io/p/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://fengzhenbing.github.io/p/</guid><description/></item><item><title/><link>https://fengzhenbing.github.io/p/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://fengzhenbing.github.io/p/</guid><description/></item><item><title/><link>https://fengzhenbing.github.io/p/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://fengzhenbing.github.io/p/</guid><description/></item><item><title/><link>https://fengzhenbing.github.io/p/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://fengzhenbing.github.io/p/</guid><description/></item><item><title/><link>https://fengzhenbing.github.io/p/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://fengzhenbing.github.io/p/</guid><description/></item><item><title/><link>https://fengzhenbing.github.io/p/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://fengzhenbing.github.io/p/</guid><description>&lt;p>总结一下，实现分布式的方式：
+1）数据库for update，
+2）redis的过期key/redission，
+3）zookeeper临时节点，
+4）etcd的lease，
+5）内存网格hazelcast和ignite的纯java分布式锁。&lt;/p></description></item><item><title/><link>https://fengzhenbing.github.io/p/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://fengzhenbing.github.io/p/</guid><description>&lt;p>Redis作为内存中的数据结构存储，常用作数据库、缓存和消息代理。它支持数据结构，如 字符串，散列，列表，集合，带有范围查询的排序集（sorted sets），位图（bitmaps），超级日志（hyperloglogs），具有半径查询和流的地理空间索引。Redis具有内置复制，Lua脚本，LRU驱逐，事务和不同级别的磁盘持久性，并通过Redis Sentinel和Redis Cluster自动分区。&lt;/p>
+&lt;p>为了实现其出色的性能，Redis使用&lt;strong>内存数据集（in-memory dataset）&lt;/strong>。&lt;/p>
+&lt;p>MQ应用有很多，比如ActiveMQ,RabbitMQ,Kafka等，但是也可以基于redis来实现，可以降低系统的维护成本和实现复杂度，本篇介绍redis中实现消息队列的几种方案。&lt;/p>
+&lt;ul>
+&lt;li>基于List的 LPUSH+BRPOP 的实现&lt;/li>
+&lt;li>PUB/SUB，订阅/发布模式&lt;/li>
+&lt;li>基于Sorted-Set的实现&lt;/li>
+&lt;li>基于Stream类型的实现&lt;/li>
+&lt;/ul>
+&lt;h3 id="基于异步消息队列list-lpush-brpoprpush-blpop">基于异步消息队列List lpush-brpop(rpush-blpop)&lt;/h3>
+&lt;p>使用&lt;strong>rpush&lt;/strong>和&lt;strong>lpush&lt;/strong>操作入队列，&lt;strong>lpop&lt;/strong>和&lt;strong>rpop&lt;/strong>操作出队列。&lt;/p>
+&lt;p>&lt;strong>List支持多个生产者和消费者并发进出消息&lt;/strong>，每个消费者拿到都是&lt;strong>不同&lt;/strong>的列表元素。&lt;/p>
+&lt;p>但是当队列为空时，lpop和rpop会一直空轮训，消耗资源；所以引入阻塞读blpop和brpop（b代表blocking），阻塞读在队列没有数据的时候进入休眠状态，&lt;/p>
+&lt;p>一旦数据到来则立刻醒过来，消息延迟几乎为零。&lt;/p>
+&lt;p>&lt;strong>注意&lt;/strong>&lt;/p>
+&lt;p>你以为上面的方案很完美？还有个问题需要解决：空闲连接的问题。&lt;/p>
+&lt;p>如果线程一直阻塞在那里，Redis客户端的连接就成了闲置连接，闲置过久，服务器一般会主动断开连接，减少闲置资源占用，这个时候blpop和brpop或抛出异常，&lt;/p>
+&lt;p>所以在编写客户端消费者的时候要小心，如果捕获到异常，还有重试。&lt;/p>
+&lt;p>&lt;strong>缺点：&lt;/strong>&lt;/p>
+&lt;ul>
+&lt;li>做消费者确认ACK麻烦，不能保证消费者消费消息后是否成功处理的问题（宕机或处理异常等），通常需要维护一个Pending列表，保证消息处理确认。&lt;/li>
+&lt;li>不能做广播模式，如pub/sub，消息发布/订阅模型&lt;/li>
+&lt;li>不能重复消费，一旦消费就会被删除&lt;/li>
+&lt;li>不支持分组消费&lt;/li>
+&lt;/ul>
+&lt;p>如何实现：&lt;a class="link" href="https://mp.weixin.qq.com/s?__biz=MzI2NzMyMDQ0NQ==&amp;amp;mid=100000206&amp;amp;idx=1&amp;amp;sn=5e18a6aa07b43b107041444499eb2c77&amp;amp;chksm=6a81ecdc5df665caead4c7575bbb09ff2d72040b68239581264f3cfa69723397cb0dcbc0da85#rd" target="_blank" rel="noopener"
+>Redis应用-异步消息队列与延时队列&lt;/a>&lt;/p>
+&lt;h3 id="pubsub订阅发布模式">PUB/SUB,订阅/发布模式&lt;/h3>
+&lt;p>SUBSCRIBE，用于订阅信道&lt;/p>
+&lt;p>PUBLISH，向信道发送消息&lt;/p>
+&lt;p>UNSUBSCRIBE，取消订阅&lt;/p>
+&lt;p>此模式允许生产者只生产一次消息，由中间件负责将消息复制到多个消息队列，每个消息队列由对应的消费组消费。&lt;/p>
+&lt;p>&lt;strong>优点&lt;/strong>&lt;/p>
+&lt;p>典型的广播模式，一个消息可以发布到多个消费者&lt;/p>
+&lt;p>多信道订阅，消费者可以同时订阅多个信道，从而接收多类消息&lt;/p>
+&lt;p>消息即时发送，消息不用等待消费者读取，消费者会自动接收到信道发布的消息&lt;/p>
+&lt;p>&lt;strong>缺点&lt;/strong>&lt;/p>
+&lt;p>消息一旦发布，不能接收。换句话就是发布时若客户端不在线，则消息丢失，不能寻回&lt;/p>
+&lt;p>不能保证每个消费者接收的时间是一致的&lt;/p>
+&lt;p>若消费者客户端出现消息积压，到一定程度，会被强制断开，导致消息意外丢失。通常发生在消息的生产远大于消费速度时&lt;/p>
+&lt;p>*&lt;strong>可见，Pub/Sub 模式不适合做消息存储，消息积压类的业务，而是擅长处理广播，即时通讯，即时反馈的业务。*&lt;/strong>&lt;/p>
+&lt;h3 id="基于sorted-set的实现">基于Sorted-Set的实现&lt;/h3>
+&lt;p>Sortes Set(有序列表)，类似于java的SortedSet和HashMap的结合体，一方面她是一个set，保证内部value的唯一性，另一方面它可以给每个value赋予一个score，代表这个value的&lt;/p>
+&lt;p>排序权重。内部实现是“跳跃表”。&lt;/p>
+&lt;p>有序集合的方案是在自己确定消息顺ID时比较常用，使用集合成员的Score来作为消息ID，保证顺序，还可以保证消息ID的单调递增。通常可以使用时间戳+序号的方案。确保了消息ID的单调递增，利用SortedSet的依据&lt;/p>
+&lt;p>Score排序的特征，就可以制作一个有序的消息队列了。&lt;/p>
+&lt;p>&lt;strong>优点&lt;/strong>&lt;/p>
+&lt;p>就是可以自定义消息ID，在消息ID有意义时，比较重要。&lt;/p>
+&lt;p>&lt;strong>缺点&lt;/strong>&lt;/p>
+&lt;p>缺点也明显，不允许重复消息（因为是集合），同时消息ID确定有错误会导致消息的顺序出错。&lt;/p>
+&lt;h3 id="基于stream类型的实现">基于Stream类型的实现&lt;/h3>
+&lt;p>Redis5.0&lt;/p>
+&lt;p>&lt;img src="https://upload-images.jianshu.io/upload_images/19397245-2683b998ae2949c5.jpg" alt="img" />&lt;/p>
+&lt;p>Stream为redis 5.0后新增的数据结构。支持多播的可持久化消息队列，实现借鉴了Kafka设计。&lt;/p>
+&lt;p>Redis Stream的结构如上图所示，&lt;strong>它有一个消息链表，将所有加入的消息都串起来，每个消息都有一个唯一的ID和对应的内容&lt;/strong>。&lt;strong>消息是持久化的&lt;/strong>，Redis重启后，内容还在。&lt;/p>
+&lt;p>每个Stream都有唯一的名称，它就是Redis的key，在我们&lt;strong>首次使用xadd指令追加消息时自动创建&lt;/strong>。&lt;/p>
+&lt;p>&lt;strong>每个Stream都可以挂多个消费组，每个消费组会有个游标last_delivered_id在Stream数组之上往前移动，表示当前消费组已经消费到哪条消息了&lt;/strong>。每个消费组都有一个Stream内唯一的名称，消费组不会自动创建，它需要单独的指令xgroup create进行创建，需要指定从Stream的某个消息ID开始消费，这个ID用来初始化last_delivered_id变量。&lt;/p>
+&lt;p>每个消费组(Consumer Group)的状态都是独立的，相互不受影响。也就是说&lt;strong>同一份Stream内部的消息会被每个消费组都消费到&lt;/strong>。&lt;/p>
+&lt;p>&lt;strong>同一个消费组(Consumer Group)可以挂接多个消费者(Consumer)，这些消费者之间是竞争关系&lt;/strong>，任意一个消费者读取了消息都会使游标last_delivered_id往前移动。每个消费者者有一个组内唯一名称。&lt;/p>
+&lt;p>消费者(Consumer)内部会有个状态变量&lt;strong>pending_ids&lt;/strong>，它记录了当前已经被客户端读取的消息，但是还没有ack。如果客户端没有ack，这个变量里面的消息ID会越来越多，一旦某个消息被ack，它就开始减少。这个pending_ids变量在Redis官方被称之为PEL，也就是Pending Entries List，这是一个很核心的数据结构，它用来确保客户端至少消费了消息一次，而不会在网络传输的中途丢失了没处理。&lt;/p>
+&lt;p>&lt;strong>增删改查&lt;/strong>&lt;/p>
+&lt;ul>
+&lt;li>xadd &lt;strong>追加消息&lt;/strong>&lt;/li>
+&lt;li>xdel 删除消息，这里的删除仅仅是设置了标志位，不影响消息总长度&lt;/li>
+&lt;li>xrange &lt;strong>获取消息列表&lt;/strong>，会自动过滤已经删除的消息&lt;/li>
+&lt;li>xlen 消息长度&lt;/li>
+&lt;li>del 删除Stream&lt;/li>
+&lt;/ul>
+&lt;p>&lt;strong>独立消费&lt;/strong>&lt;/p>
+&lt;p>我们可以在不定义消费组的情况下进行Stream消息的独立消费，当Stream没有新消息时，甚至可以阻塞等待。Redis设计了一个单独的消费指令xread，可以将Stream当成普通的消息队列(list)来使用。使用xread时，我们可以完全忽略消费组(Consumer Group)的存在，就好比Stream就是一个普通的列表(list)。&lt;/p>
+&lt;p>&lt;strong>创建消费组&lt;/strong>&lt;/p>
+&lt;p>Stream通过xgroup create指令创建消费组(Consumer Group)，需要传递起始消息ID参数用来初始化last_delivered_id变量。&lt;/p>
+&lt;p>&lt;strong>消费&lt;/strong>&lt;/p>
+&lt;p>Stream提供了xreadgroup指令可以进行消费组的组内消费，需要提供消费组名称、消费者名称和起始消息ID。它同xread一样，也可以阻塞等待新消息。读到新消息后，对应的消息ID就会进入消费者的PEL(正在处理的消息)结构里，客户端处理完毕后使用xack指令通知服务器，本条消息已经处理完毕，该消息ID就会从PEL中移除。&lt;/p>
+&lt;p>Stream消息太多怎么办&lt;/p>
+&lt;p>&lt;img src="https://upload-images.jianshu.io/upload_images/19397245-f5b35dbda2281ac7.jpg" alt="img" />&lt;/p>
+&lt;p>读者很容易想到，要是消息积累太多，Stream的链表岂不是很长，内容会不会爆掉就是个问题了。xdel指令又不会删除消息，它只是给消息做了个标志位。&lt;/p>
+&lt;p>Redis自然考虑到了这一点，所以它提供了一个定长Stream功能。在xadd的指令提供一个定长长度maxlen，就可以将老的消息干掉，确保最多不超过指定长度。&lt;/p>
+&lt;blockquote>
+&lt;p>127.0.0.1:6379&amp;gt; xlen codehole&lt;/p>
+&lt;p>(integer) 5&lt;/p>
+&lt;p>127.0.0.1:6379&amp;gt; xadd codehole maxlen 3 * name xiaorui age 1&lt;/p>
+&lt;p>1527855160273-0&lt;/p>
+&lt;p>127.0.0.1:6379&amp;gt; xlen codehole&lt;/p>
+&lt;p>(integer) 3&lt;/p>
+&lt;/blockquote>
+&lt;p>我们看到Stream的长度被砍掉了。&lt;/p>
+&lt;p>&lt;strong>消息如果忘记ACK会怎样？&lt;/strong>&lt;/p>
+&lt;p>Stream在每个消费者结构中保存了正在处理中的消息ID列表PEL，如果消费者收到了消息处理完了但是没有回复ack，就会导致PEL列表不断增长，如果有很多消费组的话，那么这个PEL占用的内存就会放大。&lt;/p>
+&lt;p>&lt;strong>PEL如何避免消息丢失？&lt;/strong>&lt;/p>
+&lt;p>在客户端消费者读取Stream消息时，Redis服务器将消息回复给客户端的过程中，客户端突然断开了连接，消息就丢失了。但是PEL里已经保存了发出去的消息ID。待客户端重新连上之后，可以再次收到PEL中的消息ID列表。不过此时xreadgroup的起始消息必须是任意有效的消息ID，一般将参数设为0-0，表示读取所有的PEL消息以及自last_delivered_id之后的新消息。&lt;/p>
+&lt;p>&lt;strong>分区Partition&lt;/strong>&lt;/p>
+&lt;p>Redis没有原生支持分区的能力，想要使用分区，需要分配多个Stream，然后在客户端使用一定的策略来讲消息放入不同的stream。&lt;/p>
+&lt;p>&lt;strong>结论&lt;/strong>&lt;/p>
+&lt;p>Stream的消费模型借鉴了kafka的消费分组的概念，它弥补了Redis Pub/Sub不能持久化消息的缺陷。但是它又不同于kafka，kafka的消息可以分partition，而Stream不行。如果非要分parition的话，得在客户端做，提供不同的Stream名称，对消息进行hash取模来选择往哪个Stream里塞。如果读者稍微研究过Redis作者的另一个开源项目Disque的话，这极可能是作者意识到Disque项目的活跃程度不够，所以将Disque的内容移植到了Redis里面。&lt;/p>
+&lt;p>参考文章：&lt;/p>
+&lt;p>&lt;a href="https://www.cnblogs.com/-wenli/p/12777703.html">https://www.cnblogs.com/-wenli/p/12777703.html&lt;/a>&lt;/p>
+&lt;p>&lt;a class="link" href="https://links.jianshu.com/go?to=https%3A%2F%2Fblog.csdn.net%2Fenmotech%2Farticle%2Fdetails%2F81230531" target="_blank" rel="noopener"
+>https://blog.csdn.net/enmotech/article/details/81230531&lt;/a>&lt;/p>
+&lt;p>&lt;a class="link" href="https://links.jianshu.com/go?to=http%3A%2F%2Fwww.hellokang.net%2Fredis%2Fmessage-queue-by-redis.html" target="_blank" rel="noopener"
+>http://www.hellokang.net/redis/message-queue-by-redis.html&lt;/a>&lt;/p></description></item></channel></rss>

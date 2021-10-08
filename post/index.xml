@@ -114,7 +114,10 @@ scurvivorRadio Ēden survivor survivor 8:1:1
 垃圾回收器 对于新生代一般时使用标记复制算法</description></item><item><title>pulsar</title><link>https://fengzhenbing.github.io/p/pulsar/</link><pubDate>Tue, 23 Feb 2021 00:00:00 +0000</pubDate><guid>https://fengzhenbing.github.io/p/pulsar/</guid><description>相关概念 计算存储分离 安装测试 # 下载 wget https://mirrors.bfsu.edu.cn/apache/pulsar/pulsar-2.7.1/apache-pulsar-2.7.1-bin.tar.gz tar xvfz apache-pulsar-2.7.1-bin.tar.gz cd apache-pulsar-2.7.1 # 单机启动 bin/pulsar standalone # 消费消息 bin/pulsar-client consume my-topic -s &amp;#34;first-subscription&amp;#34; # 生产消息 bin/pulsar-client produce my-topic --messages &amp;#34;hello-pulsar&amp;#34; 相关资料 官网快速启动</description></item><item><title>rocketMQ</title><link>https://fengzhenbing.github.io/p/rocketmq/</link><pubDate>Sat, 20 Feb 2021 09:16:25 +0600</pubDate><guid>https://fengzhenbing.github.io/p/rocketmq/</guid><description>相关概念 二代mq, 纯java开发，和kafka无本质区别
 安装测试 # 下载 4.8.0 wget https://downloads.apache.org/rocketmq/4.8.0/rocketmq-all-4.8.0-bin-release.zip unzip rocketmq-all-4.8.0-bin-release.zip #运行命名服务， 替代kafka的zk nohup sh bin/mqnamesrv &amp;amp; #查看日志 tail -f ~/logs/rocketmqlogs/namesrv.log #运行broker nohup sh bin/mqbroker -n localhost:9876 &amp;amp; #查看日志 tail -f ~/logs/rocketmqlogs/broker.log # 发送消息 export NAMESRV_ADDR=localhost:9876 sh bin/tools.sh org.apache.rocketmq.example.quickstart.Producer #消费消息 sh bin/tools.sh org.apache.rocketmq.example.quickstart.Consumer 相关资料 官网快速开始
 中文文档</description></item><item><title>rabbitMQ</title><link>https://fengzhenbing.github.io/p/rabbitmq/</link><pubDate>Fri, 19 Feb 2021 10:16:25 +0600</pubDate><guid>https://fengzhenbing.github.io/p/rabbitmq/</guid><description>Rabbitmq相关概念 一代mq，erlang开发， 改进activemq
-Publisher 消息生产者, 返送消息时指定exchange 和routing key, 即可以将消息路由到匹配的queue中 Routing key Binding 通过routing key 将queue和exchange绑定 Exchange 工具人。。交易所。。代理 FanoutExchange: 将消息分发到所有的绑定队列，无routingkey的概念，发送时不指定routing key HeadersExchange ：通过添加属性key-value匹配 DirectExchange: 按照routingkey分发到指定队列 TopicExchange:多关键字匹配 正则 Consumer Docker方式安装运行 docker pull rabbitmq:management docker run -itd --name rabbitmq-test -e RABBITMQ_DEFAULT_USER=admin -e RABBITMQ_DEFAULT_PASS=admin -p 15672:15672 -p 5672:5672 rabbitmq:management docker exec -it rabbitmq-test /bin/bash</description></item><item><title>康威定律</title><link>https://fengzhenbing.github.io/p/%E5%BA%B7%E5%A8%81%E5%AE%9A%E5%BE%8B/</link><pubDate>Wed, 13 Jan 2021 00:00:00 +0000</pubDate><guid>https://fengzhenbing.github.io/p/%E5%BA%B7%E5%A8%81%E5%AE%9A%E5%BE%8B/</guid><description>康威定律：组织决定产品形态 第一定律 组织设计的产品/设计等价于这个组织的沟通结构。
+Publisher 消息生产者, 返送消息时指定exchange 和routing key, 即可以将消息路由到匹配的queue中 Routing key Binding 通过routing key 将queue和exchange绑定 Exchange 工具人。。交易所。。代理 FanoutExchange: 将消息分发到所有的绑定队列，无routingkey的概念，发送时不指定routing key HeadersExchange ：通过添加属性key-value匹配 DirectExchange: 按照routingkey分发到指定队列 TopicExchange:多关键字匹配 正则 Consumer 1. Exchange概念
+Exchange：接收消息，并根据路由键转发消息所绑定的队列。 蓝色框：客户端发送消息至交换机，通过路由键路由至指定的队列。 黄色框：交换机和队列通过路由键有一个绑定的关系。 绿色框：消费端通过监听队列来接收消息。
+Docker方式安装运行 docker pull rabbitmq:management docker run -itd --name rabbitmq-test -e RABBITMQ_DEFAULT_USER=admin -e RABBITMQ_DEFAULT_PASS=admin -p 15672:15672 -p 5672:5672 rabbitmq:management docker exec -it rabbitmq-test /bin/bash 高可用
+镜像集群模式（高可用性） 这种模式，才是所谓的 RabbitMQ 的高可用模式。跟普通集群模式不一样的是，在镜像集群模式下，你创建的 queue，无论元数据还是 queue 里的消息都会存在于多个实例上，就是说，每个 RabbitMQ 节点都有这个 queue 的一个完整镜像，包含 queue 的全部数据的意思。然后每次你写消息到 queue 的时候，都会自动把消息同步到多个实例的 queue 上。</description></item><item><title>康威定律</title><link>https://fengzhenbing.github.io/p/%E5%BA%B7%E5%A8%81%E5%AE%9A%E5%BE%8B/</link><pubDate>Wed, 13 Jan 2021 00:00:00 +0000</pubDate><guid>https://fengzhenbing.github.io/p/%E5%BA%B7%E5%A8%81%E5%AE%9A%E5%BE%8B/</guid><description>康威定律：组织决定产品形态 第一定律 组织设计的产品/设计等价于这个组织的沟通结构。
 第二定律 时间再多一件事情也不可能做的完美，但总有时间做完一件事情
 第三定律 线型系统和线型组织架构间有潜在的异质同态特性
 第四定律 大的系统组织总是比小系统更倾向于分解</description></item><item><title>Synchronized锁</title><link>https://fengzhenbing.github.io/p/synchronized%E9%94%81/</link><pubDate>Tue, 15 Dec 2020 00:00:00 +0000</pubDate><guid>https://fengzhenbing.github.io/p/synchronized%E9%94%81/</guid><description>Synchronized Object.wait()：释放当前对象锁，并进入阻塞队列(wait set) Object.notify()：唤醒当前对象阻塞队列(wait set)里的任一线程（并不保证唤醒哪一个） Object.notifyAll()：唤醒当前对象阻塞队列(wait set)里的所有线程, 进到entry set 去竞争锁 为什么wait,notify和notifyAll要与synchronized一起使用？ Wait 只有通过synchronized拿到锁，才能进入wait set
@@ -177,10 +180,21 @@ React vue &amp;hellip;
 一套组件可以在 微信小程序，支付宝小程序，百度小程序，H5 多端适配运行
 创建项目
 # 使用 npm 安装 CLI $ npm install -g @tarojs/cli # OR 使用 yarn 安装 CLI $ yarn global add @tarojs/cli # OR 安装了 cnpm，使用 cnpm 安装 CLI $ cnpm install -g @tarojs/cli Remax 官网</description></item><item><title>kafka基础</title><link>https://fengzhenbing.github.io/p/kafka%E5%9F%BA%E7%A1%80/</link><pubDate>Tue, 20 Oct 2020 14:06:25 +0600</pubDate><guid>https://fengzhenbing.github.io/p/kafka%E5%9F%BA%E7%A1%80/</guid><description>kafka相关概念 二代mq, scala开发
-broker topic patition producer customer Customer group leader follower rebalance 服务端partition数量扩大 消费者组中某个消费者down掉 Topic特性 通过partition增加可扩展性：线上改partion数，rebalance ，会照成性能抖动。 partition有序达到高吞吐 partition多副本增加容错性 kafka单机 安装 http://kafka.apache.org/downloads
-修改配置
-cd kafka_2.13-2.7.0 # 打开 listeners=PLAINTEXT://localhost:9092 vim config/server.properties # 启动zookeeper bin/zookeeper-server-start.sh config/zookeeper.properties # 启动kafaka bin/kafka-server-start.sh config/server.properties 命令测试
-# 创建topic mokernetdeMac-mini:kafka_2.13-2.7.0 mokernet$ bin/kafka-topics.sh --zookeeper localhost:2181 --create --topic testf --partitions 4 --replication-factor 1 Created topic testf. # 查看 bin/kafka-topics.</description></item><item><title>消息基础</title><link>https://fengzhenbing.github.io/p/%E6%B6%88%E6%81%AF%E5%9F%BA%E7%A1%80/</link><pubDate>Sun, 11 Oct 2020 09:16:25 +0600</pubDate><guid>https://fengzhenbing.github.io/p/%E6%B6%88%E6%81%AF%E5%9F%BA%E7%A1%80/</guid><description>消息队列作用 异步通信：异步通信，减少线程等待，特别是处理批量等大事务、耗时操作。 系统解耦:系统不直接调用，降低依赖，特别是不在线也能保持通信最终完成。 削峰填谷:压力大的时候，缓冲部分请求消息，类似于背压处理。 可靠通信:提供多种消息模式、服务质量、顺序保障等。 消息处理模式 点对点： PTP =&amp;gt; queue 发布订阅： PubSub =&amp;gt; Topic 消息语义 QOS At most once At least once Exactly once</description></item><item><title>innodb概述及原理</title><link>https://fengzhenbing.github.io/p/innodb%E6%A6%82%E8%BF%B0%E5%8F%8A%E5%8E%9F%E7%90%86/</link><pubDate>Sat, 12 Sep 2020 14:16:25 +0600</pubDate><guid>https://fengzhenbing.github.io/p/innodb%E6%A6%82%E8%BF%B0%E5%8F%8A%E5%8E%9F%E7%90%86/</guid><description>Innodb概述 该存储引擎是第一个完整支持ACID事 务的MySOL存储引擎，其特点是行锁设计、支持MVCC、支持外键、提供一致性非锁定读，同时被设计用来最有效地利用以及使用内存和CPU；
+broker
+Kafka 集群包含一个或多个服务器，这种服务器被称为 broker。
+topic
+每条发布到 Kafka 集群的消息都有一个类别，这个类别被称为 Topic。 (物理上不同 Topic 的消息分开存储，逻辑上一个 Topic 的消息虽然保存于一个或 多个 broker 上，但用户只需指定消息的 Topic 即可生产或消费数据而不必关心数 据存于何处)。
+patition
+Partition 是物理上的概念，每个 Topic 包含一个或多个 Partition。
+消息会根据 分区策略 追加到分区文件的末尾，属于顺序写磁盘，因此效率非常高（经验证，顺序写磁盘效率比随机写内存还要高，这是Kafka高吞吐率的一个很重要的保证）。
+producer
+负责发布消息到 Kafka broker。
+customer
+消息消费者，向 Kafka broker 读取消息的客户端
+Customer group
+consumer group是kafka提供的可扩展且具有容错性的消费者机制。既然是一个组，那么组内必然可以有多个消费者或消费者实例(consumer instance)，它们共享一个公共的ID，即group ID。组内的所有消费者协调在一起来消费订阅主题(subscribed topics)的所有分区(partition)。当然，每个分区只能由同一个消费组内的一个consumer来消费。
+特点：
+consumer group下可以有一个或多个consumer instance，consumer instance可以是一个进程，也可以是一个线程 group.id是一个字符串，唯一标识一个consumer group consumer group下订阅的topic下的每个分区只能分配给某个group下的一个consumer(当然该分区还可以被分配给其他group) leader</description></item><item><title>消息基础</title><link>https://fengzhenbing.github.io/p/%E6%B6%88%E6%81%AF%E5%9F%BA%E7%A1%80/</link><pubDate>Sun, 11 Oct 2020 09:16:25 +0600</pubDate><guid>https://fengzhenbing.github.io/p/%E6%B6%88%E6%81%AF%E5%9F%BA%E7%A1%80/</guid><description>消息队列作用 异步通信：异步通信，减少线程等待，特别是处理批量等大事务、耗时操作。 系统解耦:系统不直接调用，降低依赖，特别是不在线也能保持通信最终完成。 削峰填谷:压力大的时候，缓冲部分请求消息，类似于背压处理。 可靠通信:提供多种消息模式、服务质量、顺序保障等。 消息处理模式 点对点： PTP =&amp;gt; queue 发布订阅： PubSub =&amp;gt; Topic 消息语义 QOS At most once At least once Exactly once *支持数据不丢失的ack机制*</description></item><item><title>innodb概述及原理</title><link>https://fengzhenbing.github.io/p/innodb%E6%A6%82%E8%BF%B0%E5%8F%8A%E5%8E%9F%E7%90%86/</link><pubDate>Sat, 12 Sep 2020 14:16:25 +0600</pubDate><guid>https://fengzhenbing.github.io/p/innodb%E6%A6%82%E8%BF%B0%E5%8F%8A%E5%8E%9F%E7%90%86/</guid><description>Innodb概述 该存储引擎是第一个完整支持ACID事 务的MySOL存储引擎，其特点是行锁设计、支持MVCC、支持外键、提供一致性非锁定读，同时被设计用来最有效地利用以及使用内存和CPU；
 体系结构如下：
 InnoDB存储引擎有多个内存块，这些内存块组成一个内存池，主要负责如下工作：
 维护所有进程、线程需要访问的多个内部数据结构 缓存磁盘上的数据，方便快速读取，同时在对磁盘文件的数据修改之前在这里缓存 重做日志（redo log）缓冲 后台线程的主要作用：
@@ -221,17 +235,69 @@ cancel AT事务 反向sql</description></item><item><title>高可用之限流</t
 非抢占：资源不能被抢占。只能在持有资源的进程完成任务后，该资源才会被释放。
 循环等待：有一组等待进程 {P0, P1,..., Pn}， P0 等待的资源被 P1 占有，P1 等待的资源被 P2 占有，&amp;hellip;&amp;hellip;，Pn-1 等待的资源被 Pn 占有，Pn 等待的资源被 P0 占有。
 虚拟内存 虚拟内存的重要意义是它定义了一个连续的虚拟地址空间，并且 把内存扩展到硬盘空间。
-局部性原理 时间局部性 ：如果程序中的某条指令一旦执行，不久以后该指令可能再次执行；如果某数据被访问过，不久以后该数据可能再次被访问。产生时间局部性的典型原因，是由于在程序中存在着大量的循环操作。 空间局部性 ：一旦程序访问了某个存储单元，在不久之后，其附近的存储单元也将被访问，即程序在一段时间内所访问的地址，可能集中在一定的范围之内，这是因为指令通常是顺序存放、顺序执行的，数据也一般是以向量、数组、表等形式簇聚存储的。</description></item><item><title/><link>https://fengzhenbing.github.io/p/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://fengzhenbing.github.io/p/</guid><description>什么事JMM JMM 规范明确定义了不同的线程之 间，通过哪些方式，在什么时候可以 看见其他线程保存到共享变量中的 值;以及在必要时，如何对共享变量 的访问进行同步。这样的好处是屏蔽 各种硬件平台和操作系统之间的内存 访问差异，实现了 Java 并发程序真 正的跨平台。</description></item><item><title/><link>https://fengzhenbing.github.io/p/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://fengzhenbing.github.io/p/</guid><description/></item><item><title/><link>https://fengzhenbing.github.io/p/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://fengzhenbing.github.io/p/</guid><description>nio reactor线程模型https://www.jianshu.com/p/e0e7cb085fb4
-netty线程模型
-eventloopgroup eventloop channel handler关系
-pipeline 持有context的双链表
+局部性原理 时间局部性 ：如果程序中的某条指令一旦执行，不久以后该指令可能再次执行；如果某数据被访问过，不久以后该数据可能再次被访问。产生时间局部性的典型原因，是由于在程序中存在着大量的循环操作。 空间局部性 ：一旦程序访问了某个存储单元，在不久之后，其附近的存储单元也将被访问，即程序在一段时间内所访问的地址，可能集中在一定的范围之内，这是因为指令通常是顺序存放、顺序执行的，数据也一般是以向量、数组、表等形式簇聚存储的。</description></item><item><title/><link>https://fengzhenbing.github.io/p/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://fengzhenbing.github.io/p/</guid><description>java Unsafe 。 sun.misc.Unsafe</description></item><item><title/><link>https://fengzhenbing.github.io/p/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://fengzhenbing.github.io/p/</guid><description>什么事JMM JMM 规范明确定义了不同的线程之 间，通过哪些方式，在什么时候可以 看见其他线程保存到共享变量中的 值;以及在必要时，如何对共享变量 的访问进行同步。这样的好处是屏蔽 各种硬件平台和操作系统之间的内存 访问差异，实现了 Java 并发程序真 正的跨平台。</description></item><item><title/><link>https://fengzhenbing.github.io/p/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://fengzhenbing.github.io/p/</guid><description>强引用(StrongReference) 强引用就是我们平时创建对象，创建数组时的引用。强引用在任何时候都不会被GC回收掉。内存不足，oom
+软引用(SoftReference) 软引用是在系统发生OOM之前才被JVM回收掉。软引用常被用来对于内存敏感的缓存。
+弱引用(WeakReference) 一旦JVM执行GC，弱引用就会被回收掉。
+(虚引用)PhantomReference 虚引用主要作为其指向referent被回收时的一种通知机制。
+ReferenceQueue引用队列 用于存放待回收的引用对象（GC 会把引用对象本身添加到这个队列中）
+ReferenceQueue一般用来与SoftReference、WeakReference或者PhantomReference配合使用，将需要关注的引用对象注册到引用队列后，便可以通过监控该队列来判断关注的对象是否被回收，从而执行相应的方法。
+主要使用场景：
+1、使用引用队列进行数据监控，类似前面栗子的用法。
+2、队列监控的反向操作
+参考 https://www.cnblogs.com/mfrank/p/10104586.html</description></item><item><title/><link>https://fengzhenbing.github.io/p/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://fengzhenbing.github.io/p/</guid><description>Jmstat</description></item><item><title/><link>https://fengzhenbing.github.io/p/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://fengzhenbing.github.io/p/</guid><description>参考https://zhuanlan.zhihu.com/p/138819184
+用 volatile 修饰共享变量后，每个线程要操作变量时会从主内存中将变量拷贝到本地内存作为副本，当线程操作变量副本并写回主内存后，会通过 CPU 总线嗅探机制告知其他线程该变量副本已经失效，需要重新从主内存中读取。
+volatile 的主要作用有两点：
+保证变量的内存可见性
+禁止指令重排序</description></item><item><title/><link>https://fengzhenbing.github.io/p/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://fengzhenbing.github.io/p/</guid><description>bio 阻塞io
+TCP服务端
+// 启动 ServerSocket serverSocket = new ServerSocket(8080); while (!serverSocket.isClosed()) { Socket request = serverSocket.accept(); //一次请求分配一个线程: threadPool.execute(() -&amp;gt; { // 处理接收到的内容inputStream InputStream inputStream = request.getInputStream(); inputStream.read(...) ... // 向客户端发送内容 OutputStream outputStream = request.getOutputStream(); outputStream.write(...) ... } ... // 关闭 serverSocket.close(); } TCP客户端
+// 启动连接 Socket s = new Socket(&amp;#34;localhost&amp;#34;, 8080); // 发送内容 OutputStream out = s.getOutputStream(); outputStream.write(...) // 处理接收的内容inputStream InputStream inputStream = s.getInputStream(); inputStream.read(...) .</description></item><item><title/><link>https://fengzhenbing.github.io/p/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://fengzhenbing.github.io/p/</guid><description>线程模型 nio 多reacto 参考 https://www.jianshu.com/p/e0e7cb085fb4
+netty线程模型 eventloopgroup eventloop channel handler关系
+责任链模型ChannelPipeline pipeline 持有context的双链表
 context 持有下一个和上一个context和 handler , 并触发链式调用下一个或者上一个context的hander
 handler 自己写的时候，继承适配器即可
-Pipeline netty 内存管理 bytebuf pool https://people.freebsd.org/~jasone/jemalloc/bsdcan2006/jemalloc.pdf
+整体结构 netty 内存管理 bytebuf pool https://people.freebsd.org/~jasone/jemalloc/bsdcan2006/jemalloc.pdf
 引用计数。
 对象回收复用栈 https://www.jianshu.com/p/854b855bd198
-零拷贝
-netty https://www.jianshu.com/p/0ab705ae4f2d
+零拷贝 netty https://www.jianshu.com/p/0ab705ae4f2d
 FileChannel.transferTo() 实现nio的零拷贝
-Netty之ChannelOption参数
-java Unsafe 。 sun.misc.Unsafe</description></item><item><title/><link>https://fengzhenbing.github.io/p/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://fengzhenbing.github.io/p/</guid><description/></item><item><title/><link>https://fengzhenbing.github.io/p/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://fengzhenbing.github.io/p/</guid><description/></item><item><title/><link>https://fengzhenbing.github.io/p/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://fengzhenbing.github.io/p/</guid><description/></item><item><title/><link>https://fengzhenbing.github.io/p/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://fengzhenbing.github.io/p/</guid><description/></item><item><title/><link>https://fengzhenbing.github.io/p/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://fengzhenbing.github.io/p/</guid><description/></item><item><title/><link>https://fengzhenbing.github.io/p/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://fengzhenbing.github.io/p/</guid><description/></item><item><title/><link>https://fengzhenbing.github.io/p/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://fengzhenbing.github.io/p/</guid><description/></item><item><title/><link>https://fengzhenbing.github.io/p/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://fengzhenbing.github.io/p/</guid><description/></item><item><title/><link>https://fengzhenbing.github.io/p/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://fengzhenbing.github.io/p/</guid><description/></item></channel></rss>
+Netty之ChannelOption参数</description></item><item><title/><link>https://fengzhenbing.github.io/p/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://fengzhenbing.github.io/p/</guid><description/></item><item><title/><link>https://fengzhenbing.github.io/p/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://fengzhenbing.github.io/p/</guid><description/></item><item><title/><link>https://fengzhenbing.github.io/p/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://fengzhenbing.github.io/p/</guid><description/></item><item><title/><link>https://fengzhenbing.github.io/p/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://fengzhenbing.github.io/p/</guid><description/></item><item><title/><link>https://fengzhenbing.github.io/p/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://fengzhenbing.github.io/p/</guid><description/></item><item><title/><link>https://fengzhenbing.github.io/p/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://fengzhenbing.github.io/p/</guid><description/></item><item><title/><link>https://fengzhenbing.github.io/p/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://fengzhenbing.github.io/p/</guid><description/></item><item><title/><link>https://fengzhenbing.github.io/p/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://fengzhenbing.github.io/p/</guid><description/></item><item><title/><link>https://fengzhenbing.github.io/p/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://fengzhenbing.github.io/p/</guid><description/></item><item><title/><link>https://fengzhenbing.github.io/p/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://fengzhenbing.github.io/p/</guid><description/></item><item><title/><link>https://fengzhenbing.github.io/p/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://fengzhenbing.github.io/p/</guid><description>总结一下，实现分布式的方式： 1）数据库for update， 2）redis的过期key/redission， 3）zookeeper临时节点， 4）etcd的lease， 5）内存网格hazelcast和ignite的纯java分布式锁。</description></item><item><title/><link>https://fengzhenbing.github.io/p/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://fengzhenbing.github.io/p/</guid><description>Redis作为内存中的数据结构存储，常用作数据库、缓存和消息代理。它支持数据结构，如 字符串，散列，列表，集合，带有范围查询的排序集（sorted sets），位图（bitmaps），超级日志（hyperloglogs），具有半径查询和流的地理空间索引。Redis具有内置复制，Lua脚本，LRU驱逐，事务和不同级别的磁盘持久性，并通过Redis Sentinel和Redis Cluster自动分区。
+为了实现其出色的性能，Redis使用内存数据集（in-memory dataset）。
+MQ应用有很多，比如ActiveMQ,RabbitMQ,Kafka等，但是也可以基于redis来实现，可以降低系统的维护成本和实现复杂度，本篇介绍redis中实现消息队列的几种方案。
+基于List的 LPUSH+BRPOP 的实现 PUB/SUB，订阅/发布模式 基于Sorted-Set的实现 基于Stream类型的实现 基于异步消息队列List lpush-brpop(rpush-blpop) 使用rpush和lpush操作入队列，lpop和rpop操作出队列。
+List支持多个生产者和消费者并发进出消息，每个消费者拿到都是不同的列表元素。
+但是当队列为空时，lpop和rpop会一直空轮训，消耗资源；所以引入阻塞读blpop和brpop（b代表blocking），阻塞读在队列没有数据的时候进入休眠状态，
+一旦数据到来则立刻醒过来，消息延迟几乎为零。
+注意
+你以为上面的方案很完美？还有个问题需要解决：空闲连接的问题。
+如果线程一直阻塞在那里，Redis客户端的连接就成了闲置连接，闲置过久，服务器一般会主动断开连接，减少闲置资源占用，这个时候blpop和brpop或抛出异常，
+所以在编写客户端消费者的时候要小心，如果捕获到异常，还有重试。
+缺点：
+做消费者确认ACK麻烦，不能保证消费者消费消息后是否成功处理的问题（宕机或处理异常等），通常需要维护一个Pending列表，保证消息处理确认。 不能做广播模式，如pub/sub，消息发布/订阅模型 不能重复消费，一旦消费就会被删除 不支持分组消费 如何实现：Redis应用-异步消息队列与延时队列
+PUB/SUB,订阅/发布模式 SUBSCRIBE，用于订阅信道
+PUBLISH，向信道发送消息
+UNSUBSCRIBE，取消订阅
+此模式允许生产者只生产一次消息，由中间件负责将消息复制到多个消息队列，每个消息队列由对应的消费组消费。
+优点
+典型的广播模式，一个消息可以发布到多个消费者
+多信道订阅，消费者可以同时订阅多个信道，从而接收多类消息
+消息即时发送，消息不用等待消费者读取，消费者会自动接收到信道发布的消息
+缺点
+消息一旦发布，不能接收。换句话就是发布时若客户端不在线，则消息丢失，不能寻回
+不能保证每个消费者接收的时间是一致的
+若消费者客户端出现消息积压，到一定程度，会被强制断开，导致消息意外丢失。通常发生在消息的生产远大于消费速度时
+*可见，Pub/Sub 模式不适合做消息存储，消息积压类的业务，而是擅长处理广播，即时通讯，即时反馈的业务。*
+基于Sorted-Set的实现 Sortes Set(有序列表)，类似于java的SortedSet和HashMap的结合体，一方面她是一个set，保证内部value的唯一性，另一方面它可以给每个value赋予一个score，代表这个value的
+排序权重。内部实现是“跳跃表”。
+有序集合的方案是在自己确定消息顺ID时比较常用，使用集合成员的Score来作为消息ID，保证顺序，还可以保证消息ID的单调递增。通常可以使用时间戳+序号的方案。确保了消息ID的单调递增，利用SortedSet的依据
+Score排序的特征，就可以制作一个有序的消息队列了。
+优点
+就是可以自定义消息ID，在消息ID有意义时，比较重要。
+缺点
+缺点也明显，不允许重复消息（因为是集合），同时消息ID确定有错误会导致消息的顺序出错。
+基于Stream类型的实现 Redis5.0
+Stream为redis 5.0后新增的数据结构。支持多播的可持久化消息队列，实现借鉴了Kafka设计。
+Redis Stream的结构如上图所示，它有一个消息链表，将所有加入的消息都串起来，每个消息都有一个唯一的ID和对应的内容。消息是持久化的，Redis重启后，内容还在。
+每个Stream都有唯一的名称，它就是Redis的key，在我们首次使用xadd指令追加消息时自动创建。
+每个Stream都可以挂多个消费组，每个消费组会有个游标last_delivered_id在Stream数组之上往前移动，表示当前消费组已经消费到哪条消息了。每个消费组都有一个Stream内唯一的名称，消费组不会自动创建，它需要单独的指令xgroup create进行创建，需要指定从Stream的某个消息ID开始消费，这个ID用来初始化last_delivered_id变量。
+每个消费组(Consumer Group)的状态都是独立的，相互不受影响。也就是说同一份Stream内部的消息会被每个消费组都消费到。</description></item></channel></rss>
