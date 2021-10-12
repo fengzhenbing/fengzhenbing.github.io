@@ -58,6 +58,26 @@ categories:
   - 服务端partition数量扩大
   - 消费者组中某个消费者down掉
   - 消费者组中加入新的消费者
+  
+  
+  
+  
+  
+  ### 有序性保证
+  
+  我们通过这个 Offset 可以确定一条在该 Partition 下的唯一消息。在 Partition 下面是保证了有序性，但是在 Topic 下面没有保证有序性。
+  
+  [![img](https://s2.51cto.com/oss/201808/19/11e7f591b5933c72a007ed19294862d1.jpg)](https://s2.51cto.com/oss/201808/19/11e7f591b5933c72a007ed19294862d1.jpg)
+  
+  在上图中我们的生产者会决定发送到哪个 Partition：
+  
+  **如果没有 Key 值则进行轮询发送。**
+  
+  **如果有 Key 值，对 Key 值进行 Hash，然后对分区数量取余，保证了同一个 Key 值的会被路由到同一个分区；如果想队列的强顺序一致性，可以让所有的消息都设置为同一个 Key。**
+
+
+
+
 
 ## kafka吞吐量为什么这么高
 
@@ -241,5 +261,7 @@ tail -f test.sink.txt
 
 ## 相关资料
 参考 https://kafka.apachecn.org/
+
+https://www.cnblogs.com/aspirant/p/11481332.html
 
 [大白话 kafka 架构原理](https://mp.weixin.qq.com/s?__biz=MzU1NDA0MDQ3MA==&mid=2247483958&idx=1&sn=dffaad318b50f875eea615bc3bdcc80c&chksm=fbe8efcfcc9f66d9ff096fbae1c2a3671f60ca4dc3e7412ebb511252e7193a46dcd4eb11aadc&scene=21#wechat_redirect)
