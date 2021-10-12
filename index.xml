@@ -3214,6 +3214,13 @@ $ npm run dev # 监听并且编译项目
 &lt;li>消费者组中某个消费者down掉&lt;/li>
 &lt;li>消费者组中加入新的消费者&lt;/li>
 &lt;/ul>
+&lt;h3 id="有序性保证">有序性保证&lt;/h3>
+&lt;p>我们通过这个 Offset 可以确定一条在该 Partition 下的唯一消息。在 Partition 下面是保证了有序性，但是在 Topic 下面没有保证有序性。&lt;/p>
+&lt;p>&lt;a class="link" href="https://s2.51cto.com/oss/201808/19/11e7f591b5933c72a007ed19294862d1.jpg" target="_blank" rel="noopener"
+>&lt;img src="https://s2.51cto.com/oss/201808/19/11e7f591b5933c72a007ed19294862d1.jpg" alt="img" />&lt;/a>&lt;/p>
+&lt;p>在上图中我们的生产者会决定发送到哪个 Partition：&lt;/p>
+&lt;p>&lt;strong>如果没有 Key 值则进行轮询发送。&lt;/strong>&lt;/p>
+&lt;p>&lt;strong>如果有 Key 值，对 Key 值进行 Hash，然后对分区数量取余，保证了同一个 Key 值的会被路由到同一个分区；如果想队列的强顺序一致性，可以让所有的消息都设置为同一个 Key。&lt;/strong>&lt;/p>
 &lt;/li>
 &lt;/ul>
 &lt;h2 id="kafka吞吐量为什么这么高">kafka吞吐量为什么这么高&lt;/h2>
@@ -3363,6 +3370,7 @@ tail -f test.sink.txt
 &lt;/ul>
 &lt;h2 id="相关资料">相关资料&lt;/h2>
 &lt;p>参考 &lt;a href="https://kafka.apachecn.org/">https://kafka.apachecn.org/&lt;/a>&lt;/p>
+&lt;p>&lt;a href="https://www.cnblogs.com/aspirant/p/11481332.html">https://www.cnblogs.com/aspirant/p/11481332.html&lt;/a>&lt;/p>
 &lt;p>&lt;a class="link" href="https://mp.weixin.qq.com/s?__biz=MzU1NDA0MDQ3MA==&amp;amp;mid=2247483958&amp;amp;idx=1&amp;amp;sn=dffaad318b50f875eea615bc3bdcc80c&amp;amp;chksm=fbe8efcfcc9f66d9ff096fbae1c2a3671f60ca4dc3e7412ebb511252e7193a46dcd4eb11aadc&amp;amp;scene=21#wechat_redirect" target="_blank" rel="noopener"
 >大白话 kafka 架构原理&lt;/a>&lt;/p></description></item><item><title>消息基础</title><link>https://fengzhenbing.github.io/p/%E6%B6%88%E6%81%AF%E5%9F%BA%E7%A1%80/</link><pubDate>Sun, 11 Oct 2020 09:16:25 +0600</pubDate><guid>https://fengzhenbing.github.io/p/%E6%B6%88%E6%81%AF%E5%9F%BA%E7%A1%80/</guid><description>&lt;h2 id="消息队列作用">消息队列作用&lt;/h2>
 &lt;ol>
@@ -3877,7 +3885,16 @@ tail -f test.sink.txt
 &lt;p>内存零拷贝：尽量减少不必要的内存拷贝，实现了更高效率的传输。&lt;/p>
 &lt;p>内存池设计：申请的内存可以重用，主要指直接内存。内部实现是用一颗二叉查找树管理内存分配情况。&lt;/p>
 &lt;p>串形化处理读写：避免使用锁带来的性能开销。&lt;/p>
-&lt;p>高性能序列化协议：支持 protobuf 等高性能序列化协议。&lt;/p></description></item><item><title/><link>https://fengzhenbing.github.io/p/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://fengzhenbing.github.io/p/</guid><description/></item><item><title/><link>https://fengzhenbing.github.io/p/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://fengzhenbing.github.io/p/</guid><description/></item><item><title/><link>https://fengzhenbing.github.io/p/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://fengzhenbing.github.io/p/</guid><description/></item><item><title/><link>https://fengzhenbing.github.io/p/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://fengzhenbing.github.io/p/</guid><description/></item><item><title/><link>https://fengzhenbing.github.io/p/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://fengzhenbing.github.io/p/</guid><description/></item><item><title/><link>https://fengzhenbing.github.io/p/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://fengzhenbing.github.io/p/</guid><description/></item><item><title/><link>https://fengzhenbing.github.io/p/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://fengzhenbing.github.io/p/</guid><description/></item><item><title/><link>https://fengzhenbing.github.io/p/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://fengzhenbing.github.io/p/</guid><description/></item><item><title/><link>https://fengzhenbing.github.io/p/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://fengzhenbing.github.io/p/</guid><description/></item><item><title/><link>https://fengzhenbing.github.io/p/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://fengzhenbing.github.io/p/</guid><description/></item><item><title/><link>https://fengzhenbing.github.io/p/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://fengzhenbing.github.io/p/</guid><description>&lt;p>Redis内存淘汰机制
+&lt;p>高性能序列化协议：支持 protobuf 等高性能序列化协议。&lt;/p></description></item><item><title/><link>https://fengzhenbing.github.io/p/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://fengzhenbing.github.io/p/</guid><description/></item><item><title/><link>https://fengzhenbing.github.io/p/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://fengzhenbing.github.io/p/</guid><description>&lt;p>线程状态&lt;/p>
+&lt;p>&lt;img src="https://fengzhenbing.github.io/Volumes/feng/code/opensource-project/youdaonote-pull/youdaonote/youdaonote-images/6E9F8BED398044A1AE30B467A4BEF57D.png" alt="" />&lt;/p>
+&lt;ul>
+&lt;li>&lt;input disabled="" type="checkbox"> 1 Monitor机制https://blog.csdn.net/mulinsen77/article/details/88617370&lt;/li>
+&lt;/ul>
+&lt;p>&lt;img src="https://fengzhenbing.github.io/Volumes/feng/code/opensource-project/youdaonote-pull/youdaonote/youdaonote-images/A6E3B94C6C144922A40EEBBB9DCB24E9.png" alt="" />&lt;/p>
+&lt;p>AQS&lt;/p>
+&lt;p>&lt;a href="https://www.jianshu.com/p/cc308d82cc71">https://www.jianshu.com/p/cc308d82cc71&lt;/a>&lt;/p>
+&lt;p>详解Condition的await和signal等待/通知机制&lt;/p>
+&lt;p>&lt;a href="https://www.jianshu.com/p/28387056eeb4">https://www.jianshu.com/p/28387056eeb4&lt;/a>&lt;/p></description></item><item><title/><link>https://fengzhenbing.github.io/p/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://fengzhenbing.github.io/p/</guid><description/></item><item><title/><link>https://fengzhenbing.github.io/p/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://fengzhenbing.github.io/p/</guid><description/></item><item><title/><link>https://fengzhenbing.github.io/p/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://fengzhenbing.github.io/p/</guid><description/></item><item><title/><link>https://fengzhenbing.github.io/p/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://fengzhenbing.github.io/p/</guid><description/></item><item><title/><link>https://fengzhenbing.github.io/p/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://fengzhenbing.github.io/p/</guid><description/></item><item><title/><link>https://fengzhenbing.github.io/p/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://fengzhenbing.github.io/p/</guid><description/></item><item><title/><link>https://fengzhenbing.github.io/p/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://fengzhenbing.github.io/p/</guid><description/></item><item><title/><link>https://fengzhenbing.github.io/p/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://fengzhenbing.github.io/p/</guid><description/></item><item><title/><link>https://fengzhenbing.github.io/p/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://fengzhenbing.github.io/p/</guid><description>&lt;p>Redis内存淘汰机制
 概述
 Redis清除过期Key的方式
 定期删除
