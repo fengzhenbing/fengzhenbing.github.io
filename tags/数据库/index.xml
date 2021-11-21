@@ -11,7 +11,7 @@ innodb 内存结构 缓冲池 InnoDB存储引擎是基于磁盘存储的，并�
 SHOWVARIABLESLIKE&amp;#39;innodb_buffer_poo1_size&amp;#39;\G;缓冲池管理 LRU Free Flush LRU list 通常来说 数据库中的缓冲池是通过LRU (Latest Recent Used， 最近最少使用》 算法来进行管理的, 即最频繁使用的页(一页16k)在LRU列表的前端，而最少使用的页在 LRU列表的尾端, 当缓冲池不能存放新读取到的页时 将首先释放LRU列表中尾 端的页.
 Buffer Pool的LRU算法与普通的LRU算法不一样，新数据页插入时并不从头部插入，而是从中间位置插入（默认配置下，该位置从表头计算为列表5/8的位置)，在该位置，列表被分成了如下两个子列表：
 在头部是最近被访问的新页列表 在尾部是很少被访问的旧页列表 可以和jvm的young区 old区类比。
-为什么这么设计？？ 直接将读取的页放人到LRU列表的首部呢?这是因为若直接将读取到的页放人到LRU的首部，那么某些SOL操作可能会使缓冲池中 的页被刷新出，从而影响缓冲池的效率。常见的这类操作为索引或数据的扫描操作。这 类操作需要访问表中的许多页，甚至是全部的页，而这些页通常来说又仅在这次查询操 作中需要，并不是活跃的热点数据。如果页被放人LRU列表的首部，那么非常可能将 所需要的热点数据页从LRU列表中移除，而在下一次需要读取该页时， InnoDB存储引 肇需要再次访问磁盘</description></item><item><title>数据库日志总结</title><link>https://fengzhenbing.github.io/p/%E6%95%B0%E6%8D%AE%E5%BA%93%E6%97%A5%E5%BF%97%E6%80%BB%E7%BB%93/</link><pubDate>Sat, 12 Sep 2020 14:16:25 +0600</pubDate><guid>https://fengzhenbing.github.io/p/%E6%95%B0%E6%8D%AE%E5%BA%93%E6%97%A5%E5%BF%97%E6%80%BB%E7%BB%93/</guid><description>undo log 是InnoDB存储引擎独有的
+为什么这么设计？？ 直接将读取的页放人到LRU列表的首部呢?这是因为若直接将读取到的页放人到LRU的首部，那么某些SQL操作可能会使缓冲池中 的页被刷新出，从而影响缓冲池的效率。常见的这类操作为索引或数据的扫描操作。这 类操作需要访问表中的许多页，甚至是全部的页，而这些页通常来说又仅在这次查询操 作中需要，并不是活跃的热点数据。如果页被放人LRU列表的首部，那么非常可能将 所需要的热点数据页从LRU列表中移除，而在下一次需要读取该页时， InnoDB存储引 肇需要再次访问磁盘</description></item><item><title>数据库日志总结</title><link>https://fengzhenbing.github.io/p/%E6%95%B0%E6%8D%AE%E5%BA%93%E6%97%A5%E5%BF%97%E6%80%BB%E7%BB%93/</link><pubDate>Sat, 12 Sep 2020 14:16:25 +0600</pubDate><guid>https://fengzhenbing.github.io/p/%E6%95%B0%E6%8D%AE%E5%BA%93%E6%97%A5%E5%BF%97%E6%80%BB%E7%BB%93/</guid><description>undo log 是InnoDB存储引擎独有的
 想要保证事务的原子性，就需要在异常发生时，对已经执行的操作进行回滚，在 MySQL 中，恢复机制是通过 回滚日志（undo log） 实现的。
 Mvcc 多版本的记录在undo log中
 redo log 是InnoDB存储引擎独有的物理日志，记录内容是“在某个数据页上做了什么修改”
@@ -31,4 +31,8 @@ CanCommit 轻操作
 TCC事务 业务侵入性强
 加入业务的中间字段
 Try confirm 冥等
-cancel AT事务 反向sql</description></item></channel></rss>
+cancel AT事务 反向sql
+MQ消息最终一致性解决方案 事务消息 由于传统的处理方式无法解决消息生成者本地事务处理成功与消息发送成功两者的一致性问题，因此事务消息就诞生了，它实现了消息生成者本地事务与消息发送的原子性，保证了消息生成者本地事务处理成功与消息发送成功的最终一致性问题。
+https://www.jianshu.com/p/eb571e4065ec
+RocketMQ支持事务消息
+生产者先发消息，再执行业务操作： 如果反过来，可能业务执行成功就宕机，消息没发出，导致不一致 事务消息是针对生产端而言的，而消费端，消费端的一致性是通过MQ的重试机制来完成的：消息消费失败的话，MQ自己会负责重推消息，直到消费成功（消费者保证幂等性）。 RocketMQ事务消息原理 MQ存储了待发送的消息，但是MQ无法感知到上游处理的最终结果。对于RocketMQ而言，它的解决方案非常的简单，就是其内部实现会有一个定时任务，去轮训状态为待发送的消息，然后给producer发送check请求，而producer必须实现一个check监听器，监听器的内容通常就是去检查与之对应的本地事务是否成功(一般就是查询DB)，如果成功了，则MQ会将消息设置为可发送，否则就删除消息。</description></item></channel></rss>

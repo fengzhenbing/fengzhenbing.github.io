@@ -989,7 +989,8 @@ sudo n xx.xx
 &lt;h3 id="https--http-over-ssltls">HTTPS: HTTP over SSL/TLS&lt;/h3>
 &lt;p>TLS处于会话层&lt;/p>
 &lt;p>客户端和服务端均通过握手过程协商出了许多信息，譬如一个只有双方才知道的随机产生的密钥(非对称加密算法比如RSA进行密钥协商)、传输过程中要采用的对称加密算法（比如AES128）、压缩算法等，此后该连接的通信将使用此密钥和加密算法进行加密、解密和压缩。&lt;/p>
-&lt;p>保障所有信息都是第三方无法窃听（加密传输:对称加密算法）、无法篡改（一旦篡改通信算法会立刻发现）、无法冒充（证书验证身份）&lt;/p></description></item><item><title>图解shenyu</title><link>https://fengzhenbing.github.io/p/%E5%9B%BE%E8%A7%A3shenyu/</link><pubDate>Sat, 19 Jun 2021 00:00:00 +0000</pubDate><guid>https://fengzhenbing.github.io/p/%E5%9B%BE%E8%A7%A3shenyu/</guid><description>&lt;h3 id="spi">spi&lt;/h3>
+&lt;p>保障所有信息都是第三方无法窃听（加密传输:对称加密算法）、无法篡改（一旦篡改通信算法会立刻发现）、无法冒充（证书验证身份）&lt;/p>
+&lt;p>&lt;img src="https://gitee.com/fengzhenbing/picgo/raw/master/image-20211022104720134.png" alt="image-20211022104720134" />&lt;/p></description></item><item><title>图解shenyu</title><link>https://fengzhenbing.github.io/p/%E5%9B%BE%E8%A7%A3shenyu/</link><pubDate>Sat, 19 Jun 2021 00:00:00 +0000</pubDate><guid>https://fengzhenbing.github.io/p/%E5%9B%BE%E8%A7%A3shenyu/</guid><description>&lt;h3 id="spi">spi&lt;/h3>
 &lt;p>&lt;img src="https://gitee.com/fengzhenbing/picgo/raw/master/image-20210822220553452.png" alt="image-20210822220553452" />&lt;/p>
 &lt;h3 id="数据同步">数据同步&lt;/h3>
 &lt;p>&lt;img src="https://gitee.com/fengzhenbing/picgo/raw/master/image-20210822220755858.png" alt="image-20210822220755858" />&lt;/p>
@@ -1001,6 +1002,7 @@ sudo n xx.xx
 &lt;p>&lt;img src="https://gitee.com/fengzhenbing/picgo/raw/master/image-20210822221107509.png" alt="image-20210822221107509" />&lt;/p></description></item><item><title>服务链路追踪</title><link>https://fengzhenbing.github.io/p/%E6%9C%8D%E5%8A%A1%E9%93%BE%E8%B7%AF%E8%BF%BD%E8%B8%AA/</link><pubDate>Sat, 12 Jun 2021 00:00:00 +0000</pubDate><guid>https://fengzhenbing.github.io/p/%E6%9C%8D%E5%8A%A1%E9%93%BE%E8%B7%AF%E8%BF%BD%E8%B8%AA/</guid><description>&lt;h2 id="背景">背景&lt;/h2>
 &lt;p>随着业务的发展，系统规模也会越来越大，各微服务间的调用关系也越来越错综复杂，每一个前端请求都会形成一条复杂的分布式服务调用链路，在每条链路中任何一个依赖服务出现延迟过高或错误的时候都会引起请求最后的失败。&lt;/p>
 &lt;h2 id="链路追踪原理">链路追踪原理&lt;/h2>
+&lt;p>追踪系统根据数据收集方式的差异，可分为三种主流的实现方式，分别是&lt;strong>基于日志的追踪&lt;/strong>（Log-Based Tracing），&lt;strong>基于服务的追踪&lt;/strong>（Service-Based Tracing）和&lt;strong>基于边车代理的追踪&lt;/strong>（Sidecar-Based Tracing），&lt;/p>
 &lt;h3 id="实现请求跟踪">实现请求跟踪&lt;/h3>
 &lt;p>当请求发送到分布式系统的入口端点时，只需要服务跟踪框架为该请求创建一个唯一的跟踪标识&lt;strong>Trace ID&lt;/strong>，&lt;/p>
 &lt;p>同时在分布式系统内部流转的时候，框架失踪保持该唯一标识，直到返回给请求方位置。&lt;/p>
@@ -1501,6 +1503,7 @@ kubeadm join 192.168.3.13:6443 --token qxu02l.g995k2yhkxjh3k80 &lt;span class="s
 &lt;p>问题： 可能存在两个对象相互引用，导致无法回收，内存泄漏&lt;/p>
 &lt;h4 id="根可达算法">根可达算法&lt;/h4>
 &lt;p>维护引用的链表； 如果某个对象无法到达根节点，说明可以被回收&lt;/p>
+&lt;p>那么哪些对象是根对象呢？主要包含：JVM stack，native method stack，run-time constant pool(运行常量池里的对象)，static references in method area(方法区里的静态引用)，Clazz等。&lt;/p>
 &lt;h3 id="垃圾回收算法">垃圾回收算法&lt;/h3>
 &lt;blockquote>
 &lt;p>对&lt;code>停顿时间(延时)&lt;/code>和&lt;code>吞吐量&lt;/code>的权衡，没有最好，只有最适合当前业务场景的回收方式&lt;/p>
@@ -1890,258 +1893,7 @@ return 0 end
 &lt;li>关键点:原子性、互斥、超时&lt;/li>
 &lt;/ul>
 &lt;p>更多细节：&lt;a class="link" href="https://www.cnblogs.com/yunlongaimeng/p/10266690.html" target="_blank" rel="noopener"
->https://www.cnblogs.com/yunlongaimeng/p/10266690.html&lt;/a>&lt;/p></description></item><item><title>redis基础</title><link>https://fengzhenbing.github.io/p/redis%E5%9F%BA%E7%A1%80/</link><pubDate>Fri, 11 Dec 2020 08:06:25 +0600</pubDate><guid>https://fengzhenbing.github.io/p/redis%E5%9F%BA%E7%A1%80/</guid><description>&lt;h3 id="redis线程">redis线程&lt;/h3>
-&lt;p>redis做为一个进程，一直是多线程的。处理io和处理内存的是不同线程。&lt;/p>
-&lt;ul>
-&lt;li>
-&lt;p>io线程&lt;/p>
-&lt;ul>
-&lt;li>
-&lt;p>redis6之前(2020.05)：io处理是单线程&lt;/p>
-&lt;/li>
-&lt;li>
-&lt;p>redis6：io处理多线程，采用nio模型 =&amp;gt; 主要的性能提升点&lt;/p>
-&lt;/li>
-&lt;/ul>
-&lt;/li>
-&lt;li>
-&lt;p>内存处理线程&lt;/p>
-&lt;ul>
-&lt;li>单线程 =&amp;gt;高性能核心，不用考虑线程调度&lt;/li>
-&lt;/ul>
-&lt;/li>
-&lt;/ul>
-&lt;h2 id="压测redis-benchmark">压测redis-benchmark&lt;/h2>
-&lt;ul>
-&lt;li>环境mac 4核8g&lt;/li>
-&lt;/ul>
-&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-shell" data-lang="shell">mokernetdeMac-mini:redis-6.0.9 mokernet$ ./bin/redis-benchmark -n &lt;span class="m">100000&lt;/span> -c &lt;span class="m">32&lt;/span> -t SET,GET,INCR,HSET,LPUSH,MSET -q
-SET: 121065.38 requests per second
-GET: 118764.84 requests per second
-INCR: 117508.81 requests per second
-LPUSH: 123001.23 requests per second
-HSET: 123915.74 requests per second
-MSET &lt;span class="o">(&lt;/span>&lt;span class="m">10&lt;/span> keys&lt;span class="o">)&lt;/span>: 96711.80 requests per second
-&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="redis的5种基本数据结构">redis的5种基本数据结构&lt;/h2>
-&lt;p>&lt;a href="https://redis.io/commands">https://redis.io/commands&lt;/a>&lt;/p>
-&lt;h3 id="1字符串string">1.字符串(string)&lt;/h3>
-&lt;p>简单来说就是三种:int、string、byte[]&lt;/p>
-&lt;p>Redis中字符串类型的value最多可以容纳的数据长度是512M&lt;/p>
-&lt;pre>&lt;code>set/get/setnx/getset/del/exists/append incr/decr/incrby/decrby
-&lt;/code>&lt;/pre>&lt;h3 id="2散列hash">2.散列(hash)&lt;/h3>
-&lt;p>Redis中的Hash类型可以看成具有String key 和String value的map容器。&lt;/p>
-&lt;pre>&lt;code>hset/hget/hmset/hmget/hgetall/hdel/hincrby hexists/hlen/hkeys/hvals
-&lt;/code>&lt;/pre>&lt;ul>
-&lt;li>hmset 相对于hset可一次设置多个键值对&lt;/li>
-&lt;li>hmget 相对于hget可一次获取多个键的值&lt;/li>
-&lt;/ul>
-&lt;h3 id="3列表list">3.列表(list)&lt;/h3>
-&lt;p>java的LinkedList&lt;/p>
-&lt;p>在Redis中，List类型是按照插入顺序排序的字符串链表。和数据结构中的普通链表 一 样，我们可以在其头部(Left)和尾部(Right)添加新的元素。在插入时，如果该键并不存 在，Redis将为该键创建一个新的链表。与此相反，如果链表中所有的元素均被移除， 那么该键也将会被从数据库中删除。&lt;/p>
-&lt;pre>&lt;code>lpush/rpush/lrange/lpop/rpop
-&lt;/code>&lt;/pre>&lt;h3 id="4集合set">4.集合(set)&lt;/h3>
-&lt;p>java的set，不重复的list&lt;/p>
-&lt;p>在redis中，可以将Set类型看作是没有排序的字符集合，和List类型一样，我们也可以 在该类型的数值上执行添加、删除和判断某一元素是否存在等操作。这些操作的时间复 杂度为O(1),即常量时间内完成依次操作。&lt;/p>
-&lt;p>和List类型不同的是，Set集合中不允许出现重复的元素。&lt;/p>
-&lt;pre>&lt;code>sadd/srem/smembers/sismember 类比java中set的add, remove, all, contains,
-spop key [count] 随机返回集合中一个或多个 移除
-SRANDMEMBER key [count] 返回集合中一个或多个随机数，不移除, 抽奖
-sdiff/sinter/sunion 集合求差集，求交集，求并集
-&lt;/code>&lt;/pre>&lt;h3 id="5有序集合sorted-set">5.有序集合(sorted set)&lt;/h3>
-&lt;p>按权重排序&lt;/p>
-&lt;p>sortedset在set基础上给每个元素加了个分数score。&lt;/p>
-&lt;p>redis 正是通过分数来为集合的成员进行从小到大的排序。sortedset中分数是可以重复的。&lt;/p>
-&lt;pre>&lt;code>zadd key score member score2 member2... : 将成员以及该成员的分数存放到sortedset中
-zscore key member : 返回指定成员的分数
-zcard key : 获取集合中成员数量
-zrem key member [member...] : 移除集合中指定的成员，可以指定多个成员
-zrange key start end [withscores] : 获取集合中脚注为start-end的成员，[withscores]参数表明返回的成员 包含其分数
-zrevrange key start stop [withscores] : 按照分数从大到小的顺序返回索引从start到stop之间的所有元素 (包含两端的元素)
-zremrangebyrank key start stop : 按照排名范围删除元素
-&lt;/code>&lt;/pre>&lt;h2 id="redis高级数据结构">redis高级数据结构&lt;/h2>
-&lt;h3 id="1bitmaps">1.Bitmaps&lt;/h3>
-&lt;p>bitmaps不是一个真实的数据结构。而是String类型上的一组面向bit操作的集合。由于 strings是二进制安全的blob，并且它们的最大长度是512m，所以bitmaps能最大设置 2^32个不同的bit。&lt;/p>
-&lt;pre>&lt;code>setbit/getbit/bitop/bitcount/bitpos
-&lt;/code>&lt;/pre>&lt;p>可用作集中式的冥等去重 数据压缩在字节位上，极大的节约了空间&lt;/p>
-&lt;h3 id="2hyperloglog">2.HyperLogLog&lt;/h3>
-&lt;p>Redis 是用来做基数统计的算法，HyperLogLog 的优点是，在输入元素的数量或者体积非常非常大时，计算基数所需的空间总是固定 的、并且是很小的。&lt;/p>
-&lt;p>在 Redis 里面，每个 HyperLogLog 键只需要花费 12 KB 内存，就可以计算接近 2^64 个不同元素的基 数。这和计算基数时，元素越多耗费内存就越多的集合形成鲜明对比。&lt;/p>
-&lt;p>但是，因为 HyperLogLog 只会根据输入元素来计算基数，而不会储存输入元素本身，所以 HyperLogLog 不能像集合那样，返回输入的各个元素。&lt;/p>
-&lt;pre>&lt;code>pfadd 添加
-pfcount 获得基数值
-pfmerge 合并多个key
-&lt;/code>&lt;/pre>&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-shell" data-lang="shell">127.0.0.1:6379&amp;gt; pfadd pf1 &lt;span class="m">1&lt;/span> &lt;span class="m">3&lt;/span> &lt;span class="m">1&lt;/span> &lt;span class="m">4&lt;/span> &lt;span class="m">1&lt;/span> &lt;span class="m">5&lt;/span>
-&lt;span class="o">(&lt;/span>integer&lt;span class="o">)&lt;/span> &lt;span class="m">1&lt;/span>
-127.0.0.1:6379&amp;gt; pfcount pf1
-&lt;span class="o">(&lt;/span>integer&lt;span class="o">)&lt;/span> &lt;span class="m">4&lt;/span>
-127.0.0.1:6379&amp;gt; pfadd pf2 &lt;span class="m">3&lt;/span> &lt;span class="m">4&lt;/span> &lt;span class="m">5&lt;/span> &lt;span class="m">6&lt;/span> &lt;span class="m">7&lt;/span>
-&lt;span class="o">(&lt;/span>integer&lt;span class="o">)&lt;/span> &lt;span class="m">1&lt;/span>
-127.0.0.1:6379&amp;gt; pfcount pf2
-&lt;span class="o">(&lt;/span>integer&lt;span class="o">)&lt;/span> &lt;span class="m">5&lt;/span>
-127.0.0.1:6379&amp;gt; pfmerge pf3 pf1 pf2
-OK
-127.0.0.1:6379&amp;gt; pfcount pf3
-&lt;span class="o">(&lt;/span>integer&lt;span class="o">)&lt;/span> &lt;span class="m">6&lt;/span>
-&lt;/code>&lt;/pre>&lt;/div>&lt;p>应用场景说明：&lt;/p>
-&lt;ul>
-&lt;li>基数不大，数据量不大就用不上，会有点大材小用浪费空间&lt;/li>
-&lt;li>有局限性，就是只能统计基数数量，而没办法去知道具体的内容是什么&lt;/li>
-&lt;li>和bitmap相比，属于两种特定统计情况，简单来说，HyperLogLog 去重比 bitmap 方便很多&lt;/li>
-&lt;li>一般可以bitmap和hyperloglog配合使用，bitmap标识哪些用户活跃，hyperloglog计数&lt;/li>
-&lt;/ul>
-&lt;p>一般使用：&lt;/p>
-&lt;ul>
-&lt;li>统计注册 IP 数&lt;/li>
-&lt;li>统计每日访问 IP 数&lt;/li>
-&lt;li>统计页面实时 UV 数&lt;/li>
-&lt;li>统计在线用户数&lt;/li>
-&lt;li>统计用户每天搜索不同词条的个数&lt;/li>
-&lt;/ul>
-&lt;h3 id="3geo">3.GEO&lt;/h3>
-&lt;pre>&lt;code>geoadd/geohash/geopos/geodist/georadius/georadiusbymember
-&lt;/code>&lt;/pre>&lt;p>Redis的GEO特性在 Redis3.2版本中推出，这个功能可以将用户给定的地理位置(经 度和纬度)信息储存起来，并对这些信息进行操作。&lt;/p>
-&lt;h3 id="4redis-中的布隆过滤器">4.Redis 中的布隆过滤器&lt;/h3>
-&lt;p>Redis v4.0 之后有了 &lt;a class="link" href="https://redis.io/modules" target="_blank" rel="noopener"
->Module&lt;/a>（模块/插件）,RedisBloom 作为 Redis 布隆过滤器的 Module，地址：https://github.com/RedisBloom/RedisBloom&lt;/p>
-&lt;h2 id="redis-lua">Redis Lua&lt;/h2>
-&lt;ul>
-&lt;li>
-&lt;p>类比openrestry = nginx + lua jit&lt;/p>
-&lt;/li>
-&lt;li>
-&lt;p>类似于数据库的存储过程，mongodb的js脚本&lt;/p>
-&lt;/li>
-&lt;li>
-&lt;p>redis内存操作的单线程 使得一段lua脚本之心具有：&lt;strong>原子性&lt;/strong>，操作不会被打断，保证了&lt;strong>事务&lt;/strong>&lt;/p>
-&lt;ul>
-&lt;li>
-&lt;p>直接执行
-eval &amp;ldquo;return&amp;rsquo;hello java'&amp;rdquo; 0
-eval &amp;ldquo;redis.call(&amp;lsquo;set&amp;rsquo;,KEYS[1],ARGV[1])&amp;rdquo; 1 lua-key lua-value&lt;/p>
-&lt;pre>&lt;code>127.0.0.1:6379&amp;gt; eval &amp;quot;return'hello java'&amp;quot; 0
-&amp;quot;hello java&amp;quot;
-127.0.0.1:6379&amp;gt; eval &amp;quot;redis.call('set',KEYS[1],ARGV[1])&amp;quot; 1 ff zz
-(nil)
-127.0.0.1:6379&amp;gt; get ff
-&amp;quot;zz&amp;quot;
-&lt;/code>&lt;/pre>&lt;/li>
-&lt;li>
-&lt;p>预编译
-script load script脚本片段
-返回一个SHA-1签名 shastring
-evalsha shastring keynum [key1 key2 key3 &amp;hellip;] [param1 param2 param3 &amp;hellip;]&lt;/p>
-&lt;pre>&lt;code>127.0.0.1:6379&amp;gt; script load &amp;quot;redis.call('set',KEYS[1],ARGV[1])&amp;quot;
-&amp;quot;7cfb4342127e7ab3d63ac05e0d3615fd50b45b06&amp;quot;
-127.0.0.1:6379&amp;gt; evalsha 7cfb4342127e7ab3d63ac05e0d3615fd50b45b06 1 fff zzz
-(nil)
-127.0.0.1:6379&amp;gt; get fff
-&amp;quot;zzz&amp;quot;
-&lt;/code>&lt;/pre>&lt;/li>
-&lt;/ul>
-&lt;/li>
-&lt;/ul>
-&lt;h2 id="redis-pipeline">redis pipeline&lt;/h2>
-&lt;p>使用管道一次执行多个命令，多个命令的结果一起返回，减少每个命令来回建立链接，来回响应的时间。&lt;/p>
-&lt;p>&lt;a href="https://redis.io/topics/pipelining">https://redis.io/topics/pipelining&lt;/a>&lt;/p>
-&lt;h2 id="redis事务">redis事务&lt;/h2>
-&lt;ul>
-&lt;li>
-&lt;p>开启事务:multi&lt;/p>
-&lt;/li>
-&lt;li>
-&lt;p>命令入队&lt;/p>
-&lt;/li>
-&lt;li>
-&lt;p>执行事务:exec&lt;/p>
-&lt;/li>
-&lt;li>
-&lt;p>撤销事务:discard&lt;/p>
-&lt;/li>
-&lt;li>
-&lt;p>Watch 监控事务： watch 一个key，发生变化则事务失败&lt;/p>
-&lt;/li>
-&lt;li>
-&lt;p>unwatch 取消监听&lt;/p>
-&lt;/li>
-&lt;/ul>
-&lt;pre>&lt;code>127.0.0.1:6379&amp;gt; multi
-OK
-127.0.0.1:6379&amp;gt; set ff ff
-QUEUED
-127.0.0.1:6379&amp;gt; set fff fff
-QUEUED
-127.0.0.1:6379&amp;gt; exec
-1) OK
-2) OK
-&lt;/code>&lt;/pre>&lt;h2 id="redis管道">redis管道&lt;/h2>
-&lt;h2 id="redis备份恢复机制">redis备份恢复机制&lt;/h2>
-&lt;h3 id="rdb方式">RDB方式&lt;/h3>
-&lt;ul>
-&lt;li>
-&lt;p>快照恢复，类似mysql的frm.等数据：备份当前瞬间 Redis 在内存中的数据记录&lt;/p>
-&lt;/li>
-&lt;li>
-&lt;p>save后在数据目录生成dump.rdb&lt;/p>
-&lt;/li>
-&lt;li>
-&lt;p>bgsave 异步执行备份&lt;/p>
-&lt;p>&lt;img src="http://pics5.baidu.com/feed/1c950a7b02087bf43b4490d50ac25f2a11dfcf7e.jpeg?token=22f387ba78130c6115420059481b2393&amp;amp;s=EF48A15796784D8816E1D9EB03007024" alt="img" />&lt;/p>
-&lt;/li>
-&lt;li>
-&lt;p>恢复：将备份文件 (dump.rdb) 移动到 redis 数据目录并启动服务即可&lt;/p>
-&lt;/li>
-&lt;/ul>
-&lt;p>redis.conf中&lt;/p>
-&lt;pre>&lt;code>#Redis默认配置文件中提供了三个备份条件： ##指定在多长时间内，有多少次更新操作，就将数据同步到数据文件，可以多个条件配合
-save 900 1
-save 300 10
-save 60 10000
-&lt;/code>&lt;/pre>&lt;h3 id="aof方式">AOF方式&lt;/h3>
-&lt;ul>
-&lt;li>追加文件（Append-Only File，AOF） 类比mysql的binlog&lt;/li>
-&lt;li>配置为 always，其含义为当 Redis 执行 命令的时候，则同时同步到 AOF 文件，这样会使得 Redis 同步刷新 AOF 文件，造成 缓慢。而采用 evarysec 则代表每秒同步一次命令到 AOF 文件&lt;/li>
-&lt;/ul>
-&lt;pre>&lt;code>appendfilename &amp;quot;appendonly.aof&amp;quot;
-# appendfsync always
-appendfsync everysec
-# appendfsync no......
-&lt;/code>&lt;/pre>&lt;p>&lt;img src="http://pics5.baidu.com/feed/b17eca8065380cd7df69859ba056a5325982816c.jpeg?token=a060f459d81c409c3d6c7208d2118888&amp;amp;s=AF4AA5574ED85CC841D04BE60300A036" alt="img" />&lt;/p>
-&lt;ul>
-&lt;li>恢复：自动加载&lt;/li>
-&lt;/ul>
-&lt;h2 id="redis性能优化">redis性能优化&lt;/h2>
-&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-shell" data-lang="shell">slowlog get &lt;span class="m">10&lt;/span>
-&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="几个缓存问题">几个缓存问题&lt;/h2>
-&lt;h3 id="缓存穿透">缓存穿透&lt;/h3>
-&lt;ul>
-&lt;li>现象：key对应的数据在数据源并不存在，每次针对此key的请求从缓存获取不到，请求都会到数据源，从而可能压垮数据源。比如用一个不存在的用户id获取用户信息，不论缓存还是数据库都没有，若黑客利用此漏洞进行攻击可能压垮数据库&lt;/li>
-&lt;li>解决：
-&lt;ul>
-&lt;li>采用布隆过滤器：将所有可能存在的数据哈希到一个足够大的bitmap中，一个一定不存在的数据会被 这个bitmap拦截掉，从而避免了对底层存储系统的查询压力，详见https://www.cnblogs.com/rinack/p/9712477.html&lt;/li>
-&lt;li>直接缓存空结果：如果一个查询返回的数据为空，仍然把这个空结果进行缓存。&lt;/li>
-&lt;/ul>
-&lt;/li>
-&lt;/ul>
-&lt;h3 id="缓存击穿">缓存击穿&lt;/h3>
-&lt;ul>
-&lt;li>现象：key对应的数据存在，但在redis中过期，此时若有大量并发请求过来，这些请求发现缓存过期一般都会从后端DB加载数据并回设到缓存，这个时候大并发的请求可能会瞬间把后端DB压垮。&lt;/li>
-&lt;li>解决：使用&lt;strong>互斥分布式锁&lt;/strong>进行从DB加载数据，其他的请求继续重试缓存。使用锁可能会死锁、线程池阻塞等问题，针对高热点key，最好是在并发量最小的时候，写定时器更新key的过期时间&lt;/li>
-&lt;/ul>
-&lt;h3 id="缓存雪崩">缓存雪崩&lt;/h3>
-&lt;ul>
-&lt;li>现象：当缓存服务器重启或者大量缓存集中在某一个时间段失效，这样在失效的时候，也会给后端系统(比如DB)带来很大压力。与缓存击穿的区别在于这里针对很多key缓存，前者则是某一个key。&lt;/li>
-&lt;li>解决：
-&lt;ul>
-&lt;li>最简单尽量将过期时间分散开来：可以在原有的失效时间基础上增加一个随机值，比如1-5分钟随机，&lt;/li>
-&lt;li>设置过期标志更新缓存:
-&lt;ul>
-&lt;li>1，新加一个缓存key的标记。缓存数据key的value时，同时缓存key_sign, key_sign的过期时间小于key的过期时间。&lt;/li>
-&lt;li>2 在查询缓存时，先判断key_sign是否过期，a，如果过期，先直接返回value，再启用异步线程去更新key_sign以及加载db到key的value,重新设置两个的过期时间。b. 没有过期，直接返回value&lt;/li>
-&lt;/ul>
-&lt;/li>
-&lt;/ul>
-&lt;/li>
-&lt;/ul></description></item><item><title>01.gateway整体逻辑</title><link>https://fengzhenbing.github.io/p/01.gateway%E6%95%B4%E4%BD%93%E9%80%BB%E8%BE%91/</link><pubDate>Thu, 10 Dec 2020 08:06:25 +0600</pubDate><guid>https://fengzhenbing.github.io/p/01.gateway%E6%95%B4%E4%BD%93%E9%80%BB%E8%BE%91/</guid><description>&lt;h2 id="gateway整体逻辑">gateway整体逻辑&lt;/h2>
+>https://www.cnblogs.com/yunlongaimeng/p/10266690.html&lt;/a>&lt;/p></description></item><item><title>01.gateway整体逻辑</title><link>https://fengzhenbing.github.io/p/01.gateway%E6%95%B4%E4%BD%93%E9%80%BB%E8%BE%91/</link><pubDate>Thu, 10 Dec 2020 08:06:25 +0600</pubDate><guid>https://fengzhenbing.github.io/p/01.gateway%E6%95%B4%E4%BD%93%E9%80%BB%E8%BE%91/</guid><description>&lt;h2 id="gateway整体逻辑">gateway整体逻辑&lt;/h2>
 &lt;h3 id="1流程图">1.流程图&lt;/h3>
 &lt;p>&lt;img src="https://gitee.com/fengzhenbing/picgo/raw/master/image.png" alt="image" />&lt;/p>
 &lt;h3 id="2几个关键的类">2.&lt;strong>几个关键的类&lt;/strong>&lt;/h3>
@@ -3428,7 +3180,7 @@ tail -f test.sink.txt
 &lt;/ul>
 &lt;p>可以和jvm的young区 old区类比。&lt;/p>
 &lt;h5 id="为什么这么设计">为什么这么设计？？&lt;/h5>
-&lt;p>直接将读取的页放人到LRU列表的首部呢?这是因为若直接将读取到的页放人到LRU的首部，那么某些SOL操作可能会使缓冲池中 的页被刷新出，从而影响缓冲池的效率。常见的这类操作为索引或数据的扫描操作。这 类操作需要访问表中的许多页，甚至是全部的页，而这些页通常来说又仅在这次查询操 作中需要，并不是活跃的热点数据。如果页被放人LRU列表的首部，那么非常可能将 所需要的热点数据页从LRU列表中移除，而在下一次需要读取该页时， InnoDB存储引 肇需要再次访问磁盘&lt;/p>
+&lt;p>直接将读取的页放人到LRU列表的首部呢?这是因为若直接将读取到的页放人到LRU的首部，那么某些SQL操作可能会使缓冲池中 的页被刷新出，从而影响缓冲池的效率。常见的这类操作为索引或数据的扫描操作。这 类操作需要访问表中的许多页，甚至是全部的页，而这些页通常来说又仅在这次查询操 作中需要，并不是活跃的热点数据。如果页被放人LRU列表的首部，那么非常可能将 所需要的热点数据页从LRU列表中移除，而在下一次需要读取该页时， InnoDB存储引 肇需要再次访问磁盘&lt;/p>
 &lt;p>&lt;img src="https://gitee.com/fengzhenbing/picgo/raw/master/format,png-20211005153839472.png" alt="Content is described in the surrounding text." />&lt;/p>
 &lt;h4 id="查看内存状态">查看内存状态&lt;/h4>
 &lt;p>&lt;img src="https://gitee.com/fengzhenbing/picgo/raw/master/image-20211005152044108.png" alt="image-20211005152044108" />&lt;/p>
@@ -3614,43 +3366,19 @@ tail -f test.sink.txt
 &lt;p>冥等&lt;/p>
 &lt;h3 id="cancel">cancel&lt;/h3>
 &lt;h2 id="at事务">AT事务&lt;/h2>
-&lt;p>反向sql&lt;/p></description></item><item><title>高可用之限流</title><link>https://fengzhenbing.github.io/p/%E9%AB%98%E5%8F%AF%E7%94%A8%E4%B9%8B%E9%99%90%E6%B5%81/</link><pubDate>Sun, 21 Jun 2020 00:00:00 +0000</pubDate><guid>https://fengzhenbing.github.io/p/%E9%AB%98%E5%8F%AF%E7%94%A8%E4%B9%8B%E9%99%90%E6%B5%81/</guid><description/></item><item><title/><link>https://fengzhenbing.github.io/p/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://fengzhenbing.github.io/p/</guid><description>&lt;h3 id="系统调用">系统调用&lt;/h3>
-&lt;ol>
-&lt;li>用户态(user mode) : 用户态运行的进程可以直接读取用户程序的数据。&lt;/li>
-&lt;li>系统态(kernel mode):可以简单的理解系统态运行的进程或程序几乎可以访问计算机的任何资源，不受限制。&lt;/li>
-&lt;/ol>
-&lt;p>凡是与系统态级别的资源有关的操作（如文件管理、进程控制、内存管理等)，都必须通过系统调用方式向操作系统提出服务请求，并由操作系统代为完成。&lt;/p>
-&lt;h3 id="进程的调度算法">进程的调度算法&lt;/h3>
+&lt;p>反向sql&lt;/p>
+&lt;h1 id="mq消息最终一致性解决方案">MQ消息最终一致性解决方案&lt;/h1>
+&lt;h4 id="事务消息">事务消息&lt;/h4>
+&lt;p>由于传统的处理方式无法解决&lt;code>消息生成者本地事务处理成功&lt;/code>与&lt;code>消息发送成功&lt;/code>两者的一致性问题，因此事务消息就诞生了，&lt;strong>它实现了消息生成者本地事务与消息发送的原子性，保证了消息生成者本地事务处理成功与消息发送成功的&lt;code>最终一致性&lt;/code>问题。&lt;/strong>&lt;/p>
+&lt;p>&lt;img src="https://gitee.com/fengzhenbing/picgo/raw/master/image-20211020111849317.png" alt="image-20211020111849317" />&lt;/p>
+&lt;p>&lt;a href="https://www.jianshu.com/p/eb571e4065ec">https://www.jianshu.com/p/eb571e4065ec&lt;/a>&lt;/p>
+&lt;p>RocketMQ支持事务消息&lt;/p>
 &lt;ul>
-&lt;li>&lt;strong>先到先服务(FCFS)调度算法&lt;/strong>&lt;/li>
-&lt;li>&lt;strong>短作业优先(SJF)的调度算法&lt;/strong>&lt;/li>
-&lt;li>&lt;strong>时间片轮转调度算法&lt;/strong>&lt;/li>
-&lt;li>&lt;strong>多级反馈队列调度算法&lt;/strong>&lt;/li>
-&lt;li>&lt;strong>优先级调度&lt;/strong>&lt;/li>
+&lt;li>生产者先发消息，再执行业务操作： 如果反过来，可能业务执行成功就宕机，消息没发出，导致不一致&lt;/li>
+&lt;li>事务消息是针对生产端而言的，而消费端，消费端的一致性是通过MQ的重试机制来完成的：消息消费失败的话，MQ自己会负责重推消息，直到消费成功（消费者保证幂等性）。&lt;/li>
 &lt;/ul>
-&lt;h3 id="死锁">死锁&lt;/h3>
-&lt;p>必要条件&lt;/p>
-&lt;ul>
-&lt;li>
-&lt;p>&lt;strong>互斥&lt;/strong>：资源必须处于非共享模式，即一次只有一个进程可以使用。如果另一进程申请该资源，那么必须等待直到该资源被释放为止。&lt;/p>
-&lt;/li>
-&lt;li>
-&lt;p>&lt;strong>占有并等待&lt;/strong>：一个进程至少应该占有一个资源，并等待另一资源，而该资源被其他进程所占有。&lt;/p>
-&lt;/li>
-&lt;li>
-&lt;p>&lt;strong>非抢占&lt;/strong>：资源不能被抢占。只能在持有资源的进程完成任务后，该资源才会被释放。&lt;/p>
-&lt;/li>
-&lt;li>
-&lt;p>&lt;strong>循环等待&lt;/strong>：有一组等待进程 &lt;code>{P0, P1,..., Pn}&lt;/code>， &lt;code>P0&lt;/code> 等待的资源被 &lt;code>P1&lt;/code> 占有，&lt;code>P1&lt;/code> 等待的资源被 &lt;code>P2&lt;/code> 占有，&amp;hellip;&amp;hellip;，&lt;code>Pn-1&lt;/code> 等待的资源被 &lt;code>Pn&lt;/code> 占有，&lt;code>Pn&lt;/code> 等待的资源被 &lt;code>P0&lt;/code> 占有。&lt;/p>
-&lt;/li>
-&lt;/ul>
-&lt;h3 id="虚拟内存">虚拟内存&lt;/h3>
-&lt;p>&lt;strong>虚拟内存的重要意义是它定义了一个连续的虚拟地址空间&lt;/strong>，并且 &lt;strong>把内存扩展到硬盘空间&lt;/strong>。&lt;/p>
-&lt;h3 id="局部性原理">局部性原理&lt;/h3>
-&lt;ol>
-&lt;li>&lt;strong>时间局部性&lt;/strong> ：如果程序中的某条指令一旦执行，不久以后该指令可能再次执行；如果某数据被访问过，不久以后该数据可能再次被访问。产生时间局部性的典型原因，是由于在程序中存在着大量的循环操作。&lt;/li>
-&lt;li>&lt;strong>空间局部性&lt;/strong> ：一旦程序访问了某个存储单元，在不久之后，其附近的存储单元也将被访问，即程序在一段时间内所访问的地址，可能集中在一定的范围之内，这是因为指令通常是顺序存放、顺序执行的，数据也一般是以向量、数组、表等形式簇聚存储的。&lt;/li>
-&lt;/ol></description></item><item><title/><link>https://fengzhenbing.github.io/p/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://fengzhenbing.github.io/p/</guid><description>&lt;p>java Unsafe 。 sun.misc.Unsafe&lt;/p>
+&lt;h4 id="rocketmq事务消息原理">RocketMQ事务消息原理&lt;/h4>
+&lt;p>MQ存储了&lt;code>待发送&lt;/code>的消息，但是MQ无法感知到上游处理的最终结果。对于RocketMQ而言，它的解决方案非常的简单，就是其内部实现会有一个定时任务，去轮训状态为&lt;code>待发送&lt;/code>的消息，然后给producer发送check请求，而producer必须实现一个check监听器，监听器的内容通常就是去检查与之对应的本地事务是否成功(一般就是查询DB)，如果成功了，则MQ会将消息设置为&lt;code>可发送&lt;/code>，否则就删除消息。&lt;/p></description></item><item><title>高可用之限流</title><link>https://fengzhenbing.github.io/p/%E9%AB%98%E5%8F%AF%E7%94%A8%E4%B9%8B%E9%99%90%E6%B5%81/</link><pubDate>Sun, 21 Jun 2020 00:00:00 +0000</pubDate><guid>https://fengzhenbing.github.io/p/%E9%AB%98%E5%8F%AF%E7%94%A8%E4%B9%8B%E9%99%90%E6%B5%81/</guid><description/></item><item><title/><link>https://fengzhenbing.github.io/p/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://fengzhenbing.github.io/p/</guid><description>&lt;p>java Unsafe 。 sun.misc.Unsafe&lt;/p>
 &lt;p>&lt;img src="https://gitee.com/fengzhenbing/picgo/raw/master/F556169D09144BED867ADFB7558A8E58.png" alt="" />&lt;/p></description></item><item><title/><link>https://fengzhenbing.github.io/p/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://fengzhenbing.github.io/p/</guid><description>&lt;h3 id="什么事jmm">什么事JMM&lt;/h3>
 &lt;p>JMM 规范明确定义了不同的线程之 间，通过哪些方式，在什么时候可以 看见其他线程保存到共享变量中的 值;以及在必要时，如何对共享变量 的访问进行同步。这样的好处是屏蔽 各种硬件平台和操作系统之间的内存 访问差异，实现了 Java 并发程序真 正的跨平台。&lt;/p></description></item><item><title/><link>https://fengzhenbing.github.io/p/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://fengzhenbing.github.io/p/</guid><description>&lt;p>&lt;img src="https://gitee.com/fengzhenbing/picgo/raw/master/image-20211007143642433.png" alt="image-20211007143642433" />&lt;/p>
 &lt;h5 id="强引用strongreference">强引用(StrongReference)&lt;/h5>
@@ -3667,7 +3395,7 @@ tail -f test.sink.txt
 &lt;p>主要使用场景：&lt;/p>
 &lt;p>1、使用引用队列进行数据监控，类似前面栗子的用法。&lt;/p>
 &lt;p>2、队列监控的反向操作&lt;/p>
-&lt;p>参考 &lt;a href="https://www.cnblogs.com/mfrank/p/10104586.html">https://www.cnblogs.com/mfrank/p/10104586.html&lt;/a>&lt;/p></description></item><item><title/><link>https://fengzhenbing.github.io/p/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://fengzhenbing.github.io/p/</guid><description>&lt;p>Jmstat&lt;/p></description></item><item><title/><link>https://fengzhenbing.github.io/p/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://fengzhenbing.github.io/p/</guid><description>&lt;p>参考https://zhuanlan.zhihu.com/p/138819184&lt;/p>
+&lt;p>参考 &lt;a href="https://www.cnblogs.com/mfrank/p/10104586.html">https://www.cnblogs.com/mfrank/p/10104586.html&lt;/a>&lt;/p></description></item><item><title/><link>https://fengzhenbing.github.io/p/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://fengzhenbing.github.io/p/</guid><description>&lt;p>![屏幕快照 2021-09-15 上午8.50.10](&lt;a href="https://gitee.com/fengzhenbing/picgo/raw/master/">https://gitee.com/fengzhenbing/picgo/raw/master/&lt;/a>屏幕快照 2021-09-15 上午8.50.10.png)&lt;/p></description></item><item><title/><link>https://fengzhenbing.github.io/p/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://fengzhenbing.github.io/p/</guid><description>&lt;p>Jmstat&lt;/p></description></item><item><title/><link>https://fengzhenbing.github.io/p/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://fengzhenbing.github.io/p/</guid><description>&lt;p>参考https://zhuanlan.zhihu.com/p/138819184&lt;/p>
 &lt;p>用 volatile 修饰共享变量后，每个线程要操作变量时会从主内存中将变量拷贝到本地内存作为副本，当线程操作变量副本并写回主内存后，会通过 &lt;strong>CPU 总线嗅探机制&lt;/strong>告知其他线程该变量副本已经失效，需要重新从主内存中读取。&lt;/p>
 &lt;p>volatile 的主要作用有两点：&lt;/p>
 &lt;ul>
@@ -3894,7 +3622,78 @@ tail -f test.sink.txt
 &lt;p>AQS&lt;/p>
 &lt;p>&lt;a href="https://www.jianshu.com/p/cc308d82cc71">https://www.jianshu.com/p/cc308d82cc71&lt;/a>&lt;/p>
 &lt;p>详解Condition的await和signal等待/通知机制&lt;/p>
-&lt;p>&lt;a href="https://www.jianshu.com/p/28387056eeb4">https://www.jianshu.com/p/28387056eeb4&lt;/a>&lt;/p></description></item><item><title/><link>https://fengzhenbing.github.io/p/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://fengzhenbing.github.io/p/</guid><description/></item><item><title/><link>https://fengzhenbing.github.io/p/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://fengzhenbing.github.io/p/</guid><description/></item><item><title/><link>https://fengzhenbing.github.io/p/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://fengzhenbing.github.io/p/</guid><description/></item><item><title/><link>https://fengzhenbing.github.io/p/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://fengzhenbing.github.io/p/</guid><description/></item><item><title/><link>https://fengzhenbing.github.io/p/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://fengzhenbing.github.io/p/</guid><description/></item><item><title/><link>https://fengzhenbing.github.io/p/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://fengzhenbing.github.io/p/</guid><description/></item><item><title/><link>https://fengzhenbing.github.io/p/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://fengzhenbing.github.io/p/</guid><description/></item><item><title/><link>https://fengzhenbing.github.io/p/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://fengzhenbing.github.io/p/</guid><description/></item><item><title/><link>https://fengzhenbing.github.io/p/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://fengzhenbing.github.io/p/</guid><description>&lt;p>Redis内存淘汰机制
+&lt;p>&lt;a href="https://www.jianshu.com/p/28387056eeb4">https://www.jianshu.com/p/28387056eeb4&lt;/a>&lt;/p></description></item><item><title/><link>https://fengzhenbing.github.io/p/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://fengzhenbing.github.io/p/</guid><description>&lt;pre>&lt;code>wget https://cdn.mysql.com/archives/mysql-5.7/mysql-5.7.26-linux-glibc2.12-x86_64.tar.gz
+&lt;/code>&lt;/pre></description></item><item><title/><link>https://fengzhenbing.github.io/p/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://fengzhenbing.github.io/p/</guid><description/></item><item><title/><link>https://fengzhenbing.github.io/p/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://fengzhenbing.github.io/p/</guid><description/></item><item><title/><link>https://fengzhenbing.github.io/p/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://fengzhenbing.github.io/p/</guid><description/></item><item><title/><link>https://fengzhenbing.github.io/p/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://fengzhenbing.github.io/p/</guid><description/></item><item><title/><link>https://fengzhenbing.github.io/p/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://fengzhenbing.github.io/p/</guid><description/></item><item><title/><link>https://fengzhenbing.github.io/p/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://fengzhenbing.github.io/p/</guid><description/></item><item><title/><link>https://fengzhenbing.github.io/p/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://fengzhenbing.github.io/p/</guid><description/></item><item><title/><link>https://fengzhenbing.github.io/p/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://fengzhenbing.github.io/p/</guid><description>&lt;h3 id="1开发任务">1.开发任务&lt;/h3>
+&lt;h4 id="任务">任务&lt;/h4>
+&lt;p>Refactor the data structure of the registry (Xiao Yu)&lt;/p>
+&lt;p>* Optimize Exception printing in unit test. (Tang Zhen)&lt;/p>
+&lt;p>* Configuration properties front-end support for import and export (Tang
+Zhen).&lt;/p>
+&lt;p>* Websocket integration test (Zhu Kunshui)。 Finish&lt;/p>
+&lt;p>* Modify the plugin name style to use camel case naming (zhucongqi )&lt;/p>
+&lt;p>第一个字母小写。&lt;/p>
+&lt;p>Rpc type 不用改&lt;/p>
+&lt;p>显示的问题： 首&lt;/p>
+&lt;p>Use JSON to store PluginHandle metadata (Feng Zhenbing).&lt;/p>
+&lt;p>* Optimize plugin configuration (Feng Zhenbing).&lt;/p>
+&lt;p>* Admin selector quick copy.(Feng Zhenbing).&lt;/p>
+&lt;h4 id="文档">文档&lt;/h4>
+&lt;p>* Add Grayscale release [spring cloud / dubbo] document (Mingjie, Zhang
+Lei).&lt;/p>
+&lt;p>* Improve the description of matching type for Selector And Rule (Liu
+Liang).&lt;/p>
+&lt;p>and or是否有了&lt;/p>
+&lt;p>* Add Data Permission document (plutokaito) 仕帅 资源权限的加了，数据权限的还没有&lt;/p>
+&lt;p>* Add System Management document&lt;/p>
+&lt;p>用户墙的图片：&lt;/p>
+&lt;p>手头上的事&lt;/p>
+&lt;h3 id="2发版本">2.发版本&lt;/h3>
+&lt;p>* Prepare for 2.4.1 release (Xiao Yu, Zhang Yonglun).&lt;/p>
+&lt;p>不打文档，前端 release tag.&lt;/p>
+&lt;p>2.4.1归档。&lt;/p>
+&lt;p>文档的更新，下载。&lt;/p>
+&lt;p>Website:&lt;/p>
+&lt;p>\1. Documentation for Permission Management&lt;/p>
+&lt;h3 id="3社区-源码分析">3.社区 源码分析&lt;/h3>
+&lt;p>* Add Source Code Analysis Articles for SPI (changanjennifer).&lt;/p>
+&lt;p>Ratelimiter 的源码&lt;/p>
+&lt;p>* Add Source Code Analysis Articles for registration center (Liu Wei).&lt;/p>
+&lt;p>注册中心的&lt;/p>
+&lt;p>* Add Source Code Analysis Articles for Rewrite and Redirect Plugin (Tang
+Zhen).&lt;/p>
+&lt;p>子夜&lt;/p>
+&lt;p>数据同步：&lt;/p>
+&lt;h3 id="4-下一版本的计划">4 下一版本的计划&lt;/h3>
+&lt;p>The plan for next version：&lt;/p>
+&lt;p>* Add mqtt plugin. （ impact ）&lt;/p>
+&lt;p>协议包，自定义协议自己写。 netty自己实现。单独开t c p端口。&lt;/p>
+&lt;p>前端配合。。&lt;/p>
+&lt;p>* Add agent to Observability. 可观测性质。 易哥 阿汤哥&lt;/p>
+&lt;p>* Add rocketMq plugin.&lt;/p>
+&lt;p>*客户端的requestMapping的取路径&lt;/p>
+&lt;p>端口：springmvc的&lt;/p>
+&lt;p>热更新完成了。&lt;/p>
+&lt;p>灰度的增强。 明杰&lt;/p>
+&lt;p>额外其他插件。&lt;/p>
+&lt;p>各个插件的完善。&lt;/p>
+&lt;p>dubbo rpc context 增强。&lt;/p>
+&lt;p>rpc返回的增强。&lt;/p>
+&lt;p>12月底。&lt;/p>
+&lt;p>博客：&lt;/p>
+&lt;p>分类&lt;/p>
+&lt;p>卡片&lt;/p>
+&lt;h4 id="5-其他分享">5 其他分享&lt;/h4>
+&lt;p>对shen yu项目的建议&lt;/p>
+&lt;p>或者工作生活中的分享都可以。&lt;/p>
+&lt;p>删除的问题&lt;/p>
+&lt;p>Uri&lt;/p>
+&lt;p>Issue列表？&lt;/p>
+&lt;p>GZIP 相关的问题。 qicz&lt;/p>
+&lt;p>每一步操作有个记录，做审计日志。切面。 朱充启qicz&lt;/p>
+&lt;p>集成测试：组合几个插件一起测试。 朱坤帅&lt;/p>
+&lt;p>热更新的呢：&lt;/p>
+&lt;p>出shenyu的书，做为社区建设。&lt;/p>
+&lt;p>北京开源年度大会。 Costar2021&lt;/p></description></item><item><title/><link>https://fengzhenbing.github.io/p/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://fengzhenbing.github.io/p/</guid><description/></item><item><title/><link>https://fengzhenbing.github.io/p/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://fengzhenbing.github.io/p/</guid><description/></item><item><title/><link>https://fengzhenbing.github.io/p/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://fengzhenbing.github.io/p/</guid><description>&lt;p>Redis内存淘汰机制
 概述
 Redis清除过期Key的方式
 定期删除
@@ -4070,4 +3869,255 @@ LFU（Least Frequently Used）最不常用的。
 &lt;/ol>
 &lt;h3 id="10-使用ratelimiter实现限流">10. 使用RateLimiter实现限流&lt;/h3>
 &lt;p>描述：当我们去秒杀一些商品时，此时可能会因为访问量太大而导致系统崩溃，此时要使用限流来进行限制访问量，当达到限流阀值，后续请求会被降级；降级后的处理方案可以是：返回排队页面（高峰期访问太频繁，等一会重试）、错误页等。&lt;/p>
-&lt;p>实现：项目使用RateLimiter来实现限流，RateLimiter是guava提供的基于令牌桶算法的限流实现类，通过调整生成token的速率来限制用户频繁访问秒杀页面，从而达到防止超大流量冲垮系统。（令牌桶算法的原理是系统会以一个恒定的速度往桶里放入令牌，而如果请求需要被处理，则需要先从桶里获取一个令牌，当桶里没有令牌可取时，则拒绝服务）&lt;/p></description></item></channel></rss>
+&lt;p>实现：项目使用RateLimiter来实现限流，RateLimiter是guava提供的基于令牌桶算法的限流实现类，通过调整生成token的速率来限制用户频繁访问秒杀页面，从而达到防止超大流量冲垮系统。（令牌桶算法的原理是系统会以一个恒定的速度往桶里放入令牌，而如果请求需要被处理，则需要先从桶里获取一个令牌，当桶里没有令牌可取时，则拒绝服务）&lt;/p></description></item><item><title>redis基础</title><link>https://fengzhenbing.github.io/p/redis%E5%9F%BA%E7%A1%80/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://fengzhenbing.github.io/p/redis%E5%9F%BA%E7%A1%80/</guid><description>&lt;h3 id="redis线程">redis线程&lt;/h3>
+&lt;p>redis做为一个进程，一直是多线程的。处理io和处理内存的是不同线程。&lt;/p>
+&lt;ul>
+&lt;li>
+&lt;p>io线程&lt;/p>
+&lt;ul>
+&lt;li>
+&lt;p>redis6之前(2020.05)：io处理是单线程&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>redis6：io处理多线程，采用nio模型 =&amp;gt; 主要的性能提升点&lt;/p>
+&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>
+&lt;p>内存处理线程&lt;/p>
+&lt;ul>
+&lt;li>单线程 =&amp;gt;高性能核心，不用考虑线程调度&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;h2 id="压测redis-benchmark">压测redis-benchmark&lt;/h2>
+&lt;ul>
+&lt;li>环境mac 4核8g&lt;/li>
+&lt;/ul>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-shell" data-lang="shell">mokernetdeMac-mini:redis-6.0.9 mokernet$ ./bin/redis-benchmark -n &lt;span class="m">100000&lt;/span> -c &lt;span class="m">32&lt;/span> -t SET,GET,INCR,HSET,LPUSH,MSET -q
+SET: 121065.38 requests per second
+GET: 118764.84 requests per second
+INCR: 117508.81 requests per second
+LPUSH: 123001.23 requests per second
+HSET: 123915.74 requests per second
+MSET &lt;span class="o">(&lt;/span>&lt;span class="m">10&lt;/span> keys&lt;span class="o">)&lt;/span>: 96711.80 requests per second
+&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="redis的5种基本数据结构">redis的5种基本数据结构&lt;/h2>
+&lt;p>&lt;a href="https://redis.io/commands">https://redis.io/commands&lt;/a>&lt;/p>
+&lt;h3 id="1字符串string">1.字符串(string)&lt;/h3>
+&lt;p>简单来说就是三种:int、string、byte[]&lt;/p>
+&lt;p>Redis中字符串类型的value最多可以容纳的数据长度是512M&lt;/p>
+&lt;pre>&lt;code>set/get/setnx/getset/del/exists/append incr/decr/incrby/decrby
+&lt;/code>&lt;/pre>&lt;h3 id="2散列hash">2.散列(hash)&lt;/h3>
+&lt;p>Redis中的Hash类型可以看成具有String key 和String value的map容器。&lt;/p>
+&lt;pre>&lt;code>hset/hget/hmset/hmget/hgetall/hdel/hincrby hexists/hlen/hkeys/hvals
+&lt;/code>&lt;/pre>&lt;ul>
+&lt;li>hmset 相对于hset可一次设置多个键值对&lt;/li>
+&lt;li>hmget 相对于hget可一次获取多个键的值&lt;/li>
+&lt;/ul>
+&lt;h3 id="3列表list">3.列表(list)&lt;/h3>
+&lt;p>java的LinkedList&lt;/p>
+&lt;p>在Redis中，List类型是按照插入顺序排序的字符串链表。和数据结构中的普通链表 一 样，我们可以在其头部(Left)和尾部(Right)添加新的元素。在插入时，如果该键并不存 在，Redis将为该键创建一个新的链表。与此相反，如果链表中所有的元素均被移除， 那么该键也将会被从数据库中删除。&lt;/p>
+&lt;pre>&lt;code>lpush/rpush/lrange/lpop/rpop
+&lt;/code>&lt;/pre>&lt;h3 id="4集合set">4.集合(set)&lt;/h3>
+&lt;p>java的set，不重复的list&lt;/p>
+&lt;p>在redis中，可以将Set类型看作是没有排序的字符集合，和List类型一样，我们也可以 在该类型的数值上执行添加、删除和判断某一元素是否存在等操作。这些操作的时间复 杂度为O(1),即常量时间内完成依次操作。&lt;/p>
+&lt;p>和List类型不同的是，Set集合中不允许出现重复的元素。&lt;/p>
+&lt;pre>&lt;code>sadd/srem/smembers/sismember 类比java中set的add, remove, all, contains,
+spop key [count] 随机返回集合中一个或多个 移除
+SRANDMEMBER key [count] 返回集合中一个或多个随机数，不移除, 抽奖
+sdiff/sinter/sunion 集合求差集，求交集，求并集
+&lt;/code>&lt;/pre>&lt;h3 id="5有序集合sorted-set">5.有序集合(sorted set)&lt;/h3>
+&lt;p>按权重排序&lt;/p>
+&lt;p>sortedset在set基础上给每个元素加了个分数score。&lt;/p>
+&lt;p>redis 正是通过分数来为集合的成员进行从小到大的排序。sortedset中分数是可以重复的。&lt;/p>
+&lt;pre>&lt;code>zadd key score member score2 member2... : 将成员以及该成员的分数存放到sortedset中
+zscore key member : 返回指定成员的分数
+zcard key : 获取集合中成员数量
+zrem key member [member...] : 移除集合中指定的成员，可以指定多个成员
+zrange key start end [withscores] : 获取集合中脚注为start-end的成员，[withscores]参数表明返回的成员 包含其分数
+zrevrange key start stop [withscores] : 按照分数从大到小的顺序返回索引从start到stop之间的所有元素 (包含两端的元素)
+zremrangebyrank key start stop : 按照排名范围删除元素
+&lt;/code>&lt;/pre>&lt;h2 id="redis高级数据结构">redis高级数据结构&lt;/h2>
+&lt;h3 id="1bitmaps">1.Bitmaps&lt;/h3>
+&lt;p>bitmaps不是一个真实的数据结构。而是String类型上的一组面向bit操作的集合。由于 strings是二进制安全的blob，并且它们的最大长度是512m，所以bitmaps能最大设置 2^32个不同的bit。&lt;/p>
+&lt;pre>&lt;code>setbit/getbit/bitop/bitcount/bitpos
+&lt;/code>&lt;/pre>&lt;p>可用作集中式的冥等去重 数据压缩在字节位上，极大的节约了空间&lt;/p>
+&lt;h3 id="2hyperloglog">2.HyperLogLog&lt;/h3>
+&lt;p>Redis 是用来做基数统计的算法，HyperLogLog 的优点是，在输入元素的数量或者体积非常非常大时，计算基数所需的空间总是固定 的、并且是很小的。&lt;/p>
+&lt;p>在 Redis 里面，每个 HyperLogLog 键只需要花费 12 KB 内存，就可以计算接近 2^64 个不同元素的基 数。这和计算基数时，元素越多耗费内存就越多的集合形成鲜明对比。&lt;/p>
+&lt;p>但是，因为 HyperLogLog 只会根据输入元素来计算基数，而不会储存输入元素本身，所以 HyperLogLog 不能像集合那样，返回输入的各个元素。&lt;/p>
+&lt;pre>&lt;code>pfadd 添加
+pfcount 获得基数值
+pfmerge 合并多个key
+&lt;/code>&lt;/pre>&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-shell" data-lang="shell">127.0.0.1:6379&amp;gt; pfadd pf1 &lt;span class="m">1&lt;/span> &lt;span class="m">3&lt;/span> &lt;span class="m">1&lt;/span> &lt;span class="m">4&lt;/span> &lt;span class="m">1&lt;/span> &lt;span class="m">5&lt;/span>
+&lt;span class="o">(&lt;/span>integer&lt;span class="o">)&lt;/span> &lt;span class="m">1&lt;/span>
+127.0.0.1:6379&amp;gt; pfcount pf1
+&lt;span class="o">(&lt;/span>integer&lt;span class="o">)&lt;/span> &lt;span class="m">4&lt;/span>
+127.0.0.1:6379&amp;gt; pfadd pf2 &lt;span class="m">3&lt;/span> &lt;span class="m">4&lt;/span> &lt;span class="m">5&lt;/span> &lt;span class="m">6&lt;/span> &lt;span class="m">7&lt;/span>
+&lt;span class="o">(&lt;/span>integer&lt;span class="o">)&lt;/span> &lt;span class="m">1&lt;/span>
+127.0.0.1:6379&amp;gt; pfcount pf2
+&lt;span class="o">(&lt;/span>integer&lt;span class="o">)&lt;/span> &lt;span class="m">5&lt;/span>
+127.0.0.1:6379&amp;gt; pfmerge pf3 pf1 pf2
+OK
+127.0.0.1:6379&amp;gt; pfcount pf3
+&lt;span class="o">(&lt;/span>integer&lt;span class="o">)&lt;/span> &lt;span class="m">6&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>应用场景说明：&lt;/p>
+&lt;ul>
+&lt;li>基数不大，数据量不大就用不上，会有点大材小用浪费空间&lt;/li>
+&lt;li>有局限性，就是只能统计基数数量，而没办法去知道具体的内容是什么&lt;/li>
+&lt;li>和bitmap相比，属于两种特定统计情况，简单来说，HyperLogLog 去重比 bitmap 方便很多&lt;/li>
+&lt;li>一般可以bitmap和hyperloglog配合使用，bitmap标识哪些用户活跃，hyperloglog计数&lt;/li>
+&lt;/ul>
+&lt;p>一般使用：&lt;/p>
+&lt;ul>
+&lt;li>统计注册 IP 数&lt;/li>
+&lt;li>统计每日访问 IP 数&lt;/li>
+&lt;li>统计页面实时 UV 数&lt;/li>
+&lt;li>统计在线用户数&lt;/li>
+&lt;li>统计用户每天搜索不同词条的个数&lt;/li>
+&lt;/ul>
+&lt;h3 id="3geo">3.GEO&lt;/h3>
+&lt;pre>&lt;code>geoadd/geohash/geopos/geodist/georadius/georadiusbymember
+&lt;/code>&lt;/pre>&lt;p>Redis的GEO特性在 Redis3.2版本中推出，这个功能可以将用户给定的地理位置(经 度和纬度)信息储存起来，并对这些信息进行操作。&lt;/p>
+&lt;h3 id="4redis-中的布隆过滤器">4.Redis 中的布隆过滤器&lt;/h3>
+&lt;p>Redis v4.0 之后有了 &lt;a class="link" href="https://redis.io/modules" target="_blank" rel="noopener"
+>Module&lt;/a>（模块/插件）,RedisBloom 作为 Redis 布隆过滤器的 Module，地址：https://github.com/RedisBloom/RedisBloom&lt;/p>
+&lt;h2 id="redis-lua">Redis Lua&lt;/h2>
+&lt;ul>
+&lt;li>
+&lt;p>类比openrestry = nginx + lua jit&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>类似于数据库的存储过程，mongodb的js脚本&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>redis内存操作的单线程 使得一段lua脚本之心具有：&lt;strong>原子性&lt;/strong>，操作不会被打断，保证了&lt;strong>事务&lt;/strong>&lt;/p>
+&lt;ul>
+&lt;li>
+&lt;p>直接执行
+eval &amp;ldquo;return&amp;rsquo;hello java'&amp;rdquo; 0
+eval &amp;ldquo;redis.call(&amp;lsquo;set&amp;rsquo;,KEYS[1],ARGV[1])&amp;rdquo; 1 lua-key lua-value&lt;/p>
+&lt;pre>&lt;code>127.0.0.1:6379&amp;gt; eval &amp;quot;return'hello java'&amp;quot; 0
+&amp;quot;hello java&amp;quot;
+127.0.0.1:6379&amp;gt; eval &amp;quot;redis.call('set',KEYS[1],ARGV[1])&amp;quot; 1 ff zz
+(nil)
+127.0.0.1:6379&amp;gt; get ff
+&amp;quot;zz&amp;quot;
+&lt;/code>&lt;/pre>&lt;/li>
+&lt;li>
+&lt;p>预编译
+script load script脚本片段
+返回一个SHA-1签名 shastring
+evalsha shastring keynum [key1 key2 key3 &amp;hellip;] [param1 param2 param3 &amp;hellip;]&lt;/p>
+&lt;pre>&lt;code>127.0.0.1:6379&amp;gt; script load &amp;quot;redis.call('set',KEYS[1],ARGV[1])&amp;quot;
+&amp;quot;7cfb4342127e7ab3d63ac05e0d3615fd50b45b06&amp;quot;
+127.0.0.1:6379&amp;gt; evalsha 7cfb4342127e7ab3d63ac05e0d3615fd50b45b06 1 fff zzz
+(nil)
+127.0.0.1:6379&amp;gt; get fff
+&amp;quot;zzz&amp;quot;
+&lt;/code>&lt;/pre>&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;h2 id="redis-pipeline">redis pipeline&lt;/h2>
+&lt;p>使用管道一次执行多个命令，多个命令的结果一起返回，减少每个命令来回建立链接，来回响应的时间。&lt;/p>
+&lt;p>&lt;a href="https://redis.io/topics/pipelining">https://redis.io/topics/pipelining&lt;/a>&lt;/p>
+&lt;h2 id="redis事务">redis事务&lt;/h2>
+&lt;ul>
+&lt;li>
+&lt;p>开启事务:multi&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>命令入队&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>执行事务:exec&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>撤销事务:discard&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>Watch 监控事务： watch 一个key，发生变化则事务失败&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>unwatch 取消监听&lt;/p>
+&lt;/li>
+&lt;/ul>
+&lt;pre>&lt;code>127.0.0.1:6379&amp;gt; multi
+OK
+127.0.0.1:6379&amp;gt; set ff ff
+QUEUED
+127.0.0.1:6379&amp;gt; set fff fff
+QUEUED
+127.0.0.1:6379&amp;gt; exec
+1) OK
+2) OK
+&lt;/code>&lt;/pre>&lt;h2 id="redis管道">redis管道&lt;/h2>
+&lt;h2 id="redis备份恢复机制">redis备份恢复机制&lt;/h2>
+&lt;h3 id="rdb方式">RDB方式&lt;/h3>
+&lt;ul>
+&lt;li>
+&lt;p>快照恢复，类似mysql的frm.等数据：备份当前瞬间 Redis 在内存中的数据记录&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>save后在数据目录生成dump.rdb&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>bgsave 异步执行备份&lt;/p>
+&lt;p>&lt;img src="http://pics5.baidu.com/feed/1c950a7b02087bf43b4490d50ac25f2a11dfcf7e.jpeg?token=22f387ba78130c6115420059481b2393&amp;amp;s=EF48A15796784D8816E1D9EB03007024" alt="img" />&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>恢复：将备份文件 (dump.rdb) 移动到 redis 数据目录并启动服务即可&lt;/p>
+&lt;/li>
+&lt;/ul>
+&lt;p>redis.conf中&lt;/p>
+&lt;pre>&lt;code>#Redis默认配置文件中提供了三个备份条件： ##指定在多长时间内，有多少次更新操作，就将数据同步到数据文件，可以多个条件配合
+save 900 1
+save 300 10
+save 60 10000
+&lt;/code>&lt;/pre>&lt;h3 id="aof方式">AOF方式&lt;/h3>
+&lt;ul>
+&lt;li>追加文件（Append-Only File，AOF） 类比mysql的binlog&lt;/li>
+&lt;li>配置为 always，其含义为当 Redis 执行 命令的时候，则同时同步到 AOF 文件，这样会使得 Redis 同步刷新 AOF 文件，造成 缓慢。而采用 evarysec 则代表每秒同步一次命令到 AOF 文件&lt;/li>
+&lt;/ul>
+&lt;pre>&lt;code>appendfilename &amp;quot;appendonly.aof&amp;quot;
+# appendfsync always
+appendfsync everysec
+# appendfsync no......
+&lt;/code>&lt;/pre>&lt;p>&lt;img src="http://pics5.baidu.com/feed/b17eca8065380cd7df69859ba056a5325982816c.jpeg?token=a060f459d81c409c3d6c7208d2118888&amp;amp;s=AF4AA5574ED85CC841D04BE60300A036" alt="img" />&lt;/p>
+&lt;ul>
+&lt;li>恢复：自动加载&lt;/li>
+&lt;/ul>
+&lt;h2 id="redis性能优化">redis性能优化&lt;/h2>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-shell" data-lang="shell">slowlog get &lt;span class="m">10&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="几个缓存问题">几个缓存问题&lt;/h2>
+&lt;h3 id="缓存穿透">缓存穿透&lt;/h3>
+&lt;ul>
+&lt;li>现象：key对应的数据在数据源并不存在，每次针对此key的请求从缓存获取不到，请求都会到数据源，从而可能压垮数据源。比如用一个不存在的用户id获取用户信息，不论缓存还是数据库都没有，若黑客利用此漏洞进行攻击可能压垮数据库&lt;/li>
+&lt;li>解决：
+&lt;ul>
+&lt;li>采用布隆过滤器：将所有可能存在的数据哈希到一个足够大的bitmap中，一个一定不存在的数据会被 这个bitmap拦截掉，从而避免了对底层存储系统的查询压力，详见https://www.cnblogs.com/rinack/p/9712477.html&lt;/li>
+&lt;li>直接缓存空结果：如果一个查询返回的数据为空，仍然把这个空结果进行缓存。&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;h3 id="缓存击穿">缓存击穿&lt;/h3>
+&lt;ul>
+&lt;li>现象：key对应的数据存在，但在redis中过期，此时若有大量并发请求过来，这些请求发现缓存过期一般都会从后端DB加载数据并回设到缓存，这个时候大并发的请求可能会瞬间把后端DB压垮。&lt;/li>
+&lt;li>解决：使用&lt;strong>互斥分布式锁&lt;/strong>进行从DB加载数据，其他的请求继续重试缓存。使用锁可能会死锁、线程池阻塞等问题，针对高热点key，最好是在并发量最小的时候，写定时器更新key的过期时间&lt;/li>
+&lt;/ul>
+&lt;h3 id="缓存雪崩">缓存雪崩&lt;/h3>
+&lt;ul>
+&lt;li>现象：当缓存服务器重启或者大量缓存集中在某一个时间段失效，这样在失效的时候，也会给后端系统(比如DB)带来很大压力。与缓存击穿的区别在于这里针对很多key缓存，前者则是某一个key。&lt;/li>
+&lt;li>解决：
+&lt;ul>
+&lt;li>最简单尽量将过期时间分散开来：可以在原有的失效时间基础上增加一个随机值，比如1-5分钟随机，&lt;/li>
+&lt;li>设置过期标志更新缓存:
+&lt;ul>
+&lt;li>1，新加一个缓存key的标记。缓存数据key的value时，同时缓存key_sign, key_sign的过期时间小于key的过期时间。&lt;/li>
+&lt;li>2 在查询缓存时，先判断key_sign是否过期，a，如果过期，先直接返回value，再启用异步线程去更新key_sign以及加载db到key的value,重新设置两个的过期时间。b. 没有过期，直接返回value&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul></description></item></channel></rss>
