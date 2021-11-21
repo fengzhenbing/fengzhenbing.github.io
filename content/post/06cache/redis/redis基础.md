@@ -1,5 +1,5 @@
 ---
-title: "redis基础"
+   title: "redis基础"
 date: 2020-12-11T08:06:25+06:00
 description: redis基础
 tags:
