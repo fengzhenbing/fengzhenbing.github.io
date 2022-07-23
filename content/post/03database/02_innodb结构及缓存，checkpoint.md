@@ -22,7 +22,7 @@ tags:
 
 体系结构如下：
 
-![image-20211005142610433](https://gitee.com/fengzhenbing/picgo/raw/master/image-20211005142610433.png)
+![image-20211005142610433](https://fengzhenbing.github.io/img/picgo/image-20211005142610433.png)
 
 InnoDB存储引擎有多个内存块，这些内存块组成一个内存池，主要负责如下工作：
 
@@ -40,7 +40,7 @@ InnoDB存储引擎有多个内存块，这些内存块组成一个内存池，�
 
 ### innodb 内存结构
 
-![image-20211005144108370](https://gitee.com/fengzhenbing/picgo/raw/master/image-20211005144108370.png)
+![image-20211005144108370](https://fengzhenbing.github.io/img/picgo/image-20211005144108370.png)
 
 #### 缓冲池
 
@@ -83,7 +83,7 @@ Buffer Pool的LRU算法与普通的LRU算法不一样，新数据页插入时并
 
 
 
-![Content is described in the surrounding text.](https://gitee.com/fengzhenbing/picgo/raw/master/format,png-20211005153839472.png)
+![Content is described in the surrounding text.](https://fengzhenbing.github.io/img/picgo/format,png-20211005153839472.png)
 
 
 
@@ -91,7 +91,7 @@ Buffer Pool的LRU算法与普通的LRU算法不一样，新数据页插入时并
 
 #### 查看内存状态
 
-![image-20211005152044108](https://gitee.com/fengzhenbing/picgo/raw/master/image-20211005152044108.png)
+![image-20211005152044108](https://fengzhenbing.github.io/img/picgo/image-20211005152044108.png)
 
 ### Checkpoint
 

@@ -1,4 +1,4 @@
-![image-20211007143642433](https://gitee.com/fengzhenbing/picgo/raw/master/image-20211007143642433.png)
+![image-20211007143642433](https://fengzhenbing.github.io/img/picgo/image-20211007143642433.png)
 
 ##### 强引用(StrongReference)
 

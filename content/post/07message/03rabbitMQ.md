@@ -29,7 +29,7 @@ categories:
 
 - Exchange：接收消息，并根据路由键转发消息所绑定的队列。
 
- ![img](https://gitee.com/fengzhenbing/picgo/raw/master/1577453-20200519174721973-114601627.png) 
+ ![img](https://fengzhenbing.github.io/img/picgo/1577453-20200519174721973-114601627.png) 
 
 蓝色框：客户端发送消息至交换机，通过路由键路由至指定的队列。
 黄色框：交换机和队列通过路由键有一个绑定的关系。
@@ -54,7 +54,7 @@ docker exec -it rabbitmq-test /bin/bash
 
 这种模式，才是所谓的 RabbitMQ 的高可用模式。跟普通集群模式不一样的是，在镜像集群模式下，你创建的 queue，无论元数据还是 queue 里的消息都会**存在于多个实例上**，就是说，每个 RabbitMQ 节点都有这个 queue 的一个**完整镜像**，包含 queue 的全部数据的意思。然后每次你写消息到 queue 的时候，都会自动把**消息同步**到多个实例的 queue 上。
 
-![mq-8](https://gitee.com/fengzhenbing/picgo/raw/master/mq-8.png)
+![mq-8](https://fengzhenbing.github.io/img/picgo/mq-8.png)
 
 那么**如何开启这个镜像集群模式**呢？其实很简单，RabbitMQ 有很好的管理控制台，就是在后台新增一个策略，这个策略是**镜像集群模式的策略**，指定的时候是可以要求数据同步到所有节点的，也可以要求同步到指定数量的节点，再次创建 queue 的时候，应用这个策略，就会自动将数据同步到其他的节点上去了。
 

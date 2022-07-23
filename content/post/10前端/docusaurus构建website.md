@@ -72,11 +72,11 @@ https://docusaurus.io/zh-CN/docs/api/plugins/@docusaurus/plugin-content-docs#i18
 
 归档目录
 
-![image-20210822214033782](https://gitee.com/fengzhenbing/picgo/raw/master/image-20210822214033782.png)
+![image-20210822214033782](https://fengzhenbing.github.io/img/picgo/image-20210822214033782.png)
 
 归档文件翻译目录
 
-![image-20210822214124926](https://gitee.com/fengzhenbing/picgo/raw/master/image-20210822214124926.png)
+![image-20210822214124926](https://fengzhenbing.github.io/img/picgo/image-20210822214124926.png)
 
 ### hugo文档迁移注意事项
 

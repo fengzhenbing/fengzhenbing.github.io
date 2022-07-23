@@ -94,7 +94,7 @@ scrape_configs:
 
 访问http://192.168.3.13:9090 可看到读取的jmx_exporter的metrics  
 
-![image-20210815150732316](https://gitee.com/fengzhenbing/picgo/raw/master/image-20210815150732316.png)
+![image-20210815150732316](https://fengzhenbing.github.io/img/picgo/image-20210815150732316.png)
 
 
 
@@ -112,7 +112,7 @@ docker run -d --name=grafana -p 3000:3000 grafana/grafana
 
 ### 配置prometheus数据源
 
-![image-20210815153009091](https://gitee.com/fengzhenbing/picgo/raw/master/image-20210815153009091.png)
+![image-20210815153009091](https://fengzhenbing.github.io/img/picgo/image-20210815153009091.png)
 
 
 
@@ -120,11 +120,11 @@ docker run -d --name=grafana -p 3000:3000 grafana/grafana
 
 找一个合适的dashboard导入。如https://grafana.com/grafana/dashboards/3457
 
-![image-20210815160530374](https://gitee.com/fengzhenbing/picgo/raw/master/image-20210815160530374.png)
+![image-20210815160530374](https://fengzhenbing.github.io/img/picgo/image-20210815160530374.png)
 
 ### 效果
 
-![image-20210815160638492](https://gitee.com/fengzhenbing/picgo/raw/master/image-20210815160638492.png)
+![image-20210815160638492](https://fengzhenbing.github.io/img/picgo/image-20210815160638492.png)
 
 ## 参考
 

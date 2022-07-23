@@ -17,4 +17,4 @@ tags:
 
 
 
-![sql执行过程](https://gitee.com/fengzhenbing/picgo/raw/master/sql执行过程.png)
+![sql执行过程](https://fengzhenbing.github.io/img/picgo/sql执行过程.png)

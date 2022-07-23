@@ -91,7 +91,7 @@ Kafka利用了操作系统本身的Page Cache
 
 零拷贝就是使用了一个名为sendfile()的系统调用方法，将数据从page cache直接发送到Socket缓冲区，避免了系统上下文的切换，消除了从内核空间到用户空间的来回复制。从下图可以看出，"零拷贝"并不是说整个过程完全不发生拷贝，而是站在内核的角度来说的，避免了内核空间到用户空间的来回拷贝。
 
-![image-20211007195405264](https://gitee.com/fengzhenbing/picgo/raw/master/image-20211007195405264.png)
+![image-20211007195405264](https://fengzhenbing.github.io/img/picgo/image-20211007195405264.png)
 
  
 

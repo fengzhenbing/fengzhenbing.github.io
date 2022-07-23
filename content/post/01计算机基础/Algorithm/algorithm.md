@@ -76,4 +76,4 @@ O的定义：
 
 
 
-![image-20210826152534266](https://gitee.com/fengzhenbing/picgo/raw/master/image-20210826152534266.png)
+![image-20210826152534266](https://fengzhenbing.github.io/img/picgo/image-20210826152534266.png)

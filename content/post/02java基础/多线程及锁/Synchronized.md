@@ -35,7 +35,7 @@ notify notifyAll只有通过synchronized拿到锁，才能去唤醒 wait set 里
 
 Markword  32位jvm 结构如下：  重量级锁即为 Synchronized 的锁
 
-![image-20210418232331824](https://gitee.com/fengzhenbing/picgo/raw/master/image-20210418232331824.png)
+![image-20210418232331824](https://fengzhenbing.github.io/img/picgo/image-20210418232331824.png)
 
 ##  锁升级
 

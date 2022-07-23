@@ -14,7 +14,7 @@ categories:
 
 
 
-![image-20210918164002561](https://gitee.com/fengzhenbing/picgo/raw/master/image-20210918164002561.png)
+![image-20210918164002561](https://fengzhenbing.github.io/img/picgo/image-20210918164002561.png)
 
 ![image-20210918164733950](/Users/mokernet/Library/Application Support/typora-user-images/image-20210918164733950.png)
 
@@ -30,7 +30,7 @@ categories:
 
 所以三次握手就能确认双发收发功能都正常，缺一不可。
 
-![四次挥手](https://gitee.com/fengzhenbing/picgo/raw/master/format,png.png)
+![四次挥手](https://fengzhenbing.github.io/img/picgo/format,png.png)
 
 断开一个 TCP 连接则需要“四次挥手”：
 

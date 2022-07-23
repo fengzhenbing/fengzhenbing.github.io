@@ -11,7 +11,7 @@ categories:
 ## 相关概念
 
 - 计算存储分离
-- ![image-20210406220312072](https://gitee.com/fengzhenbing/picgo/raw/master/image-20210406220312072.png)
+- ![image-20210406220312072](https://fengzhenbing.github.io/img/picgo/image-20210406220312072.png)
 
 ## 安装测试
 

@@ -121,7 +121,7 @@ k8s.gcr.io 为google官方（Google Container Registry），对于不能科学�
 
 阿里云加速地址获取 https://cr.console.aliyun.com/cn-shanghai/instances/mirrors
 
-![image-20210725221057446](https://gitee.com/fengzhenbing/picgo/raw/master/image-20210725221057446.png)
+![image-20210725221057446](https://fengzhenbing.github.io/img/picgo/image-20210725221057446.png)
 
 ```shell
 sudo tee /etc/docker/daemon.json <<-'EOF'
@@ -206,7 +206,7 @@ kubeadm init \
 
 
 
-![image-20210725225837358](https://gitee.com/fengzhenbing/picgo/raw/master/image-20210725225837358.png)
+![image-20210725225837358](https://fengzhenbing.github.io/img/picgo/image-20210725225837358.png)
 
 
 
@@ -297,7 +297,7 @@ $ kubeadm token create --print-join-command
 
 
 
-![image-20210725233415235](https://gitee.com/fengzhenbing/picgo/raw/master/image-20210725233415235.png)
+![image-20210725233415235](https://fengzhenbing.github.io/img/picgo/image-20210725233415235.png)
 
 对于实验测试非线上来讲，可以直接将`system:anonymous`加为用户
 
