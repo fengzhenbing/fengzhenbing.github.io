@@ -3,7 +3,7 @@
 &lt;p>上下文对象作为读取并解析配置, 承载数据的核心；&lt;/p>
 &lt;p>spring有ApplicationContext,netty有HandlerContext&lt;/p>
 &lt;p>向其他中间件一样，在ShardingSphere也十分重要; 后续几乎所有功能比如数据分片、数据加密、SQL 改写，各类扩展都依赖上下文对象存储的数据&lt;/p>
-&lt;p>&lt;img src="https://gitee.com/fengzhenbing/picgo/raw/master/image-20210913215827140.png" alt="image-20210913215827140" />&lt;/p>
+&lt;p>&lt;img src="https://fengzhenbing.github.io/img/picgo/image-20210913215827140.png" alt="image-20210913215827140" />&lt;/p>
 &lt;h3 id="标准元数据上下文---standardmetadatacontexts">标准元数据上下文 StandardMetaDataContexts&lt;/h3>
 &lt;p>核心存储了ShardingSphereMetaData元数据集合，作为重点后面分析&lt;/p>
 &lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-java" data-lang="java">&lt;span class="nd">@Getter&lt;/span>
@@ -112,9 +112,9 @@
 &lt;/span>&lt;span class="c1">&lt;/span> &lt;span class="kd">private&lt;/span> &lt;span class="kd">final&lt;/span> &lt;span class="n">Collection&lt;/span>&lt;span class="o">&amp;lt;&lt;/span>&lt;span class="n">ShardingSphereRule&lt;/span>&lt;span class="o">&amp;gt;&lt;/span> &lt;span class="n">rules&lt;/span>&lt;span class="o">;&lt;/span>
 &lt;span class="o">}&lt;/span>
 &lt;/code>&lt;/pre>&lt;/div>&lt;p>RuleConfiguration直接对应了用户的yaml, properties等配置&lt;/p>
-&lt;p>&lt;img src="https://gitee.com/fengzhenbing/picgo/raw/master/image-20210913214107105.png" alt="image-20210913214107105" />&lt;/p>
+&lt;p>&lt;img src="https://fengzhenbing.github.io/img/picgo/image-20210913214107105.png" alt="image-20210913214107105" />&lt;/p>
 &lt;p>ShardingSphereRule&lt;/p>
-&lt;p>&lt;img src="https://gitee.com/fengzhenbing/picgo/raw/master/image-20210913222453670.png" alt="image-20210913222453670" />&lt;/p>
+&lt;p>&lt;img src="https://fengzhenbing.github.io/img/picgo/image-20210913222453670.png" alt="image-20210913222453670" />&lt;/p>
 &lt;p>buildSchemaRules()&lt;/p>
 &lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-java" data-lang="java"> &lt;span class="kd">public&lt;/span> &lt;span class="kd">static&lt;/span> &lt;span class="n">Collection&lt;/span>&lt;span class="o">&amp;lt;&lt;/span>&lt;span class="n">ShardingSphereRule&lt;/span>&lt;span class="o">&amp;gt;&lt;/span> &lt;span class="nf">buildSchemaRules&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="kd">final&lt;/span> &lt;span class="n">String&lt;/span> &lt;span class="n">schemaName&lt;/span>&lt;span class="o">,&lt;/span> &lt;span class="kd">final&lt;/span> &lt;span class="n">Collection&lt;/span>&lt;span class="o">&amp;lt;&lt;/span>&lt;span class="n">RuleConfiguration&lt;/span>&lt;span class="o">&amp;gt;&lt;/span> &lt;span class="n">schemaRuleConfigurations&lt;/span>&lt;span class="o">,&lt;/span>
 &lt;span class="kd">final&lt;/span> &lt;span class="n">DatabaseType&lt;/span> &lt;span class="n">databaseType&lt;/span>&lt;span class="o">,&lt;/span> &lt;span class="kd">final&lt;/span> &lt;span class="n">Map&lt;/span>&lt;span class="o">&amp;lt;&lt;/span>&lt;span class="n">String&lt;/span>&lt;span class="o">,&lt;/span> &lt;span class="n">DataSource&lt;/span>&lt;span class="o">&amp;gt;&lt;/span> &lt;span class="n">dataSourceMap&lt;/span>&lt;span class="o">)&lt;/span> &lt;span class="o">{&lt;/span>
@@ -124,7 +124,7 @@
 &lt;/span>&lt;span class="c1">&lt;/span> &lt;span class="k">return&lt;/span> &lt;span class="n">builders&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">entrySet&lt;/span>&lt;span class="o">().&lt;/span>&lt;span class="na">stream&lt;/span>&lt;span class="o">().&lt;/span>&lt;span class="na">map&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">entry&lt;/span> &lt;span class="o">-&amp;gt;&lt;/span> &lt;span class="n">entry&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">getValue&lt;/span>&lt;span class="o">().&lt;/span>&lt;span class="na">build&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">schemaName&lt;/span>&lt;span class="o">,&lt;/span> &lt;span class="n">dataSourceMap&lt;/span>&lt;span class="o">,&lt;/span> &lt;span class="n">databaseType&lt;/span>&lt;span class="o">,&lt;/span> &lt;span class="n">entry&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">getKey&lt;/span>&lt;span class="o">())).&lt;/span>&lt;span class="na">collect&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">Collectors&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">toList&lt;/span>&lt;span class="o">());&lt;/span>
 &lt;span class="o">}&lt;/span>
 &lt;/code>&lt;/pre>&lt;/div>&lt;p>SchemaRuleBuilder作为一个规则解析扩展点&lt;/p>
-&lt;p>&lt;img src="https://gitee.com/fengzhenbing/picgo/raw/master/image-20210914013607189.png" alt="image-20210914013607189" />&lt;/p>
+&lt;p>&lt;img src="https://fengzhenbing.github.io/img/picgo/image-20210914013607189.png" alt="image-20210914013607189" />&lt;/p>
 &lt;h4 id="b-再看buildresource即构建数据源的元数据对象">b) 再看buildResource，即构建数据源的元数据对象&lt;/h4>
 &lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-java" data-lang="java">&lt;span class="kd">private&lt;/span> &lt;span class="n">ShardingSphereResource&lt;/span> &lt;span class="nf">buildResource&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="kd">final&lt;/span> &lt;span class="n">DatabaseType&lt;/span> &lt;span class="n">databaseType&lt;/span>&lt;span class="o">,&lt;/span> &lt;span class="kd">final&lt;/span> &lt;span class="n">Map&lt;/span>&lt;span class="o">&amp;lt;&lt;/span>&lt;span class="n">String&lt;/span>&lt;span class="o">,&lt;/span> &lt;span class="n">DataSource&lt;/span>&lt;span class="o">&amp;gt;&lt;/span> &lt;span class="n">dataSourceMap&lt;/span>&lt;span class="o">)&lt;/span> &lt;span class="kd">throws&lt;/span> &lt;span class="n">SQLException&lt;/span> &lt;span class="o">{&lt;/span>
 &lt;span class="c1">//构建数据源的元数据对象
@@ -135,7 +135,7 @@
 &lt;span class="o">}&lt;/span>
 &lt;/code>&lt;/pre>&lt;/div>&lt;h4 id="c-再看如何构建数据库元数据-buildschema方法">c) 再看如何构建数据库元数据, buildSchema()方法&lt;/h4>
 &lt;p>加载数据库的元数据，但是各个方言版本的元数据不太一样，例如mysql的在information_schema中，针对对不同方言，可以通过DialectTableMetaDataLoader的spi扩展定制各类方言版本的数据库元数据加载。&lt;/p>
-&lt;p>&lt;img src="https://gitee.com/fengzhenbing/picgo/raw/master/image-20210914014024075.png" alt="image-20210914014024075" />&lt;/p>
+&lt;p>&lt;img src="https://fengzhenbing.github.io/img/picgo/image-20210914014024075.png" alt="image-20210914014024075" />&lt;/p>
 &lt;ul>
 &lt;li>数据库元数据&lt;/li>
 &lt;/ul>
@@ -192,7 +192,7 @@
 &lt;p>整个加载过程中使用不少设计模式，构造器模式，工厂模式，装饰器，组合等等，spi扩展点也预留不少，仔细研读收获颇丰。&lt;/p>
 &lt;p>目前的解读只是从大的主线来理解，当然中间还有很多细节需要后续补充。&lt;/p>
 &lt;p>debug过程中容易走丢，实时记录下路线是个不错的方式：&lt;/p>
-&lt;p>&lt;img src="https://gitee.com/fengzhenbing/picgo/raw/master/image-20210914001438627.png" alt="image-20210914001438627" />&lt;/p></description></item><item><title>shardingsphere（5.0.0.beta）源码总览</title><link>https://fengzhenbing.github.io/p/shardingsphere5.0.0.beta%E6%BA%90%E7%A0%81%E6%80%BB%E8%A7%88/</link><pubDate>Thu, 02 Sep 2021 00:00:00 +0000</pubDate><guid>https://fengzhenbing.github.io/p/shardingsphere5.0.0.beta%E6%BA%90%E7%A0%81%E6%80%BB%E8%A7%88/</guid><description>&lt;h2 id="shardingsphere500beta源码学习-总览">Shardingsphere（5.0.0.beta）源码学习-总览&lt;/h2>
+&lt;p>&lt;img src="https://fengzhenbing.github.io/img/picgo/image-20210914001438627.png" alt="image-20210914001438627" />&lt;/p></description></item><item><title>shardingsphere（5.0.0.beta）源码总览</title><link>https://fengzhenbing.github.io/p/shardingsphere5.0.0.beta%E6%BA%90%E7%A0%81%E6%80%BB%E8%A7%88/</link><pubDate>Thu, 02 Sep 2021 00:00:00 +0000</pubDate><guid>https://fengzhenbing.github.io/p/shardingsphere5.0.0.beta%E6%BA%90%E7%A0%81%E6%80%BB%E8%A7%88/</guid><description>&lt;h2 id="shardingsphere500beta源码学习-总览">Shardingsphere（5.0.0.beta）源码学习-总览&lt;/h2>
 &lt;p>shardingsphere作为极为优秀的开源分布式数据库解决方案，通过阅读源码可以学到很多软件设计与开发的知识。&lt;/p>
 &lt;p>本次我继续按照之前读源码的方式&lt;code>从整体到细节，带着问题读源码的方式&lt;/code>记录这次深入学习 shardingsphere的过程。&lt;/p>
 &lt;h3 id="源码版本">源码版本&lt;/h3>
@@ -377,9 +377,9 @@
 &lt;span class="o">}&lt;/span>
 &lt;/code>&lt;/pre>&lt;/div>&lt;h4 id="执行流程">执行流程&lt;/h4>
 &lt;p>再接着调试栈来看&lt;/p>
-&lt;p>&lt;img src="https://gitee.com/fengzhenbing/picgo/raw/master/image-20210909233033903.png" alt="image-20210909233033903" />&lt;/p>
+&lt;p>&lt;img src="https://fengzhenbing.github.io/img/picgo/image-20210909233033903.png" alt="image-20210909233033903" />&lt;/p>
 &lt;p>执行流程为&lt;/p>
-&lt;p>&lt;img src="https://gitee.com/fengzhenbing/picgo/raw/master/image-20210910003744036.png" alt="image-20210910003744036" />&lt;/p>
+&lt;p>&lt;img src="https://fengzhenbing.github.io/img/picgo/image-20210910003744036.png" alt="image-20210910003744036" />&lt;/p>
 &lt;p>下面简单分析：&lt;/p>
 &lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-JAVA" data-lang="JAVA">&lt;span class="kd">public&lt;/span> &lt;span class="kd">final&lt;/span> &lt;span class="kd">class&lt;/span> &lt;span class="nc">ShardingSpherePreparedStatement&lt;/span> &lt;span class="kd">extends&lt;/span> &lt;span class="n">AbstractPreparedStatementAdapter&lt;/span> &lt;span class="o">{&lt;/span>
 &lt;span class="kd">private&lt;/span> &lt;span class="nf">ShardingSpherePreparedStatement&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="kd">final&lt;/span> &lt;span class="n">ShardingSphereConnection&lt;/span> &lt;span class="n">connection&lt;/span>&lt;span class="o">,&lt;/span> &lt;span class="kd">final&lt;/span> &lt;span class="n">String&lt;/span> &lt;span class="n">sql&lt;/span>&lt;span class="o">,&lt;/span>
@@ -513,7 +513,7 @@
 &lt;p>影子库SQL改写&lt;/p>
 &lt;p>分片的SQL改写&lt;/p>
 &lt;/blockquote>
-&lt;p>&lt;img src="https://gitee.com/fengzhenbing/picgo/raw/master/image-20210910002416276.png" alt="image-20210910002416276" />&lt;/p>
+&lt;p>&lt;img src="https://fengzhenbing.github.io/img/picgo/image-20210910002416276.png" alt="image-20210910002416276" />&lt;/p>
 &lt;h5 id="执行引擎">执行引擎&lt;/h5>
 &lt;blockquote>
 &lt;p>将路由和改写完成之后的真实 SQL 安全且高效发送到底层数据源执行。&lt;/p>
@@ -616,7 +616,7 @@
 &lt;span class="o">}&lt;/span>
 &lt;span class="o">}&lt;/span>
 &lt;/code>&lt;/pre>&lt;/div>&lt;p>ResultMerger&lt;/p>
-&lt;p>&lt;img src="https://gitee.com/fengzhenbing/picgo/raw/master/image-20210910010533225.png" alt="image-20210910010533225" />&lt;/p>
+&lt;p>&lt;img src="https://fengzhenbing.github.io/img/picgo/image-20210910010533225.png" alt="image-20210910010533225" />&lt;/p>
 &lt;ul>
 &lt;li>以上对整个流程中各个关键节点进行简单分析，后续对每个节点做详细学习&lt;/li>
 &lt;/ul></description></item><item><title>分布式任务调度Hodor</title><link>https://fengzhenbing.github.io/p/%E5%88%86%E5%B8%83%E5%BC%8F%E4%BB%BB%E5%8A%A1%E8%B0%83%E5%BA%A6hodor/</link><pubDate>Wed, 01 Sep 2021 00:00:00 +0000</pubDate><guid>https://fengzhenbing.github.io/p/%E5%88%86%E5%B8%83%E5%BC%8F%E4%BB%BB%E5%8A%A1%E8%B0%83%E5%BA%A6hodor/</guid><description>&lt;h2 id="分布式任务调度hodor源码分析整体结构">分布式任务调度Hodor源码分析（整体结构）&lt;/h2>
@@ -627,7 +627,7 @@
 &lt;blockquote>
 &lt;p>因无任何文档，以下架构图纯阅读源码个人理解后手工所画：&lt;/p>
 &lt;/blockquote>
-&lt;p>&lt;img src="https://gitee.com/fengzhenbing/picgo/raw/master/image-20210907231952228.png" alt="image-20210907231952228" />&lt;/p>
+&lt;p>&lt;img src="https://fengzhenbing.github.io/img/picgo/image-20210907231952228.png" alt="image-20210907231952228" />&lt;/p>
 &lt;h3 id="代码目录及分析">代码目录及分析&lt;/h3>
 &lt;ul>
 &lt;li>
@@ -748,9 +748,9 @@ yarn run docusaurus docs:version 2.4.0
 &lt;/code>&lt;/pre>&lt;/div>&lt;p>历史版本的国际化参考&lt;/p>
 &lt;p>&lt;a href="https://docusaurus.io/zh-CN/docs/api/plugins/@docusaurus/plugin-content-docs#i18n">https://docusaurus.io/zh-CN/docs/api/plugins/@docusaurus/plugin-content-docs#i18n&lt;/a>&lt;/p>
 &lt;p>归档目录&lt;/p>
-&lt;p>&lt;img src="https://gitee.com/fengzhenbing/picgo/raw/master/image-20210822214033782.png" alt="image-20210822214033782" />&lt;/p>
+&lt;p>&lt;img src="https://fengzhenbing.github.io/img/picgo/image-20210822214033782.png" alt="image-20210822214033782" />&lt;/p>
 &lt;p>归档文件翻译目录&lt;/p>
-&lt;p>&lt;img src="https://gitee.com/fengzhenbing/picgo/raw/master/image-20210822214124926.png" alt="image-20210822214124926" />&lt;/p>
+&lt;p>&lt;img src="https://fengzhenbing.github.io/img/picgo/image-20210822214124926.png" alt="image-20210822214124926" />&lt;/p>
 &lt;h3 id="hugo文档迁移注意事项">hugo文档迁移注意事项&lt;/h3>
 &lt;ul>
 &lt;li>
@@ -846,18 +846,18 @@ rules:
 &lt;/span>&lt;span class="w"> &lt;/span>- &lt;span class="nt">targets&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="s1">&amp;#39;192.168.3.14:3010&amp;#39;&lt;/span>&lt;span class="p">]&lt;/span>&lt;span class="w">
 &lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="验证">验证&lt;/h3>
 &lt;p>访问http://192.168.3.13:9090 可看到读取的jmx_exporter的metrics&lt;/p>
-&lt;p>&lt;img src="https://gitee.com/fengzhenbing/picgo/raw/master/image-20210815150732316.png" alt="image-20210815150732316" />&lt;/p>
+&lt;p>&lt;img src="https://fengzhenbing.github.io/img/picgo/image-20210815150732316.png" alt="image-20210815150732316" />&lt;/p>
 &lt;h2 id="3-grafana连接prometheus">3. Grafana连接Prometheus&lt;/h2>
 &lt;pre>&lt;code>docker pull grafana/grafana
 docker run -d --name=grafana -p 3000:3000 grafana/grafana
 &lt;/code>&lt;/pre>&lt;p>访问http://192.168.3.13:3000 使用admin/admin即可登录&lt;/p>
 &lt;h3 id="配置prometheus数据源">配置prometheus数据源&lt;/h3>
-&lt;p>&lt;img src="https://gitee.com/fengzhenbing/picgo/raw/master/image-20210815153009091.png" alt="image-20210815153009091" />&lt;/p>
+&lt;p>&lt;img src="https://fengzhenbing.github.io/img/picgo/image-20210815153009091.png" alt="image-20210815153009091" />&lt;/p>
 &lt;h3 id="配置dashboard">配置dashboard&lt;/h3>
 &lt;p>找一个合适的dashboard导入。如https://grafana.com/grafana/dashboards/3457&lt;/p>
-&lt;p>&lt;img src="https://gitee.com/fengzhenbing/picgo/raw/master/image-20210815160530374.png" alt="image-20210815160530374" />&lt;/p>
+&lt;p>&lt;img src="https://fengzhenbing.github.io/img/picgo/image-20210815160530374.png" alt="image-20210815160530374" />&lt;/p>
 &lt;h3 id="效果">效果&lt;/h3>
-&lt;p>&lt;img src="https://gitee.com/fengzhenbing/picgo/raw/master/image-20210815160638492.png" alt="image-20210815160638492" />&lt;/p>
+&lt;p>&lt;img src="https://fengzhenbing.github.io/img/picgo/image-20210815160638492.png" alt="image-20210815160638492" />&lt;/p>
 &lt;h2 id="参考">参考&lt;/h2>
 &lt;ul>
 &lt;li>prometheus安装 &lt;a href="https://prometheus.io/docs/prometheus/latest/installation/">https://prometheus.io/docs/prometheus/latest/installation/&lt;/a>&lt;/li>
@@ -990,16 +990,16 @@ sudo n xx.xx
 &lt;p>TLS处于会话层&lt;/p>
 &lt;p>客户端和服务端均通过握手过程协商出了许多信息，譬如一个只有双方才知道的随机产生的密钥(非对称加密算法比如RSA进行密钥协商)、传输过程中要采用的对称加密算法（比如AES128）、压缩算法等，此后该连接的通信将使用此密钥和加密算法进行加密、解密和压缩。&lt;/p>
 &lt;p>保障所有信息都是第三方无法窃听（加密传输:对称加密算法）、无法篡改（一旦篡改通信算法会立刻发现）、无法冒充（证书验证身份）&lt;/p>
-&lt;p>&lt;img src="https://gitee.com/fengzhenbing/picgo/raw/master/image-20211022104720134.png" alt="image-20211022104720134" />&lt;/p></description></item><item><title>图解shenyu</title><link>https://fengzhenbing.github.io/p/%E5%9B%BE%E8%A7%A3shenyu/</link><pubDate>Sat, 19 Jun 2021 00:00:00 +0000</pubDate><guid>https://fengzhenbing.github.io/p/%E5%9B%BE%E8%A7%A3shenyu/</guid><description>&lt;h3 id="spi">spi&lt;/h3>
-&lt;p>&lt;img src="https://gitee.com/fengzhenbing/picgo/raw/master/image-20210822220553452.png" alt="image-20210822220553452" />&lt;/p>
+&lt;p>&lt;img src="https://fengzhenbing.github.io/img/picgo/image-20211022104720134.png" alt="image-20211022104720134" />&lt;/p></description></item><item><title>图解shenyu</title><link>https://fengzhenbing.github.io/p/%E5%9B%BE%E8%A7%A3shenyu/</link><pubDate>Sat, 19 Jun 2021 00:00:00 +0000</pubDate><guid>https://fengzhenbing.github.io/p/%E5%9B%BE%E8%A7%A3shenyu/</guid><description>&lt;h3 id="spi">spi&lt;/h3>
+&lt;p>&lt;img src="https://fengzhenbing.github.io/img/picgo/image-20210822220553452.png" alt="image-20210822220553452" />&lt;/p>
 &lt;h3 id="数据同步">数据同步&lt;/h3>
-&lt;p>&lt;img src="https://gitee.com/fengzhenbing/picgo/raw/master/image-20210822220755858.png" alt="image-20210822220755858" />&lt;/p>
+&lt;p>&lt;img src="https://fengzhenbing.github.io/img/picgo/image-20210822220755858.png" alt="image-20210822220755858" />&lt;/p>
 &lt;h3 id="请求执行路径">请求执行路径&lt;/h3>
-&lt;p>&lt;img src="https://gitee.com/fengzhenbing/picgo/raw/master/image-20210822220834008.png" alt="image-20210822220834008" />&lt;/p>
+&lt;p>&lt;img src="https://fengzhenbing.github.io/img/picgo/image-20210822220834008.png" alt="image-20210822220834008" />&lt;/p>
 &lt;h3 id="服务调用">服务调用&lt;/h3>
-&lt;p>&lt;img src="https://gitee.com/fengzhenbing/picgo/raw/master/image-20210822220248073.png" alt="image-20210822220248073" />&lt;/p>
+&lt;p>&lt;img src="https://fengzhenbing.github.io/img/picgo/image-20210822220248073.png" alt="image-20210822220248073" />&lt;/p>
 &lt;h3 id="admin定时探活">admin定时探活&lt;/h3>
-&lt;p>&lt;img src="https://gitee.com/fengzhenbing/picgo/raw/master/image-20210822221107509.png" alt="image-20210822221107509" />&lt;/p></description></item><item><title>服务链路追踪</title><link>https://fengzhenbing.github.io/p/%E6%9C%8D%E5%8A%A1%E9%93%BE%E8%B7%AF%E8%BF%BD%E8%B8%AA/</link><pubDate>Sat, 12 Jun 2021 00:00:00 +0000</pubDate><guid>https://fengzhenbing.github.io/p/%E6%9C%8D%E5%8A%A1%E9%93%BE%E8%B7%AF%E8%BF%BD%E8%B8%AA/</guid><description>&lt;h2 id="背景">背景&lt;/h2>
+&lt;p>&lt;img src="https://fengzhenbing.github.io/img/picgo/image-20210822221107509.png" alt="image-20210822221107509" />&lt;/p></description></item><item><title>服务链路追踪</title><link>https://fengzhenbing.github.io/p/%E6%9C%8D%E5%8A%A1%E9%93%BE%E8%B7%AF%E8%BF%BD%E8%B8%AA/</link><pubDate>Sat, 12 Jun 2021 00:00:00 +0000</pubDate><guid>https://fengzhenbing.github.io/p/%E6%9C%8D%E5%8A%A1%E9%93%BE%E8%B7%AF%E8%BF%BD%E8%B8%AA/</guid><description>&lt;h2 id="背景">背景&lt;/h2>
 &lt;p>随着业务的发展，系统规模也会越来越大，各微服务间的调用关系也越来越错综复杂，每一个前端请求都会形成一条复杂的分布式服务调用链路，在每条链路中任何一个依赖服务出现延迟过高或错误的时候都会引起请求最后的失败。&lt;/p>
 &lt;h2 id="链路追踪原理">链路追踪原理&lt;/h2>
 &lt;p>追踪系统根据数据收集方式的差异，可分为三种主流的实现方式，分别是&lt;strong>基于日志的追踪&lt;/strong>（Log-Based Tracing），&lt;strong>基于服务的追踪&lt;/strong>（Service-Based Tracing）和&lt;strong>基于边车代理的追踪&lt;/strong>（Sidecar-Based Tracing），&lt;/p>
@@ -1017,7 +1017,7 @@ sudo n xx.xx
 &lt;h3 id="cat">Cat&lt;/h3>
 &lt;h3 id="pinpoint">Pinpoint&lt;/h3>
 &lt;h3 id="特点对比">特点对比&lt;/h3>
-&lt;p>&lt;img src="https://gitee.com/fengzhenbing/picgo/raw/master/image-20210719093354996.png" alt="image-20210719093354996" />&lt;/p></description></item><item><title>k8s Kubectl命令</title><link>https://fengzhenbing.github.io/p/k8s-kubectl%E5%91%BD%E4%BB%A4/</link><pubDate>Thu, 10 Jun 2021 00:00:00 +0000</pubDate><guid>https://fengzhenbing.github.io/p/k8s-kubectl%E5%91%BD%E4%BB%A4/</guid><description>&lt;h2 id="kubelet日志">kubelet日志&lt;/h2>
+&lt;p>&lt;img src="https://fengzhenbing.github.io/img/picgo/image-20210719093354996.png" alt="image-20210719093354996" />&lt;/p></description></item><item><title>k8s Kubectl命令</title><link>https://fengzhenbing.github.io/p/k8s-kubectl%E5%91%BD%E4%BB%A4/</link><pubDate>Thu, 10 Jun 2021 00:00:00 +0000</pubDate><guid>https://fengzhenbing.github.io/p/k8s-kubectl%E5%91%BD%E4%BB%A4/</guid><description>&lt;h2 id="kubelet日志">kubelet日志&lt;/h2>
 &lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-shell" data-lang="shell">journalctl -fu kubelet
 kubectl -h
 kubectl get namespaces
@@ -1125,8 +1125,8 @@ kubectl autoscale deployment nginx-deployment --min&lt;span class="o">=&lt;/span
 &lt;li>
 &lt;p>控制平面通信：还接收来自控制器的指令（称为控制平面通信），根据控制平面中的配置，对数据平面通信的内容进行分析处理，以实现熔断、认证、度量、监控、负载均衡等各种附加功能。&lt;/p>
 &lt;p>通过&lt;/p>
-&lt;p>主要框架：&lt;a class="link" href="![]%28https://gitee.com/fengzhenbing/picgo/raw/master/image-20210721231153297.png%29" >Istio&lt;/a>&lt;/p>
-&lt;p>&lt;img src="https://gitee.com/fengzhenbing/picgo/raw/master/image-20210721231153297.png" alt="image-20210721231153297" />&lt;/p>
+&lt;p>主要框架：&lt;a class="link" href="![]%28https://fengzhenbing.github.io/img/picgo/image-20210721231153297.png%29" >Istio&lt;/a>&lt;/p>
+&lt;p>&lt;img src="https://fengzhenbing.github.io/img/picgo/image-20210721231153297.png" alt="image-20210721231153297" />&lt;/p>
 &lt;/li>
 &lt;/ul>
 &lt;p>上帝的归上帝，凯撒的归凯撒，业务与技术完全分离，远程与本地完全透明，也许这就是最好的时代了吧？&lt;/p>
@@ -1191,7 +1191,7 @@ k8s.gcr.io/coredns/coredns:v1.8.0
 &lt;/code>&lt;/pre>&lt;/div>&lt;p>k8s.gcr.io 为google官方（Google Container Registry），对于不能科学上网的同学来说，可以使用阿里云加速&lt;/p>
 &lt;h3 id="31-配置阿里云加速地址">3.1 配置阿里云加速地址&lt;/h3>
 &lt;p>阿里云加速地址获取 &lt;a href="https://cr.console.aliyun.com/cn-shanghai/instances/mirrors">https://cr.console.aliyun.com/cn-shanghai/instances/mirrors&lt;/a>&lt;/p>
-&lt;p>&lt;img src="https://gitee.com/fengzhenbing/picgo/raw/master/image-20210725221057446.png" alt="image-20210725221057446" />&lt;/p>
+&lt;p>&lt;img src="https://fengzhenbing.github.io/img/picgo/image-20210725221057446.png" alt="image-20210725221057446" />&lt;/p>
 &lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-shell" data-lang="shell">sudo tee /etc/docker/daemon.json &lt;span class="s">&amp;lt;&amp;lt;-&amp;#39;EOF&amp;#39;
 &lt;/span>&lt;span class="s">{
 &lt;/span>&lt;span class="s"> &amp;#34;registry-mirrors&amp;#34;: [&amp;#34;https://xxxx.mirror.aliyuncs.com&amp;#34;]
@@ -1250,7 +1250,7 @@ fengzhenbing@fengzhenbing-ubuntu:/etc/docker$ sudo systemctl enable kubelet
 &lt;p>&lt;code>--control-plane-endpoint&lt;/code>参数是控制面的地址，强烈建议使用一个域名代替直接的IP地址来建立Kubernetes集群。因为CA证书直接与地址相关，Kubernetes中诸多配置（配置文件、ConfigMap资源）也直接存储了这个地址，一旦更换IP，要想要不重置集群，手工换起来异常麻烦。所以最好使用hostname（仅限单节点实验）或者dns name。&lt;/p>
 &lt;/blockquote>
 &lt;p>执行完，如下提示表明成功&lt;/p>
-&lt;p>&lt;img src="https://gitee.com/fengzhenbing/picgo/raw/master/image-20210725225837358.png" alt="image-20210725225837358" />&lt;/p>
+&lt;p>&lt;img src="https://fengzhenbing.github.io/img/picgo/image-20210725225837358.png" alt="image-20210725225837358" />&lt;/p>
 &lt;h2 id="5-为当前用户生成-kubeconfig">5 为当前用户生成 &lt;strong>kubeconfig&lt;/strong>&lt;/h2>
 &lt;p>使用 Kubernetes 前需要为当前用户先配置好 admin.conf 文件&lt;/p>
 &lt;pre>&lt;code>root@fengzhenbing-ubuntu:~# mkdir -p $HOME/.kube
@@ -1293,7 +1293,7 @@ kubeadm join 192.168.3.13:6443 --token qxu02l.g995k2yhkxjh3k80 &lt;span class="s
 &lt;pre>&lt;code>$ kubeadm token create --print-join-command
 &lt;/code>&lt;/pre>&lt;h2 id="9相关问题">9相关问题&lt;/h2>
 &lt;p>无法访问api端点如下&lt;/p>
-&lt;p>&lt;img src="https://gitee.com/fengzhenbing/picgo/raw/master/image-20210725233415235.png" alt="image-20210725233415235" />&lt;/p>
+&lt;p>&lt;img src="https://fengzhenbing.github.io/img/picgo/image-20210725233415235.png" alt="image-20210725233415235" />&lt;/p>
 &lt;p>对于实验测试非线上来讲，可以直接将&lt;code>system:anonymous&lt;/code>加为用户&lt;/p>
 &lt;pre>&lt;code>kubectl create clusterrolebinding test:anonymous --clusterrole=cluster-admin --user=system:anonymous
 &lt;/code>&lt;/pre>&lt;p>对于正式环境，需要创建一个用户并授权&lt;/p>
@@ -1551,7 +1551,7 @@ kubeadm join 192.168.3.13:6443 --token qxu02l.g995k2yhkxjh3k80 &lt;span class="s
 &lt;p>对于老年代一般使用标记整理算法 （CMS除外）&lt;/p>
 &lt;/li>
 &lt;/ul>
-&lt;p>&lt;img src="https://gitee.com/fengzhenbing/picgo/raw/master/image-20210916161350325.png" alt="image-20210916161350325" />&lt;/p>
+&lt;p>&lt;img src="https://fengzhenbing.github.io/img/picgo/image-20210916161350325.png" alt="image-20210916161350325" />&lt;/p>
 &lt;h4 id="serial收集器">Serial收集器&lt;/h4>
 &lt;ul>
 &lt;li>串行&lt;/li>
@@ -1639,7 +1639,7 @@ kubeadm join 192.168.3.13:6443 --token qxu02l.g995k2yhkxjh3k80 &lt;span class="s
 java version &lt;span class="s2">&amp;#34;1.8.0_131&amp;#34;&lt;/span>
 Java&lt;span class="o">(&lt;/span>TM&lt;span class="o">)&lt;/span> SE Runtime Environment &lt;span class="o">(&lt;/span>build 1.8.0_131-b11&lt;span class="o">)&lt;/span>
 Java HotSpot&lt;span class="o">(&lt;/span>TM&lt;span class="o">)&lt;/span> 64-Bit Server VM &lt;span class="o">(&lt;/span>build 25.131-b11, mixed mode&lt;span class="o">)&lt;/span>
-&lt;/code>&lt;/pre>&lt;/div>&lt;p>&lt;img src="https://gitee.com/fengzhenbing/picgo/raw/master/519126-20180623154635076-953076776.png" alt="img" />&lt;/p>
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>&lt;img src="https://fengzhenbing.github.io/img/picgo/519126-20180623154635076-953076776.png" alt="img" />&lt;/p>
 &lt;blockquote>
 &lt;p>UseParallelGC 按道理时使用 Parallel Scavenge + SerialOld，但后来P araller old出现后，&lt;strong>实际默认时用的&lt;code>Parallel Scavenge + Parallel Old&lt;/code>&lt;/strong>&lt;/p>
 &lt;/blockquote>
@@ -1667,7 +1667,7 @@ Java HotSpot&lt;span class="o">(&lt;/span>TM&lt;span class="o">)&lt;/span> 64-Bi
 &lt;/blockquote></description></item><item><title>pulsar</title><link>https://fengzhenbing.github.io/p/pulsar/</link><pubDate>Tue, 23 Feb 2021 00:00:00 +0000</pubDate><guid>https://fengzhenbing.github.io/p/pulsar/</guid><description>&lt;h2 id="相关概念">相关概念&lt;/h2>
 &lt;ul>
 &lt;li>计算存储分离&lt;/li>
-&lt;li>&lt;img src="https://gitee.com/fengzhenbing/picgo/raw/master/image-20210406220312072.png" alt="image-20210406220312072" />&lt;/li>
+&lt;li>&lt;img src="https://fengzhenbing.github.io/img/picgo/image-20210406220312072.png" alt="image-20210406220312072" />&lt;/li>
 &lt;/ul>
 &lt;h2 id="安装测试">安装测试&lt;/h2>
 &lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-shell" data-lang="shell">&lt;span class="c1"># 下载&lt;/span>
@@ -1726,7 +1726,7 @@ sh bin/tools.sh org.apache.rocketmq.example.quickstart.Consumer
 &lt;ul>
 &lt;li>Exchange：接收消息，并根据路由键转发消息所绑定的队列。&lt;/li>
 &lt;/ul>
-&lt;p>&lt;img src="https://gitee.com/fengzhenbing/picgo/raw/master/1577453-20200519174721973-114601627.png" alt="img" />&lt;/p>
+&lt;p>&lt;img src="https://fengzhenbing.github.io/img/picgo/1577453-20200519174721973-114601627.png" alt="img" />&lt;/p>
 &lt;p>蓝色框：客户端发送消息至交换机，通过路由键路由至指定的队列。
 黄色框：交换机和队列通过路由键有一个绑定的关系。
 绿色框：消费端通过监听队列来接收消息。&lt;/p>
@@ -1737,7 +1737,7 @@ docker &lt;span class="nb">exec&lt;/span> -it rabbitmq-test /bin/bash
 &lt;/code>&lt;/pre>&lt;/div>&lt;p>高可用&lt;/p>
 &lt;h4 id="镜像集群模式高可用性">镜像集群模式（高可用性）&lt;/h4>
 &lt;p>这种模式，才是所谓的 RabbitMQ 的高可用模式。跟普通集群模式不一样的是，在镜像集群模式下，你创建的 queue，无论元数据还是 queue 里的消息都会&lt;strong>存在于多个实例上&lt;/strong>，就是说，每个 RabbitMQ 节点都有这个 queue 的一个&lt;strong>完整镜像&lt;/strong>，包含 queue 的全部数据的意思。然后每次你写消息到 queue 的时候，都会自动把&lt;strong>消息同步&lt;/strong>到多个实例的 queue 上。&lt;/p>
-&lt;p>&lt;img src="https://gitee.com/fengzhenbing/picgo/raw/master/mq-8.png" alt="mq-8" />&lt;/p>
+&lt;p>&lt;img src="https://fengzhenbing.github.io/img/picgo/mq-8.png" alt="mq-8" />&lt;/p>
 &lt;p>那么&lt;strong>如何开启这个镜像集群模式&lt;/strong>呢？其实很简单，RabbitMQ 有很好的管理控制台，就是在后台新增一个策略，这个策略是&lt;strong>镜像集群模式的策略&lt;/strong>，指定的时候是可以要求数据同步到所有节点的，也可以要求同步到指定数量的节点，再次创建 queue 的时候，应用这个策略，就会自动将数据同步到其他的节点上去了。&lt;/p>
 &lt;p>这样的话，好处在于，你任何一个机器宕机了，没事儿，其它机器（节点）还包含了这个 queue 的完整数据，别的 consumer 都可以到其它节点上去消费数据。坏处在于，第一，这个性能开销也太大了吧，消息需要同步到所有机器上，导致网络带宽压力和消耗很重！第二，这么玩儿，不是分布式的，就&lt;strong>没有扩展性可言&lt;/strong>了，如果某个 queue 负载很重，你加机器，新增的机器也包含了这个 queue 的所有数据，并&lt;strong>没有办法线性扩展&lt;/strong>你的 queue。你想，如果这个 queue 的数据量很大，大到这个机器上的容量无法容纳了，此时该怎么办呢？&lt;/p></description></item><item><title>康威定律</title><link>https://fengzhenbing.github.io/p/%E5%BA%B7%E5%A8%81%E5%AE%9A%E5%BE%8B/</link><pubDate>Wed, 13 Jan 2021 00:00:00 +0000</pubDate><guid>https://fengzhenbing.github.io/p/%E5%BA%B7%E5%A8%81%E5%AE%9A%E5%BE%8B/</guid><description>&lt;h2 id="康威定律组织决定产品形态">康威定律：组织决定产品形态&lt;/h2>
 &lt;h3 id="第一定律">第一定律&lt;/h3>
@@ -1761,7 +1761,7 @@ docker &lt;span class="nb">exec&lt;/span> -it rabbitmq-test /bin/bash
 &lt;h2 id="对象在内存中的存储">对象在内存中的存储&lt;/h2>
 &lt;p>&lt;img src="https://img-blog.csdnimg.cn/2019012010560977.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L211bGluc2VuNzc=,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述" />&lt;/p>
 &lt;p>Markword 32位jvm 结构如下： 重量级锁即为 Synchronized 的锁&lt;/p>
-&lt;p>&lt;img src="https://gitee.com/fengzhenbing/picgo/raw/master/image-20210418232331824.png" alt="image-20210418232331824" />&lt;/p>
+&lt;p>&lt;img src="https://fengzhenbing.github.io/img/picgo/image-20210418232331824.png" alt="image-20210418232331824" />&lt;/p>
 &lt;h2 id="锁升级">锁升级&lt;/h2>
 &lt;p>参考 &lt;a href="https://mp.weixin.qq.com/s/2yxexZUr5MWdMZ02GCSwdA">https://mp.weixin.qq.com/s/2yxexZUr5MWdMZ02GCSwdA&lt;/a>&lt;/p></description></item><item><title>hazelcast</title><link>https://fengzhenbing.github.io/p/hazelcast/</link><pubDate>Mon, 14 Dec 2020 08:06:25 +0600</pubDate><guid>https://fengzhenbing.github.io/p/hazelcast/</guid><description>&lt;h2 id="安装">安装&lt;/h2>
 &lt;h3 id="docker">docker&lt;/h3>
@@ -1895,7 +1895,7 @@ return 0 end
 &lt;p>更多细节：&lt;a class="link" href="https://www.cnblogs.com/yunlongaimeng/p/10266690.html" target="_blank" rel="noopener"
 >https://www.cnblogs.com/yunlongaimeng/p/10266690.html&lt;/a>&lt;/p></description></item><item><title>01.gateway整体逻辑</title><link>https://fengzhenbing.github.io/p/01.gateway%E6%95%B4%E4%BD%93%E9%80%BB%E8%BE%91/</link><pubDate>Thu, 10 Dec 2020 08:06:25 +0600</pubDate><guid>https://fengzhenbing.github.io/p/01.gateway%E6%95%B4%E4%BD%93%E9%80%BB%E8%BE%91/</guid><description>&lt;h2 id="gateway整体逻辑">gateway整体逻辑&lt;/h2>
 &lt;h3 id="1流程图">1.流程图&lt;/h3>
-&lt;p>&lt;img src="https://gitee.com/fengzhenbing/picgo/raw/master/image.png" alt="image" />&lt;/p>
+&lt;p>&lt;img src="https://fengzhenbing.github.io/img/picgo/image.png" alt="image" />&lt;/p>
 &lt;h3 id="2几个关键的类">2.&lt;strong>几个关键的类&lt;/strong>&lt;/h3>
 &lt;ul>
 &lt;li>org.springframework.web.reactive.DispatcherHandler: 请求分发处理器；&lt;/li>
@@ -1939,7 +1939,7 @@ return 0 end
 &lt;li>route：路由的定义类，及路由定位类CachingRouteLocator的所有实现，及路由定义定位类CompositeRouteDefinitionLocator的所有实现，路由存储接口RouteDefinitionRepository及其所有实现&lt;/li>
 &lt;li>support：工具类；如HTTP协议处理，组件名处理，日期转换等&lt;/li>
 &lt;/ul></description></item><item><title>02.reactor响应式编程学习</title><link>https://fengzhenbing.github.io/p/02.reactor%E5%93%8D%E5%BA%94%E5%BC%8F%E7%BC%96%E7%A8%8B%E5%AD%A6%E4%B9%A0/</link><pubDate>Thu, 10 Dec 2020 08:06:25 +0600</pubDate><guid>https://fengzhenbing.github.io/p/02.reactor%E5%93%8D%E5%BA%94%E5%BC%8F%E7%BC%96%E7%A8%8B%E5%AD%A6%E4%B9%A0/</guid><description>&lt;h2 id="reactor-使用">reactor 使用&lt;/h2>
-&lt;p>![image (1)](&lt;a href="https://gitee.com/fengzhenbing/picgo/raw/master/image">https://gitee.com/fengzhenbing/picgo/raw/master/image&lt;/a> (1).png)&lt;/p>
+&lt;p>![image (1)](&lt;a href="https://fengzhenbing.github.io/img/picgo/image">https://fengzhenbing.github.io/img/picgo/image&lt;/a> (1).png)&lt;/p>
 &lt;h4 id="webflux-模块的名称是-spring-webflux名称中的-flux-来源于-reactor-中的类-flux">Webflux 模块的名称是 spring-webflux，名称中的 Flux 来源于 Reactor 中的类 Flux。&lt;/h4>
 &lt;p>Reactor 两个核心概念做一些澄清，一个是Mono，另一个是Flux&lt;/p>
 &lt;ul>
@@ -1963,7 +1963,7 @@ return 0 end
 &lt;/blockquote></description></item><item><title>03.scg NettyWebServer启动过程</title><link>https://fengzhenbing.github.io/p/03.scg-nettywebserver%E5%90%AF%E5%8A%A8%E8%BF%87%E7%A8%8B/</link><pubDate>Thu, 10 Dec 2020 08:06:25 +0600</pubDate><guid>https://fengzhenbing.github.io/p/03.scg-nettywebserver%E5%90%AF%E5%8A%A8%E8%BF%87%E7%A8%8B/</guid><description>&lt;h2 id="scg-nettywebserver启动过程">scg NettyWebServer启动过程&lt;/h2>
 &lt;p>spring cloud gateway(下面简称scg)依赖spring webflux, 而spring webflux依赖于reactor-netty,也就是scg启动过程中最终会启动netty做为服务器。
 springboot中定义一下几种服务器：&lt;/p>
-&lt;p>&lt;img src="https://gitee.com/fengzhenbing/picgo/raw/master/webserver.png" alt="webserver" />&lt;/p>
+&lt;p>&lt;img src="https://fengzhenbing.github.io/img/picgo/webserver.png" alt="webserver" />&lt;/p>
 &lt;h3 id="1-启动reactivewebserverapplicationcontext">1 启动ReactiveWebServerApplicationContext&lt;/h3>
 &lt;p>从springboot启动开始分析&lt;/p>
 &lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-java" data-lang="java">&lt;span class="n">SpringApplication&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">run&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">GatewayApplication&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">class&lt;/span>&lt;span class="o">,&lt;/span> &lt;span class="n">args&lt;/span>&lt;span class="o">);&lt;/span>
@@ -2015,7 +2015,7 @@ springboot中定义一下几种服务器：&lt;/p>
 &lt;span class="k">return&lt;/span> &lt;span class="o">(&lt;/span>&lt;span class="n">ConfigurableApplicationContext&lt;/span>&lt;span class="o">)&lt;/span> &lt;span class="n">BeanUtils&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">instantiateClass&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">contextClass&lt;/span>&lt;span class="o">);&lt;/span>
 &lt;span class="o">}&lt;/span>
 &lt;/code>&lt;/pre>&lt;/div>&lt;p>各类容器选择总结&lt;/p>
-&lt;p>&lt;img src="https://gitee.com/fengzhenbing/picgo/raw/master/context.png" alt="context" />&lt;/p>
+&lt;p>&lt;img src="https://fengzhenbing.github.io/img/picgo/context.png" alt="context" />&lt;/p>
 &lt;h3 id="2--reactivewebserverapplicationcontext刷新">2 ReactiveWebServerApplicationContext刷新&lt;/h3>
 &lt;p>先创建了
 org.springframework.boot.autoconfigure.web.reactive.ReactiveWebServerFactoryAutoConfiguration中配置了EmbeddedNetty，初始化了NettyReactiveWebServerFactory&lt;/p>
@@ -2090,7 +2090,7 @@ org.springframework.boot.autoconfigure.web.reactive.ReactiveWebServerFactoryAuto
 参考 Reactor Netty参考指南 &lt;a href="https://projectreactor.io/docs/netty/release/reference/index.html">https://projectreactor.io/docs/netty/release/reference/index.html&lt;/a>&lt;/p></description></item><item><title>04.scg 一次请求的执行过程</title><link>https://fengzhenbing.github.io/p/04.scg-%E4%B8%80%E6%AC%A1%E8%AF%B7%E6%B1%82%E7%9A%84%E6%89%A7%E8%A1%8C%E8%BF%87%E7%A8%8B/</link><pubDate>Thu, 10 Dec 2020 08:06:25 +0600</pubDate><guid>https://fengzhenbing.github.io/p/04.scg-%E4%B8%80%E6%AC%A1%E8%AF%B7%E6%B1%82%E7%9A%84%E6%89%A7%E8%A1%8C%E8%BF%87%E7%A8%8B/</guid><description>&lt;h2 id="一次请求的执行过程">一次请求的执行过程&lt;/h2></description></item><item><title>05.route路由的配置加载</title><link>https://fengzhenbing.github.io/p/05.route%E8%B7%AF%E7%94%B1%E7%9A%84%E9%85%8D%E7%BD%AE%E5%8A%A0%E8%BD%BD/</link><pubDate>Thu, 10 Dec 2020 08:06:25 +0600</pubDate><guid>https://fengzhenbing.github.io/p/05.route%E8%B7%AF%E7%94%B1%E7%9A%84%E9%85%8D%E7%BD%AE%E5%8A%A0%E8%BD%BD/</guid><description>&lt;h2 id="route路由的配置加载">route路由的配置加载&lt;/h2>
 &lt;hr>
 &lt;p>主要在sprng-cloud-gateway-server的route包定义路由相关的定义，构建和加载&lt;/p>
-&lt;p>![路由](&lt;a href="https://gitee.com/fengzhenbing/picgo/raw/master/image">https://gitee.com/fengzhenbing/picgo/raw/master/image&lt;/a> (2).png)&lt;/p>
+&lt;p>![路由](&lt;a href="https://fengzhenbing.github.io/img/picgo/image">https://fengzhenbing.github.io/img/picgo/image&lt;/a> (2).png)&lt;/p>
 &lt;h3 id="0相关配置">0.相关配置&lt;/h3>
 &lt;ul>
 &lt;li>通过springboot spi方式，springboot会启动spring.factories中配置的
@@ -2124,7 +2124,7 @@ org.springframework.cloud.gateway.discovery.GatewayDiscoveryClientAutoConfigurat
 &lt;/span>&lt;span class="c1">&lt;/span> &lt;span class="n">Flux&lt;/span>&lt;span class="o">&amp;lt;&lt;/span>&lt;span class="n">RouteDefinition&lt;/span>&lt;span class="o">&amp;gt;&lt;/span> &lt;span class="nf">getRouteDefinitions&lt;/span>&lt;span class="o">();&lt;/span>
 &lt;span class="o">}&lt;/span>
 &lt;/code>&lt;/pre>&lt;/div>&lt;p>有以下实现：&lt;/p>
-&lt;p>![image (3)](&lt;a href="https://gitee.com/fengzhenbing/picgo/raw/master/image">https://gitee.com/fengzhenbing/picgo/raw/master/image&lt;/a> (3).png)&lt;/p>
+&lt;p>![image (3)](&lt;a href="https://fengzhenbing.github.io/img/picgo/image">https://fengzhenbing.github.io/img/picgo/image&lt;/a> (3).png)&lt;/p>
 &lt;blockquote>
 &lt;ul>
 &lt;li>CachingRouteDefinitionLocator: 它包装了CompositeRouteDefinitionLocator,缓存路由定义RouteDefinition列表&lt;/li>
@@ -2276,7 +2276,7 @@ return Mono.just(routeDefinition);
 &lt;span class="c1">//fzb 获取路由对象
 &lt;/span>&lt;span class="c1">&lt;/span> &lt;span class="n">Flux&lt;/span>&lt;span class="o">&amp;lt;&lt;/span>&lt;span class="n">Route&lt;/span>&lt;span class="o">&amp;gt;&lt;/span> &lt;span class="nf">getRoutes&lt;/span>&lt;span class="o">();&lt;/span>
 &lt;span class="o">}&lt;/span>
-&lt;/code>&lt;/pre>&lt;/div>&lt;p>&lt;img src="https://gitee.com/fengzhenbing/picgo/raw/master/routeLocator.png" alt="routeLocator" />&lt;/p>
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>&lt;img src="https://fengzhenbing.github.io/img/picgo/routeLocator.png" alt="routeLocator" />&lt;/p>
 &lt;p>类似RouteDefinitionLocator三个实现：&lt;/p>
 &lt;blockquote>
 &lt;ul>
@@ -2417,7 +2417,7 @@ return Mono.just(routeDefinition);
 &lt;/code>&lt;/pre>&lt;/div>&lt;ul>
 &lt;li>eureka-client starter的引入，会同时引入ribbon,作为后续请求，负载均衡的实现&lt;/li>
 &lt;/ul>
-&lt;p>&lt;img src="https://gitee.com/fengzhenbing/picgo/raw/master/eureka-ribbon.png" alt="eureka-ribbon" />&lt;/p>
+&lt;p>&lt;img src="https://fengzhenbing.github.io/img/picgo/eureka-ribbon.png" alt="eureka-ribbon" />&lt;/p>
 &lt;p>spring.cloud.gateway.discovery.locator.enabled设为true,启用服务发现的DiscoveryClientRouteDefinitionLocator&lt;/p>
 &lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-yaml" data-lang="yaml">&lt;span class="nt">spring&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
 &lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">cloud&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
@@ -2442,14 +2442,14 @@ return Mono.just(routeDefinition);
 &lt;li>eureka-client的引入，会开启TimedSupervisorTask执行HeartbeatThread的心跳任务， 默认每隔30s一次&lt;/li>
 &lt;/ul>
 &lt;p>RouteRefreshListener 每隔30s接收到HeartBeatEvent事件，同时会发送RefreshRoutes事件&lt;/p>
-&lt;p>&lt;img src="https://gitee.com/fengzhenbing/picgo/raw/master/rrf.png" alt="rrf" />&lt;/p>
-&lt;p>&lt;img src="https://gitee.com/fengzhenbing/picgo/raw/master/heartbeat.png" alt="heartbeat" />&lt;/p>
+&lt;p>&lt;img src="https://fengzhenbing.github.io/img/picgo/rrf.png" alt="rrf" />&lt;/p>
+&lt;p>&lt;img src="https://fengzhenbing.github.io/img/picgo/heartbeat.png" alt="heartbeat" />&lt;/p>
 &lt;p>CachingRouteLocator 收到RefreshRoutesEvent事件，重新获取路由时会发现多了一个DiscoveryClientRouteDefinitionLocator （负责从注册中心获取新路由配置）&lt;/p>
-&lt;p>&lt;img src="https://gitee.com/fengzhenbing/picgo/raw/master/cacheroutelocator.png" alt="cacheroutelocator" />&lt;/p>
+&lt;p>&lt;img src="https://fengzhenbing.github.io/img/picgo/cacheroutelocator.png" alt="cacheroutelocator" />&lt;/p>
 &lt;h3 id="验证">验证&lt;/h3>
 &lt;p>http://localhost:7070/ORDER/order/get 前边ORDER为eureka-client从eureka-server获取的服务名，&lt;/p>
 &lt;p>LoadBalancerClientFilter在NettyRoutingFilter之前通过ribbon执行负载均衡策略，选择一个服务实例&lt;/p>
-&lt;p>&lt;img src="https://gitee.com/fengzhenbing/picgo/raw/master/lbancerClient.png" alt="lbancerClient" />&lt;/p>
+&lt;p>&lt;img src="https://fengzhenbing.github.io/img/picgo/lbancerClient.png" alt="lbancerClient" />&lt;/p>
 &lt;h3 id="总结">总结&lt;/h3>
 &lt;ul>
 &lt;li>springgateway 接收注册中心心跳事件，发送路由刷新事件，&lt;/li>
@@ -2981,7 +2981,7 @@ $ npm run dev # 监听并且编译项目
 &lt;p>Kafka利用了操作系统本身的Page Cache&lt;/p>
 &lt;h3 id="零拷贝">零拷贝&lt;/h3>
 &lt;p>零拷贝就是使用了一个名为sendfile()的系统调用方法，将数据从page cache直接发送到Socket缓冲区，避免了系统上下文的切换，消除了从内核空间到用户空间的来回复制。从下图可以看出，&amp;ldquo;零拷贝&amp;quot;并不是说整个过程完全不发生拷贝，而是站在内核的角度来说的，避免了内核空间到用户空间的来回拷贝。&lt;/p>
-&lt;p>&lt;img src="https://gitee.com/fengzhenbing/picgo/raw/master/image-20211007195405264.png" alt="image-20211007195405264" />&lt;/p>
+&lt;p>&lt;img src="https://fengzhenbing.github.io/img/picgo/image-20211007195405264.png" alt="image-20211007195405264" />&lt;/p>
 &lt;h2 id="topic特性">Topic特性&lt;/h2>
 &lt;ol>
 &lt;li>通过partition增加可扩展性：线上改partion数，rebalance ，会照成性能抖动。&lt;/li>
@@ -3146,7 +3146,7 @@ tail -f test.sink.txt
 &lt;h3 id="innodb概述">Innodb概述&lt;/h3>
 &lt;p>该存储引擎是第一个完整支持ACID事 务的MySOL存储引擎，其特点是行锁设计、支持MVCC、支持外键、提供一致性非锁定读，同时被设计用来最有效地利用以及使用内存和CPU；&lt;/p>
 &lt;p>体系结构如下：&lt;/p>
-&lt;p>&lt;img src="https://gitee.com/fengzhenbing/picgo/raw/master/image-20211005142610433.png" alt="image-20211005142610433" />&lt;/p>
+&lt;p>&lt;img src="https://fengzhenbing.github.io/img/picgo/image-20211005142610433.png" alt="image-20211005142610433" />&lt;/p>
 &lt;p>InnoDB存储引擎有多个内存块，这些内存块组成一个内存池，主要负责如下工作：&lt;/p>
 &lt;ul>
 &lt;li>维护所有进程、线程需要访问的多个内部数据结构&lt;/li>
@@ -3163,7 +3163,7 @@ tail -f test.sink.txt
 &lt;/li>
 &lt;/ul>
 &lt;h3 id="innodb-内存结构">innodb 内存结构&lt;/h3>
-&lt;p>&lt;img src="https://gitee.com/fengzhenbing/picgo/raw/master/image-20211005144108370.png" alt="image-20211005144108370" />&lt;/p>
+&lt;p>&lt;img src="https://fengzhenbing.github.io/img/picgo/image-20211005144108370.png" alt="image-20211005144108370" />&lt;/p>
 &lt;h4 id="缓冲池">缓冲池&lt;/h4>
 &lt;p>InnoDB存储引擎是基于磁盘存储的，并将其中的记录按照页的方式进行管理。因此 可将其视为基于磁盘的数据库系统 (Disk-baseDatabase)。在数据库系统中，由于&lt;strong>CPU 速度与磁盘速度之间的鸿沟&lt;/strong>，基于磁盘的数据库系统通常使用缇冲池技术来提高数据库 的整体性能 .&lt;/p>
 &lt;p>缓冲池简单来说就是一块内存区域，通过内存的速度来弥补磁盘速度较慢对数据库性能的影响。在数据库中进行读取页的操作，首先将从磁盘读到的页存放在缓冲他中 这个过程称为将页“FIX”在缓冲池中。下一次再读相同的页时，首先判断该页是否在 缓冲他中，若在缓冲池中，称该页在缓冲池中被命中，直接读取该页。否则，读取磁盘 上的页 .&lt;/p>
@@ -3181,9 +3181,9 @@ tail -f test.sink.txt
 &lt;p>可以和jvm的young区 old区类比。&lt;/p>
 &lt;h5 id="为什么这么设计">为什么这么设计？？&lt;/h5>
 &lt;p>直接将读取的页放人到LRU列表的首部呢?这是因为若直接将读取到的页放人到LRU的首部，那么某些SQL操作可能会使缓冲池中 的页被刷新出，从而影响缓冲池的效率。常见的这类操作为索引或数据的扫描操作。这 类操作需要访问表中的许多页，甚至是全部的页，而这些页通常来说又仅在这次查询操 作中需要，并不是活跃的热点数据。如果页被放人LRU列表的首部，那么非常可能将 所需要的热点数据页从LRU列表中移除，而在下一次需要读取该页时， InnoDB存储引 肇需要再次访问磁盘&lt;/p>
-&lt;p>&lt;img src="https://gitee.com/fengzhenbing/picgo/raw/master/format,png-20211005153839472.png" alt="Content is described in the surrounding text." />&lt;/p>
+&lt;p>&lt;img src="https://fengzhenbing.github.io/img/picgo/format,png-20211005153839472.png" alt="Content is described in the surrounding text." />&lt;/p>
 &lt;h4 id="查看内存状态">查看内存状态&lt;/h4>
-&lt;p>&lt;img src="https://gitee.com/fengzhenbing/picgo/raw/master/image-20211005152044108.png" alt="image-20211005152044108" />&lt;/p>
+&lt;p>&lt;img src="https://fengzhenbing.github.io/img/picgo/image-20211005152044108.png" alt="image-20211005152044108" />&lt;/p>
 &lt;h3 id="checkpoint">Checkpoint&lt;/h3>
 &lt;p>Checkpoint(检查点)技术的目的是解决以下几个间题&lt;/p>
 &lt;ul>
@@ -3248,7 +3248,7 @@ tail -f test.sink.txt
 &lt;h3 id="relay-log">relay log&lt;/h3>
 &lt;p>中继日志，基于binlog的主从同步&lt;/p>
 &lt;p>&lt;em>&lt;strong>*工作原理*&lt;/strong>&lt;/em>&lt;/p>
-&lt;p>&lt;em>&lt;strong>*&lt;img src="https://gitee.com/fengzhenbing/picgo/raw/master/1297933-20190705153223795-497941446.png" alt="img" />*&lt;/strong>&lt;/em>&lt;/p>
+&lt;p>&lt;em>&lt;strong>*&lt;img src="https://fengzhenbing.github.io/img/picgo/1297933-20190705153223795-497941446.png" alt="img" />*&lt;/strong>&lt;/em>&lt;/p>
 &lt;p>1、主节点必须启用二进制日志，记录任何修改了数据库数据的事件。
 2、从节点开启一个线程（I/O Thread)把自己扮演成 mysql 的客户端，通过 mysql 协议，请求主节点的二进制日志文件中的事件
 3、主节点启动一个线程（dump Thread），检查自己二进制日志中的事件，跟对方请求的位置对比，如果不带请求位置参数，则主节点就会从第一个日志文件中的第一个事件一个一个发送给从节点。
@@ -3335,7 +3335,7 @@ tail -f test.sink.txt
 &lt;span class="k">return&lt;/span> &lt;span class="o">(&lt;/span>&lt;span class="n">T&lt;/span>&lt;span class="o">)&lt;/span> &lt;span class="n">SINGLES&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">get&lt;/span>&lt;span class="o">(&lt;/span>&lt;span class="n">clazz&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="na">getName&lt;/span>&lt;span class="o">());&lt;/span>
 &lt;span class="o">}&lt;/span>
 &lt;span class="o">}&lt;/span>
-&lt;/code>&lt;/pre>&lt;/div></description></item><item><title>分布式事务</title><link>https://fengzhenbing.github.io/p/%E5%88%86%E5%B8%83%E5%BC%8F%E4%BA%8B%E5%8A%A1/</link><pubDate>Thu, 13 Aug 2020 14:16:25 +0600</pubDate><guid>https://fengzhenbing.github.io/p/%E5%88%86%E5%B8%83%E5%BC%8F%E4%BA%8B%E5%8A%A1/</guid><description>&lt;p>&lt;img src="https://gitee.com/fengzhenbing/picgo/raw/master/20200526140940829.png" alt="20200526140940829" />&lt;/p>
+&lt;/code>&lt;/pre>&lt;/div></description></item><item><title>分布式事务</title><link>https://fengzhenbing.github.io/p/%E5%88%86%E5%B8%83%E5%BC%8F%E4%BA%8B%E5%8A%A1/</link><pubDate>Thu, 13 Aug 2020 14:16:25 +0600</pubDate><guid>https://fengzhenbing.github.io/p/%E5%88%86%E5%B8%83%E5%BC%8F%E4%BA%8B%E5%8A%A1/</guid><description>&lt;p>&lt;img src="https://fengzhenbing.github.io/img/picgo/20200526140940829.png" alt="20200526140940829" />&lt;/p>
 &lt;h2 id="两段式提交">两段式提交&lt;/h2>
 &lt;p>（2 Phase Commit，2PC）&lt;/p>
 &lt;h3 id="准备阶段">&lt;strong>准备阶段&lt;/strong>&lt;/h3>
@@ -3370,7 +3370,7 @@ tail -f test.sink.txt
 &lt;h1 id="mq消息最终一致性解决方案">MQ消息最终一致性解决方案&lt;/h1>
 &lt;h4 id="事务消息">事务消息&lt;/h4>
 &lt;p>由于传统的处理方式无法解决&lt;code>消息生成者本地事务处理成功&lt;/code>与&lt;code>消息发送成功&lt;/code>两者的一致性问题，因此事务消息就诞生了，&lt;strong>它实现了消息生成者本地事务与消息发送的原子性，保证了消息生成者本地事务处理成功与消息发送成功的&lt;code>最终一致性&lt;/code>问题。&lt;/strong>&lt;/p>
-&lt;p>&lt;img src="https://gitee.com/fengzhenbing/picgo/raw/master/image-20211020111849317.png" alt="image-20211020111849317" />&lt;/p>
+&lt;p>&lt;img src="https://fengzhenbing.github.io/img/picgo/image-20211020111849317.png" alt="image-20211020111849317" />&lt;/p>
 &lt;p>&lt;a href="https://www.jianshu.com/p/eb571e4065ec">https://www.jianshu.com/p/eb571e4065ec&lt;/a>&lt;/p>
 &lt;p>RocketMQ支持事务消息&lt;/p>
 &lt;ul>
@@ -3379,8 +3379,8 @@ tail -f test.sink.txt
 &lt;/ul>
 &lt;h4 id="rocketmq事务消息原理">RocketMQ事务消息原理&lt;/h4>
 &lt;p>MQ存储了&lt;code>待发送&lt;/code>的消息，但是MQ无法感知到上游处理的最终结果。对于RocketMQ而言，它的解决方案非常的简单，就是其内部实现会有一个定时任务，去轮训状态为&lt;code>待发送&lt;/code>的消息，然后给producer发送check请求，而producer必须实现一个check监听器，监听器的内容通常就是去检查与之对应的本地事务是否成功(一般就是查询DB)，如果成功了，则MQ会将消息设置为&lt;code>可发送&lt;/code>，否则就删除消息。&lt;/p></description></item><item><title>高可用之限流</title><link>https://fengzhenbing.github.io/p/%E9%AB%98%E5%8F%AF%E7%94%A8%E4%B9%8B%E9%99%90%E6%B5%81/</link><pubDate>Sun, 21 Jun 2020 00:00:00 +0000</pubDate><guid>https://fengzhenbing.github.io/p/%E9%AB%98%E5%8F%AF%E7%94%A8%E4%B9%8B%E9%99%90%E6%B5%81/</guid><description/></item><item><title/><link>https://fengzhenbing.github.io/p/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://fengzhenbing.github.io/p/</guid><description>&lt;p>java Unsafe 。 sun.misc.Unsafe&lt;/p>
-&lt;p>&lt;img src="https://gitee.com/fengzhenbing/picgo/raw/master/F556169D09144BED867ADFB7558A8E58.png" alt="" />&lt;/p></description></item><item><title/><link>https://fengzhenbing.github.io/p/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://fengzhenbing.github.io/p/</guid><description>&lt;h3 id="什么事jmm">什么事JMM&lt;/h3>
-&lt;p>JMM 规范明确定义了不同的线程之 间，通过哪些方式，在什么时候可以 看见其他线程保存到共享变量中的 值;以及在必要时，如何对共享变量 的访问进行同步。这样的好处是屏蔽 各种硬件平台和操作系统之间的内存 访问差异，实现了 Java 并发程序真 正的跨平台。&lt;/p></description></item><item><title/><link>https://fengzhenbing.github.io/p/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://fengzhenbing.github.io/p/</guid><description>&lt;p>&lt;img src="https://gitee.com/fengzhenbing/picgo/raw/master/image-20211007143642433.png" alt="image-20211007143642433" />&lt;/p>
+&lt;p>&lt;img src="https://fengzhenbing.github.io/img/picgo/F556169D09144BED867ADFB7558A8E58.png" alt="" />&lt;/p></description></item><item><title/><link>https://fengzhenbing.github.io/p/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://fengzhenbing.github.io/p/</guid><description>&lt;h3 id="什么事jmm">什么事JMM&lt;/h3>
+&lt;p>JMM 规范明确定义了不同的线程之 间，通过哪些方式，在什么时候可以 看见其他线程保存到共享变量中的 值;以及在必要时，如何对共享变量 的访问进行同步。这样的好处是屏蔽 各种硬件平台和操作系统之间的内存 访问差异，实现了 Java 并发程序真 正的跨平台。&lt;/p></description></item><item><title/><link>https://fengzhenbing.github.io/p/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://fengzhenbing.github.io/p/</guid><description>&lt;p>&lt;img src="https://fengzhenbing.github.io/img/picgo/image-20211007143642433.png" alt="image-20211007143642433" />&lt;/p>
 &lt;h5 id="强引用strongreference">强引用(StrongReference)&lt;/h5>
 &lt;p>强引用就是我们平时创建对象，创建数组时的引用。强引用在任何时候都不会被GC回收掉。内存不足，oom&lt;/p>
 &lt;h5 id="软引用softreference">软引用(SoftReference)&lt;/h5>
@@ -3395,7 +3395,7 @@ tail -f test.sink.txt
 &lt;p>主要使用场景：&lt;/p>
 &lt;p>1、使用引用队列进行数据监控，类似前面栗子的用法。&lt;/p>
 &lt;p>2、队列监控的反向操作&lt;/p>
-&lt;p>参考 &lt;a href="https://www.cnblogs.com/mfrank/p/10104586.html">https://www.cnblogs.com/mfrank/p/10104586.html&lt;/a>&lt;/p></description></item><item><title/><link>https://fengzhenbing.github.io/p/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://fengzhenbing.github.io/p/</guid><description>&lt;p>![屏幕快照 2021-09-15 上午8.50.10](&lt;a href="https://gitee.com/fengzhenbing/picgo/raw/master/">https://gitee.com/fengzhenbing/picgo/raw/master/&lt;/a>屏幕快照 2021-09-15 上午8.50.10.png)&lt;/p></description></item><item><title/><link>https://fengzhenbing.github.io/p/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://fengzhenbing.github.io/p/</guid><description>&lt;p>Jmstat&lt;/p></description></item><item><title/><link>https://fengzhenbing.github.io/p/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://fengzhenbing.github.io/p/</guid><description>&lt;p>参考https://zhuanlan.zhihu.com/p/138819184&lt;/p>
+&lt;p>参考 &lt;a href="https://www.cnblogs.com/mfrank/p/10104586.html">https://www.cnblogs.com/mfrank/p/10104586.html&lt;/a>&lt;/p></description></item><item><title/><link>https://fengzhenbing.github.io/p/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://fengzhenbing.github.io/p/</guid><description>&lt;p>![屏幕快照 2021-09-15 上午8.50.10](&lt;a href="https://fengzhenbing.github.io/img/picgo/">https://fengzhenbing.github.io/img/picgo/&lt;/a>屏幕快照 2021-09-15 上午8.50.10.png)&lt;/p></description></item><item><title/><link>https://fengzhenbing.github.io/p/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://fengzhenbing.github.io/p/</guid><description>&lt;p>Jmstat&lt;/p></description></item><item><title/><link>https://fengzhenbing.github.io/p/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://fengzhenbing.github.io/p/</guid><description>&lt;p>参考https://zhuanlan.zhihu.com/p/138819184&lt;/p>
 &lt;p>用 volatile 修饰共享变量后，每个线程要操作变量时会从主内存中将变量拷贝到本地内存作为副本，当线程操作变量副本并写回主内存后，会通过 &lt;strong>CPU 总线嗅探机制&lt;/strong>告知其他线程该变量副本已经失效，需要重新从主内存中读取。&lt;/p>
 &lt;p>volatile 的主要作用有两点：&lt;/p>
 &lt;ul>
@@ -3580,28 +3580,28 @@ tail -f test.sink.txt
 &lt;/code>&lt;/pre>&lt;/div></description></item><item><title/><link>https://fengzhenbing.github.io/p/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://fengzhenbing.github.io/p/</guid><description>&lt;h3 id="线程模型">线程模型&lt;/h3>
 &lt;h4 id="nio-多reacto">nio 多reacto&lt;/h4>
 &lt;p>参考 &lt;a href="https://www.jianshu.com/p/e0e7cb085fb4">https://www.jianshu.com/p/e0e7cb085fb4&lt;/a>&lt;/p>
-&lt;p>&lt;img src="https://gitee.com/fengzhenbing/picgo/raw/master/F6A1AB8C69F049B5A0178FD00F132D6F.png" alt="" />&lt;/p>
+&lt;p>&lt;img src="https://fengzhenbing.github.io/img/picgo/F6A1AB8C69F049B5A0178FD00F132D6F.png" alt="" />&lt;/p>
 &lt;h4 id="netty线程模型">netty线程模型&lt;/h4>
-&lt;p>&lt;img src="https://gitee.com/fengzhenbing/picgo/raw/master/BE156EF4454949CF9E6E49CEEC0A2B2D.png" alt="" />&lt;/p>
+&lt;p>&lt;img src="https://fengzhenbing.github.io/img/picgo/BE156EF4454949CF9E6E49CEEC0A2B2D.png" alt="" />&lt;/p>
 &lt;p>eventloopgroup eventloop channel handler关系&lt;/p>
-&lt;p>&lt;img src="https://gitee.com/fengzhenbing/picgo/raw/master/A20B60869216424BA7678D0D5213BFB6.png" alt="" />&lt;/p>
-&lt;p>&lt;img src="https://gitee.com/fengzhenbing/picgo/raw/master/227DA0D6B04B41449E83B72ED7098F5A.png" alt="" />&lt;/p>
+&lt;p>&lt;img src="https://fengzhenbing.github.io/img/picgo/A20B60869216424BA7678D0D5213BFB6.png" alt="" />&lt;/p>
+&lt;p>&lt;img src="https://fengzhenbing.github.io/img/picgo/227DA0D6B04B41449E83B72ED7098F5A.png" alt="" />&lt;/p>
 &lt;h3 id="责任链模型channelpipeline">责任链模型ChannelPipeline&lt;/h3>
-&lt;p>&lt;img src="https://gitee.com/fengzhenbing/picgo/raw/master/2CE502957CF84D2C8429CD2A0E998D54.png" alt="" />&lt;/p>
+&lt;p>&lt;img src="https://fengzhenbing.github.io/img/picgo/2CE502957CF84D2C8429CD2A0E998D54.png" alt="" />&lt;/p>
 &lt;p>pipeline 持有context的双链表&lt;/p>
-&lt;p>&lt;img src="https://gitee.com/fengzhenbing/picgo/raw/master/914EBB37C6084D8A9EA6A105262A45A1.png" alt="" />&lt;/p>
+&lt;p>&lt;img src="https://fengzhenbing.github.io/img/picgo/914EBB37C6084D8A9EA6A105262A45A1.png" alt="" />&lt;/p>
 &lt;p>context 持有下一个和上一个context和 handler , 并触发链式调用下一个或者上一个context的hander&lt;/p>
-&lt;p>&lt;img src="https://gitee.com/fengzhenbing/picgo/raw/master/6F42E200304A47B095E78C10B5246039.png" alt="" />&lt;/p>
+&lt;p>&lt;img src="https://fengzhenbing.github.io/img/picgo/6F42E200304A47B095E78C10B5246039.png" alt="" />&lt;/p>
 &lt;p>handler 自己写的时候，继承适配器即可&lt;/p>
-&lt;p>&lt;img src="https://gitee.com/fengzhenbing/picgo/raw/master/B154DADDE045400881317E5E571A7AA8.png" alt="" />&lt;/p>
+&lt;p>&lt;img src="https://fengzhenbing.github.io/img/picgo/B154DADDE045400881317E5E571A7AA8.png" alt="" />&lt;/p>
 &lt;h3 id="整体结构">整体结构&lt;/h3>
-&lt;p>&lt;img src="https://gitee.com/fengzhenbing/picgo/raw/master/2E7F7EA909664C2989958271D27A09B4.png" alt="" />&lt;/p>
+&lt;p>&lt;img src="https://fengzhenbing.github.io/img/picgo/2E7F7EA909664C2989958271D27A09B4.png" alt="" />&lt;/p>
 &lt;h3 id="netty-内存管理--bytebuf--pool">netty 内存管理 bytebuf pool&lt;/h3>
 &lt;p>&lt;a href="https://people.freebsd.org/~jasone/jemalloc/bsdcan2006/jemalloc.pdf">https://people.freebsd.org/~jasone/jemalloc/bsdcan2006/jemalloc.pdf&lt;/a>&lt;/p>
-&lt;p>&lt;img src="https://gitee.com/fengzhenbing/picgo/raw/master/07723506D21F497FBAE1196D73A7626A.png" alt="" />&lt;/p>
+&lt;p>&lt;img src="https://fengzhenbing.github.io/img/picgo/07723506D21F497FBAE1196D73A7626A.png" alt="" />&lt;/p>
 &lt;p>引用计数。&lt;/p>
-&lt;p>&lt;img src="https://gitee.com/fengzhenbing/picgo/raw/master/5562B699C19A4BD69705BBCCE0C3DD93.png" alt="" />&lt;/p>
-&lt;p>&lt;img src="https://gitee.com/fengzhenbing/picgo/raw/master/E0F2FA0E08C248C6B3A76F770FFB0947.png" alt="" />&lt;/p>
+&lt;p>&lt;img src="https://fengzhenbing.github.io/img/picgo/5562B699C19A4BD69705BBCCE0C3DD93.png" alt="" />&lt;/p>
+&lt;p>&lt;img src="https://fengzhenbing.github.io/img/picgo/E0F2FA0E08C248C6B3A76F770FFB0947.png" alt="" />&lt;/p>
 &lt;h3 id="对象回收复用栈">对象回收复用栈&lt;/h3>
 &lt;p>&lt;a href="https://www.jianshu.com/p/854b855bd198">https://www.jianshu.com/p/854b855bd198&lt;/a>&lt;/p>
 &lt;h3 id="零拷贝">零拷贝&lt;/h3>
