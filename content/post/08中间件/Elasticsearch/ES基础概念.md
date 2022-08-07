@@ -11,8 +11,6 @@ categories:
 
 ---
 
-
-
 ## lucene 和 es 的前世今生
 
 lucene 是最先进、功能最强大的搜索库。如果直接基于 lucene 开发，非常复杂，即便写一些简单的功能，也要写大量的 Java 代码，需要深入理解原理。
@@ -76,16 +74,12 @@ Node 是集群中的一个节点，节点也有一个名称，默认是随机分
 
 ## es 核心概念 vs. db 核心概念
 
-| es       | db       |
-| -------- | -------- |
-| index    | 数据库   |
-| type     | 数据表   |
+| es       | db   |
+| -------- | ---- |
+| index    | 数据库  |
+| type     | 数据表  |
 | docuemnt | 一行数据 |
 
 以上是一个简单的类比。
-
-
-
-
 
 转载https://gitee.com/shishan100/Java-Interview-Advanced/blob/master/docs/high-concurrency/es-introduction.md#lucene-%E5%92%8C-es-%E7%9A%84%E5%89%8D%E4%B8%96%E4%BB%8A%E7%94%9F
